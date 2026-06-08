@@ -1,0 +1,18 @@
+[
+  {"slug": "selangor", "name": "Selangor", "name_ms": "Selangor", "region": "Central"},
+  {"slug": "kuala-lumpur", "name": "Kuala Lumpur", "name_ms": "Kuala Lumpur", "region": "Central"},
+  {"slug": "putrajaya", "name": "Putrajaya", "name_ms": "Putrajaya", "region": "Central"},
+  {"slug": "johor", "name": "Johor", "name_ms": "Johor", "region": "South"},
+  {"slug": "melaka", "name": "Melaka", "name_ms": "Melaka", "region": "South"},
+  {"slug": "negeri-sembilan", "name": "Negeri Sembilan", "name_ms": "Negeri Sembilan", "region": "South"},
+  {"slug": "penang", "name": "Penang", "name_ms": "Pulau Pinang", "region": "North"},
+  {"slug": "kedah", "name": "Kedah", "name_ms": "Kedah", "region": "North"},
+  {"slug": "perlis", "name": "Perlis", "name_ms": "Perlis", "region": "North"},
+  {"slug": "perak", "name": "Perak", "name_ms": "Perak", "region": "North"},
+  {"slug": "pahang", "name": "Pahang", "name_ms": "Pahang", "region": "East"},
+  {"slug": "terengganu", "name": "Terengganu", "name_ms": "Terengganu", "region": "East"},
+  {"slug": "kelantan", "name": "Kelantan", "name_ms": "Kelantan", "region": "East"},
+  {"slug": "sabah", "name": "Sabah", "name_ms": "Sabah", "region": "Borneo"},
+  {"slug": "sarawak", "name": "Sarawak", "name_ms": "Sarawak", "region": "Borneo"},
+  {"slug": "labuan", "name": "Labuan", "name_ms": "Labuan", "region": "Borneo"}
+]

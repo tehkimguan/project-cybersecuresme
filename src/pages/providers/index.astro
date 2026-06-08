@@ -1,0 +1,170 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import ProviderCard from '../../components/ProviderCard.astro';
+import CategoryTile from '../../components/CategoryTile.astro';
+import clinicsData from '../../data/providers.json';
+import categoriesData from '../../data/categories.json';
+import statesData from '../../data/states.json';
+
+const path = '/providers';
+const altLocaleHref = '/ms/direktori';
+
+const totalCount = clinicsData.length;
+
+// Count providers per category
+const categoryCounts: Record<string, number> = {};
+for (const cat of categoriesData) {
+  categoryCounts[cat.slug] = clinicsData.filter(c => (c.categories || []).includes(cat.slug)).length;
+}
+
+// Count providers per state
+const stateCounts: Record<string, number> = {};
+for (const clinic of clinicsData) {
+  if (clinic.state) {
+    stateCounts[clinic.state] = (stateCounts[clinic.state] || 0) + 1;
+  }
+}
+
+const schemaData = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Cybersecurity Providers in Malaysia',
+  description: `Browse ${totalCount} cybersecurity providers across Malaysia. Managed security, penetration testing, cloud security, GRC compliance, SOC and more.`,
+  url: 'https://cybersecuresme.my/providers',
+  inLanguage: 'en-MY',
+  breadcrumb: {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://cybersecuresme.my' },
+      { '@type': 'ListItem', position: 2, name: 'Providers', item: 'https://cybersecuresme.my/providers' },
+    ],
+  },
+};
+---
+
+<Base
+  title="Cybersecurity Providers in Malaysia | Cyber Secure SME"
+  description={`Browse ${totalCount} cybersecurity providers across Malaysia. Managed security, penetration testing, cloud security, GRC compliance, SOC and more.`}
+  locale="en"
+  altLocaleHref={altLocaleHref}
+  canonical="https://cybersecuresme.my/providers"
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+  </Fragment>
+
+  <SiteHeader locale="en" currentPath={path} altLocaleHref={altLocaleHref} />
+
+  <main id="main-content">
+
+    <!-- Hero header -->
+    <section style="background:#f2f2f2;border-bottom:1px solid #181818;padding:64px 0 52px;">
+      <div class="container">
+        <p class="eyebrow" style="margin:0 0 14px 0;">VERIFIED DIRECTORY</p>
+        <h1 class="heading" style="font-size:clamp(28px,4vw,44px);margin:0 0 18px 0;line-height:1.05;">
+          Cybersecurity Providers in Malaysia
+        </h1>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;color:#181818;line-height:1.55;max-width:600px;margin:0 0 10px 0;">
+          Find verified providers across 8 service categories and 16 states. Every listing is cross-referenced with NACSA, CyberSecurity Malaysia, and SSM records.
+        </p>
+        <p class="eyebrow" style="margin:0;color:#6e6e6e;">
+          {totalCount} PROVIDERS &nbsp;&#183;&nbsp; 8 CATEGORIES &nbsp;&#183;&nbsp; 16 STATES
+        </p>
+      </div>
+    </section>
+
+    <!-- Category filter chips -->
+    <section style="padding:36px 0 0;" aria-label="Filter by category">
+      <div class="container">
+        <p class="eyebrow" style="margin:0 0 14px 0;color:#6e6e6e;">BROWSE BY CATEGORY</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          {categoriesData.map(cat => (
+            <a
+              href={`/providers/${cat.slug}`}
+              style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:0.05em;color:#181818;background:#f2f2f2;border:1px solid #181818;padding:7px 16px;text-decoration:none;transition:background 120ms ease,color 120ms ease;min-height:36px;display:inline-flex;align-items:center;gap:8px;border-radius:0;"
+              class="filter-chip"
+            >
+              {cat.name}
+              <span style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:0.02em;color:#6e6e6e;">
+                {categoryCounts[cat.slug] || 0}
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- State filter chips -->
+    <section style="padding:20px 0 36px;" aria-label="Filter by state">
+      <div class="container">
+        <p class="eyebrow" style="margin:0 0 14px 0;color:#6e6e6e;">BROWSE BY STATE</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          {statesData.filter(s => stateCounts[s.slug] > 0).map(state => (
+            <a
+              href={`/providers?state=${state.slug}`}
+              style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:0.05em;color:#181818;background:#f2f2f2;border:1px solid #181818;padding:7px 16px;text-decoration:none;transition:background 120ms ease,color 120ms ease;min-height:36px;display:inline-flex;align-items:center;gap:8px;border-radius:0;"
+              class="filter-chip"
+            >
+              {state.name}
+              <span style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:0.02em;color:#6e6e6e;">
+                {stateCounts[state.slug]}
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Provider grid -->
+    <section style="padding:0 0 96px;" aria-label="All providers">
+      <div class="container">
+        <div class="clinic-grid">
+          {clinicsData.map(clinic => (
+            <ProviderCard clinic={clinic} locale="en" />
+          ))}
+        </div>
+
+        <!-- CTA: list your company -->
+        <div style="margin-top:64px;border:1px solid #181818;padding:44px 36px;text-align:center;background:#f2f2f2;">
+          <p class="eyebrow" style="margin:0 0 14px 0;color:#6e6e6e;">FOR CYBERSECURITY FIRMS</p>
+          <h2 class="heading" style="font-size:26px;margin:0 0 14px 0;">Is your company listed?</h2>
+          <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#6e6e6e;line-height:1.6;margin:0 0 28px 0;max-width:480px;margin-left:auto;margin-right:auto;">
+            Claim your free listing or upgrade to a verified profile to reach businesses searching for your services.
+          </p>
+          <a
+            href="/list-your-company"
+            class="btn-primary"
+            data-ph="cta_list_company_directory"
+          >
+            List your company
+            <span aria-hidden="true" style="color:#fc523b;">&#8599;</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <SiteFooter locale="en" currentPath={path} altLocaleHref={altLocaleHref} />
+
+</Base>
+
+<style>
+  .clinic-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 900px) {
+    .clinic-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .clinic-grid { grid-template-columns: 1fr; }
+  }
+  .filter-chip:hover { background: #181818; color: #f2f2f2; }
+  @media (prefers-reduced-motion: reduce) {
+    .filter-chip { transition: none; }
+  }
+</style>

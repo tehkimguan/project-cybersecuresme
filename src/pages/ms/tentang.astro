@@ -1,0 +1,198 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+
+const tiers = [
+  {
+    id: 'listed',
+    label: 'TERSENARAI',
+    title: 'Tersenarai',
+    desc: 'Nama, lokasi, dan kategori pembekal ada dalam direktori. Bersumber daripada data awam. Pengesahan identiti belum dilaksanakan.',
+  },
+  {
+    id: 'claimed',
+    label: 'DITUNTUT',
+    title: 'Dituntut',
+    desc: 'Pemilik perniagaan telah mengesahkan pemilikan e-mel dan mengesahkan butiran penyenaraian adalah tepat.',
+  },
+  {
+    id: 'ssm-checked',
+    label: 'DISEMAK SSM',
+    title: 'Disemak SSM',
+    desc: 'Nombor pendaftaran syarikat telah dirujuk silang dengan rekod SSM (Suruhanjaya Syarikat Malaysia), mengesahkan entiti itu ialah syarikat Malaysia yang berdaftar.',
+  },
+  {
+    id: 'nacsa-licensed',
+    label: 'BERLESEN NACSA',
+    title: 'Berlesen NACSA',
+    desc: 'Pembekal memegang lesen pembekal perkhidmatan keselamatan siber yang sah di bawah Akta Keselamatan Siber 2024 (Akta 854), dikeluarkan oleh NACSA (Agensi Keselamatan Siber Negara). Ini adalah tahap pengesahan kawal selia tertinggi untuk firma keselamatan siber.',
+  },
+  {
+    id: 'premium',
+    label: 'PENAJA PREMIUM',
+    title: 'Penaja Premium',
+    desc: 'Profil tajaan berbayar. Status pengesahan dipaparkan secara berasingan daripada tajaan. Penempatan premium tidak bermakna pengesahan yang lebih tinggi atau pengesahan.',
+  },
+];
+
+const regulators = [
+  {
+    name: 'NACSA - Agensi Keselamatan Siber Negara (Akta 854)',
+    full: 'NACSA mentadbir Akta Keselamatan Siber 2024 (Akta 854). Pembekal perkhidmatan keselamatan siber kepada entiti Infrastruktur Maklumat Kritikal Negara (CNII) mesti memegang lesen NACSA. NACSA juga menjalankan fungsi perisikan ancaman siber negara.',
+    url: 'https://www.nacsa.gov.my/',
+    url_label: 'nacsa.gov.my',
+  },
+  {
+    name: 'CyberSecurity Malaysia',
+    full: 'CyberSecurity Malaysia ialah agensi pakar negara di bawah MOSTI. Ia mengendalikan Pasukan Tindak Balas Kecemasan Komputer Malaysia (MyCERT), menjalankan program kesedaran keselamatan siber MySafe, dan menyediakan perkhidmatan penilaian forensik dan keselamatan ICT.',
+    url: 'https://www.cybersecurity.my/',
+    url_label: 'cybersecurity.my',
+  },
+  {
+    name: 'JPDP - Jabatan Perlindungan Data Peribadi (Akta 709)',
+    full: 'JPDP menguatkuasakan Akta Perlindungan Data Peribadi 2010 (Akta 709). Pemproses dan pengawal data yang mengendalikan data peribadi Malaysia mesti mematuhinya. Pindaan 2024 mengukuhkan keperluan pemberitahuan pelanggaran.',
+    url: 'https://www.pdp.gov.my/',
+    url_label: 'pdp.gov.my',
+  },
+  {
+    name: 'MCMC - Suruhanjaya Komunikasi dan Multimedia Malaysia',
+    full: 'MCMC mengawal selia industri komunikasi dan multimedia di Malaysia di bawah Akta Komunikasi dan Multimedia 1998 (Akta 588). Berkaitan dengan pembekal yang menawarkan keselamatan rangkaian, perkhidmatan internet, dan infrastruktur awan.',
+    url: 'https://www.mcmc.gov.my/',
+    url_label: 'mcmc.gov.my',
+  },
+  {
+    name: 'BNM RMiT - Bank Negara Malaysia Pengurusan Risiko dalam Teknologi',
+    full: 'Dasar Pengurusan Risiko dalam Teknologi (RMiT) BNM terpakai kepada institusi kewangan yang beroperasi di Malaysia. Pembekal keselamatan siber yang melayani bank, syarikat insurans, atau pengendali wang elektronik Malaysia mesti memahami kewajipan RMiT klien mereka.',
+    url: 'https://www.bnm.gov.my/',
+    url_label: 'bnm.gov.my',
+  },
+  {
+    name: 'ISO/IEC 27001 dan CREST',
+    full: 'ISO/IEC 27001 ialah piawaian pengurusan keselamatan maklumat antarabangsa. CREST ialah badan akreditasi global untuk perkhidmatan ujian penembusan dan SOC. Walaupun bukan pengawal selia Malaysia, pensijilan ini merupakan piawaian kompetensi yang diiktiraf secara meluas untuk pembekal keselamatan siber.',
+    url: 'https://www.iso.org/isoiec-27001-information-security.html',
+    url_label: 'iso.org',
+  },
+];
+---
+
+<Base
+  title="Tentang Cyber Secure SME: Direktori Keselamatan Siber Malaysia"
+  description="Cyber Secure SME ialah direktori bebas pembekal keselamatan siber di Malaysia. Ketahui cara kami mengesahkan penyenaraian dan maksud setiap tahap pengesahan."
+  locale="ms"
+  altLocaleHref="/about"
+  schemaType="breadcrumb"
+  schemaData={{ items: [{ name: 'Utama', url: '/ms' }, { name: 'Tentang', url: '/ms/tentang' }] }}
+>
+  <SiteHeader locale="ms" currentPath="/ms/tentang" altLocaleHref="/about" />
+
+  <main>
+    <!-- Hero -->
+    <section style="background:#f2f2f2;border-bottom:1px solid #181818;padding:64px 0 56px;">
+      <div class="container" style="max-width:800px;">
+        <p class="eyebrow" style="margin:0 0 20px 0;">TENTANG KAMI</p>
+        <h1 class="heading" style="font-size:clamp(28px,5vw,44px);margin:0 0 22px 0;line-height:1.05;">
+          Direktori bebas yang dibina berdasarkan data yang disahkan
+        </h1>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:19px;color:#181818;line-height:1.55;margin:0;max-width:620px;">
+          Cyber Secure SME ialah direktori neutral dan bukan pihak berkepentingan. Kami tidak memiliki, mengendalikan, atau menyokong mana-mana firma keselamatan siber. Tugas kami adalah untuk memaparkan maklumat yang tepat supaya perniagaan Malaysia dapat mencari pembekal dengan yakin.
+        </p>
+      </div>
+    </section>
+
+    <!-- What we do -->
+    <section style="padding:72px 0;border-bottom:1px solid #d6d6cf;">
+      <div class="container" style="max-width:800px;">
+        <h2 class="heading" style="font-size:26px;margin:0 0 22px 0;">Apakah Cyber Secure SME</h2>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;color:#181818;line-height:1.65;margin:0 0 20px 0;">
+          Pasaran keselamatan siber Malaysia merangkumi pembekal perkhidmatan keselamatan terurus, firma ujian penembusan, pakar keselamatan awan, perunding pematuhan, dan jurulatih kesedaran keselamatan. Pembekal-pembekal ini adalah nyata. Mencari satu yang boleh dipercayai dan disahkan dengan cepat adalah lebih sukar daripada sepatutnya - terutamanya bagi pemilik perniagaan kecil yang bukan pakar keselamatan.
+        </p>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;color:#181818;line-height:1.65;margin:0 0 20px 0;">
+          Cyber Secure SME merujuk silang pembekal terhadap pengawal selia dan piawaian yang penting dalam bidang ini: NACSA (Akta Keselamatan Siber 2024 / Akta 854), CyberSecurity Malaysia, Jabatan Perlindungan Data Peribadi (Akta 709 / JPDP), MCMC, dan pensijilan yang diiktiraf seperti ISO/IEC 27001 dan CREST. Kami memaparkan apa yang dapat kami sahkan dan kami tidak mendakwa mengetahui apa yang kami tidak tahu.
+        </p>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;color:#181818;line-height:1.65;margin:0;">
+          Direktori ini meliputi 8 kategori perkhidmatan dan kesemua 16 negeri Malaysia. Penyenaraian adalah untuk maklumat sahaja. Tiada apa-apa di laman ini merupakan nasihat keselamatan untuk situasi spesifik anda. Sentiasa sahkan kelayakan pembekal secara langsung sebelum melibatkan mereka.
+        </p>
+      </div>
+    </section>
+
+    <!-- Verification tiers -->
+    <section style="background:#ffffff;padding:72px 0;border-bottom:1px solid #181818;">
+      <div class="container" style="max-width:800px;">
+        <p class="eyebrow" style="margin:0 0 14px 0;">TAHAP PENGESAHAN</p>
+        <h2 class="heading" style="font-size:26px;margin:0 0 10px 0;">Maksud setiap lencana</h2>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#6e6e6e;line-height:1.6;margin:0 0 44px 0;">
+          Setiap penyenaraian membawa lencana yang menggambarkan setakat mana pengesahan telah dilakukan. Kami tidak mencampuradukkan tahap pengesahan. Lencana peringkat lebih tinggi memerlukan lebih banyak langkah.
+        </p>
+
+        <div style="display:flex;flex-direction:column;border:1px solid #181818;">
+          {tiers.map((tier, i) => (
+            <div style={`padding:22px 26px;${i > 0 ? 'border-top:1px solid #d6d6cf;' : ''}display:flex;gap:20px;align-items:flex-start;`}>
+              <span style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#181818;background:transparent;border:1px solid #181818;padding:4px 8px;white-space:nowrap;flex-shrink:0;margin-top:2px;">
+                {tier.label}
+              </span>
+              <div>
+                <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:19px;font-weight:400;color:#181818;margin:0 0 4px 0;">{tier.title}</p>
+                <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:16px;color:#6e6e6e;line-height:1.6;margin:0;">{tier.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Regulators -->
+    <section style="padding:72px 0;border-bottom:1px solid #d6d6cf;">
+      <div class="container" style="max-width:800px;">
+        <p class="eyebrow" style="margin:0 0 14px 0;">BADAN RUJUKAN</p>
+        <h2 class="heading" style="font-size:26px;margin:0 0 10px 0;">Cara kami mengesahkan kelayakan</h2>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#6e6e6e;line-height:1.6;margin:0 0 44px 0;">
+          Setiap tahap pengesahan dipetakan kepada badan kawal selia Malaysia yang spesifik atau piawaian antarabangsa. Kami merujuk silang terhadap daftar rasmi di mana ada.
+        </p>
+
+        <div style="display:flex;flex-direction:column;gap:0;">
+          {regulators.map((reg, i) => (
+            <div style={`padding:28px 0;${i > 0 ? 'border-top:1px solid #d6d6cf;' : ''}`}>
+              <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:10px;">
+                <h3 class="heading" style="font-size:20px;margin:0;">{reg.name}</h3>
+                <a
+                  href={reg.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="arrow-link"
+                  style="font-size:14px;"
+                >
+                  {reg.url_label}
+                </a>
+              </div>
+              <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:16px;color:#6e6e6e;line-height:1.65;margin:0;">{reg.full}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <section style="background:#f2f2f2;border-top:1px solid #181818;padding:52px 0;">
+      <div class="container" style="max-width:800px;">
+        <p class="eyebrow" style="margin:0 0 14px 0;">NOTIS PENTING</p>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#181818;line-height:1.7;margin:0;">
+          Cyber Secure SME ialah direktori bebas. Kami tidak menyediakan penilaian keselamatan, nasihat, atau perkhidmatan perundingan. Penyenaraian di laman ini bukan merupakan pengesahan. Data kelayakan pembekal boleh berubah; sentiasa sahkan terus dengan pihak berkuasa yang berkaitan sebelum melibatkan firma keselamatan siber. Untuk insiden keselamatan yang mendesak, hubungi talian kecemasan CyberSecurity Malaysia: +603-8008 7000 (24 jam).
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter locale="ms" currentPath="/ms/tentang" altLocaleHref="/about" />
+
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Utama", "item": "https://cybersecuresme.my/ms" },
+        { "@type": "ListItem", "position": 2, "name": "Tentang", "item": "https://cybersecuresme.my/ms/tentang" }
+      ]
+    })}
+  </script>
+</Base>

@@ -1,0 +1,135 @@
+---
+interface Props { locale?: string; }
+const { locale = 'en' } = Astro.props;
+---
+
+<div class="dtc-wrap">
+  <div class="dtc-grid">
+    <label class="dtc-label">
+      <span class="dtc-eyebrow">Annual revenue (RM)</span>
+      <input type="number" id="dtc-revenue" class="dtc-input" min="0" placeholder="2000000" aria-label="Annual revenue in ringgit" />
+    </label>
+    <label class="dtc-label">
+      <span class="dtc-eyebrow">Business hours per year</span>
+      <input type="number" id="dtc-hours" class="dtc-input" min="1" max="8760" placeholder="2912" value="2912" aria-label="Business hours per year" />
+      <span class="dtc-hint">2,912 = 8 h/day x 52 weeks x 7 days (default)</span>
+    </label>
+    <label class="dtc-label">
+      <span class="dtc-eyebrow">Staff unable to work during outage</span>
+      <input type="number" id="dtc-staff" class="dtc-input" min="0" placeholder="10" aria-label="Number of affected staff" />
+    </label>
+    <label class="dtc-label">
+      <span class="dtc-eyebrow">Average hourly staff cost (RM)</span>
+      <input type="number" id="dtc-staffcost" class="dtc-input" min="0" placeholder="35" aria-label="Average staff hourly cost in ringgit" />
+      <span class="dtc-hint">Salary + benefits. RM 35/h = approx RM 70k/yr.</span>
+    </label>
+    <label class="dtc-label">
+      <span class="dtc-eyebrow">Downtime duration (hours)</span>
+      <input type="number" id="dtc-downtime" class="dtc-input" min="0" step="0.5" placeholder="8" aria-label="Downtime duration in hours" />
+    </label>
+  </div>
+
+  <button type="button" id="dtc-btn" class="dtc-btn">Calculate downtime cost</button>
+
+  <div id="dtc-result" class="dtc-result-panel" hidden aria-live="polite">
+    <div class="dtc-result-grid">
+      <div class="dtc-result-block">
+        <span class="dtc-eyebrow">Total incident cost</span>
+        <span class="dtc-big" id="dtc-total">--</span>
+      </div>
+      <div class="dtc-result-block">
+        <span class="dtc-eyebrow">Cost per downtime hour</span>
+        <span class="dtc-big" id="dtc-per-hour">--</span>
+      </div>
+    </div>
+    <div class="dtc-breakdown" id="dtc-breakdown"></div>
+    <p class="dtc-note">
+      Use this figure to justify backup and recovery investment. For example, a 4-hour recovery-time objective (RTO)
+      at RM 15,000/h = RM 60,000 incident cost - the budget case for a managed recovery solution.
+      See <a href="/providers/data-backup" class="dtc-link">data backup providers &rarr;</a>
+    </p>
+  </div>
+
+  <p class="dtc-disclaimer">This calculator models direct revenue loss and idle staff cost only. It excludes reputational damage, customer churn, regulatory fines, and recovery labour. Use as a planning aid, not a forecast.</p>
+</div>
+
+<style>
+  .dtc-wrap { display:flex; flex-direction:column; gap:20px; font-family:"EB Garamond",Georgia,serif; }
+  .dtc-eyebrow { font-family:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#181818; font-feature-settings:"tnum"; display:block; margin-bottom:4px; }
+  .dtc-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .dtc-label { display:flex; flex-direction:column; gap:2px; }
+  .dtc-input { background:#fff; border:1px solid #181818; border-radius:0; padding:10px 14px; font-family:"Inter",Arial,sans-serif; font-size:15px; color:#181818; width:100%; min-height:44px; outline:none; }
+  .dtc-input:focus { outline:2px solid #181818; outline-offset:-2px; }
+  .dtc-hint { font-family:"Inter",Arial,sans-serif; font-size:11px; color:#6e6e6e; margin-top:2px; }
+  .dtc-btn { border:1px solid #181818; background:transparent; color:#181818; font-family:"Inter",Arial,sans-serif; font-size:13px; letter-spacing:.06em; text-transform:uppercase; padding:12px 24px; cursor:pointer; align-self:flex-start; }
+  .dtc-btn:hover { background:#181818; color:#f2f2f2; }
+  .dtc-result-panel { background:#f2f2f2; border-top:1px solid #181818; padding:20px; display:flex; flex-direction:column; gap:16px; }
+  .dtc-result-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .dtc-result-block { display:flex; flex-direction:column; gap:4px; }
+  .dtc-big { font-family:"EB Garamond",Georgia,serif; font-size:30px; color:#181818; line-height:1.1; }
+  .dtc-breakdown { border-top:1px solid #d6d6cf; padding-top:14px; display:flex; flex-direction:column; gap:8px; }
+  .dtc-row { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .dtc-row-label { font-family:"EB Garamond",Georgia,serif; font-size:16px; color:#181818; }
+  .dtc-row-val { font-family:"Inter",Arial,sans-serif; font-size:14px; font-feature-settings:"tnum"; color:#181818; white-space:nowrap; }
+  .dtc-note { font-family:"Inter",Arial,sans-serif; font-size:12px; color:#6e6e6e; line-height:1.5; border-top:1px solid #d6d6cf; padding-top:12px; margin:0; }
+  .dtc-link { color:#181818; text-decoration:underline; }
+  .dtc-link:hover { color:#fc523b; }
+  .dtc-disclaimer { font-family:"Inter",Arial,sans-serif; font-size:12px; color:#6e6e6e; line-height:1.5; border-top:1px solid #d6d6cf; padding-top:14px; margin:0; }
+  @media (max-width:560px) { .dtc-grid { grid-template-columns:1fr; } .dtc-result-grid { grid-template-columns:1fr; } }
+</style>
+
+<script is:inline>
+(function () {
+  var btn = document.getElementById('dtc-btn');
+  var resultPanel = document.getElementById('dtc-result');
+  var totalEl = document.getElementById('dtc-total');
+  var perHourEl = document.getElementById('dtc-per-hour');
+  var breakdownEl = document.getElementById('dtc-breakdown');
+  var captured = false;
+
+  function fmt(n) {
+    return 'RM ' + Math.round(n).toLocaleString('en-MY');
+  }
+
+  function compute() {
+    var rev = parseFloat(document.getElementById('dtc-revenue').value) || 0;
+    var bizHours = parseFloat(document.getElementById('dtc-hours').value) || 2912;
+    var staff = parseFloat(document.getElementById('dtc-staff').value) || 0;
+    var staffCost = parseFloat(document.getElementById('dtc-staffcost').value) || 0;
+    var downtime = parseFloat(document.getElementById('dtc-downtime').value) || 0;
+
+    if (downtime <= 0 || bizHours <= 0) return;
+
+    var revPerHour = rev / bizHours;
+    var revLoss = revPerHour * downtime;
+    var staffLoss = staff * staffCost * downtime;
+    var total = revLoss + staffLoss;
+    var perHour = total / downtime;
+
+    totalEl.textContent = fmt(total);
+    perHourEl.textContent = fmt(perHour) + '/h';
+
+    var rows = [
+      { label: 'Lost revenue (' + downtime + 'h x ' + fmt(revPerHour) + '/h)', val: fmt(revLoss) },
+      { label: 'Idle staff cost (' + staff + ' staff x ' + fmt(staffCost) + '/h x ' + downtime + 'h)', val: fmt(staffLoss) },
+    ];
+    breakdownEl.innerHTML = rows.map(function(r) {
+      return '<div class="dtc-row"><span class="dtc-row-label">' + r.label + '</span><span class="dtc-row-val">' + r.val + '</span></div>';
+    }).join('');
+
+    resultPanel.removeAttribute('hidden');
+
+    if (!captured) {
+      captured = true;
+      try { if (window.posthog) window.posthog.capture('calculator_used', { tool: 'it-downtime-cost-calculator' }); } catch(_){}
+    }
+  }
+
+  btn.addEventListener('click', compute);
+
+  // Auto-compute on enter in any input
+  document.querySelectorAll('#dtc-revenue,#dtc-hours,#dtc-staff,#dtc-staffcost,#dtc-downtime').forEach(function(el) {
+    el.addEventListener('keydown', function(e) { if (e.key === 'Enter') compute(); });
+  });
+})();
+</script>

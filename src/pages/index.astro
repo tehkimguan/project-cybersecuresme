@@ -1,0 +1,288 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import CategoryTile from '../components/CategoryTile.astro';
+import ProviderCard from '../components/ProviderCard.astro';
+import categoriesData from '../data/categories.json';
+import clinicsData from '../data/providers.json';
+import statesData from '../data/states.json';
+import { tEN } from '../lib/localeRoutes';
+
+const t = tEN;
+const categories = categoriesData;
+const clinics = clinicsData as any[];
+const states = statesData;
+
+// Count providers per category
+const catCount: Record<string, number> = {};
+for (const c of clinics) {
+  for (const cat of (c.categories || [])) {
+    catCount[cat] = (catCount[cat] || 0) + 1;
+  }
+}
+
+// Featured: prefer premium, else first 6
+const premium = clinics.filter(c => c.verification_level === 'premium');
+const featured = (premium.length >= 1 ? premium : clinics).slice(0, 6);
+
+const totalClinics = clinics.length;
+---
+
+<Base
+  title="Cyber Secure SME: Malaysia's Cybersecurity Directory for SMEs"
+  description="Find verified cybersecurity providers in Malaysia. Managed security, penetration testing, PDPA compliance, ransomware recovery and more. Browse by service and state."
+  locale="en"
+  altLocaleHref="/ms"
+  schemaType="homepage"
+>
+  <SiteHeader locale="en" currentPath="/" altLocaleHref="/ms" />
+
+  <!-- 1. HERO -->
+  <section style="background:#f2f2f2;padding-top:88px;padding-bottom:88px;border-bottom:1px solid #181818;">
+    <div class="container">
+      <div style="max-width:740px;">
+        <!-- Eyebrow -->
+        <p class="eyebrow" style="margin:0 0 24px 0;">{t.heroEyebrow}</p>
+
+        <!-- Headline -->
+        <h1 class="heading" style="font-size:clamp(32px,5vw,58px);margin:0 0 24px 0;">
+          {t.heroHeadline}
+        </h1>
+
+        <!-- Subcopy -->
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:20px;color:#181818;line-height:1.55;margin:0 0 36px 0;max-width:600px;">
+          {t.heroSubcopy}
+        </p>
+
+        <!-- CTA row -->
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;">
+          <a href="/providers" class="btn-primary" data-ph="hero_cta_browse" data-ph-locale="en">
+            {t.heroCta}
+            <span aria-hidden="true" style="color:#fc523b;">&#8599;</span>
+          </a>
+          <a href="/list-your-company" class="btn-secondary" data-ph="hero_cta_list" data-ph-locale="en">
+            {t.heroSecondaryCta}
+          </a>
+        </div>
+
+        <!-- Stat row -->
+        <div style="display:flex;gap:48px;flex-wrap:wrap;margin-top:52px;padding-top:36px;border-top:1px solid #d6d6cf;">
+          {[
+            { value: String(totalClinics) + '+', label: t.totalProviders },
+            { value: String(categories.length), label: t.totalCategories },
+            { value: '16', label: t.totalStates },
+          ].map(({ value, label }) => (
+            <div>
+              <p class="heading" style="font-size:36px;margin:0;line-height:1;">{value}</p>
+              <p class="eyebrow" style="margin:6px 0 0 0;color:#6e6e6e;">{label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. TRUST STRIP -->
+  <section style="background:#181818;border-bottom:1px solid #181818;padding:22px 0;">
+    <div class="container">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;row-gap:10px;">
+        <p style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#f2f2f2;margin:0;flex-shrink:0;">
+          {t.howWeVerify}
+        </p>
+        {t.trustChips.map(chip => (
+          <div
+            title={chip.note}
+            style="display:inline-flex;align-items:center;gap:7px;background:transparent;border:1px solid #6e6e6e;padding:5px 12px;flex-shrink:0;"
+          >
+            <span aria-hidden="true" style="color:#fc523b;font-size:10px;line-height:1;">&#9632;</span>
+            <span style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.06em;color:#f2f2f2;white-space:nowrap;">{chip.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. CATEGORIES GRID -->
+  <section class="section" style="background:#f2f2f2;border-bottom:1px solid #d6d6cf;">
+    <div class="container">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:36px;flex-wrap:wrap;">
+        <div>
+          <p class="eyebrow" style="margin:0 0 10px 0;">SERVICES</p>
+          <h2 class="heading" style="font-size:clamp(24px,3vw,34px);margin:0;">{t.browseCategories}</h2>
+        </div>
+        <a href="/providers" class="arrow-link" style="font-size:16px;">{t.viewAllClinics}</a>
+      </div>
+
+      <div class="grid-categories">
+        {categories.map(cat => (
+          <CategoryTile
+            category={cat}
+            count={catCount[cat.slug] || 0}
+            locale="en"
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. FEATURED PROVIDERS -->
+  {featured.length > 0 && (
+    <section class="section" style="background:#ffffff;border-bottom:1px solid #d6d6cf;">
+      <div class="container">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:36px;flex-wrap:wrap;">
+          <div>
+            <p class="eyebrow" style="margin:0 0 10px 0;">VERIFIED PROVIDERS</p>
+            <h2 class="heading" style="font-size:clamp(24px,3vw,34px);margin:0;">{t.featuredClinics}</h2>
+          </div>
+          <a href="/providers" class="arrow-link" style="font-size:16px;">{t.viewAllClinics}</a>
+        </div>
+
+        <div class="grid-clinics">
+          {featured.map(clinic => (
+            <ProviderCard clinic={clinic} locale="en" />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- 5. BROWSE BY STATE -->
+  <section class="section" style="background:#f2f2f2;border-bottom:1px solid #d6d6cf;">
+    <div class="container">
+      <p class="eyebrow" style="margin:0 0 10px 0;">16 STATES</p>
+      <h2 class="heading" style="font-size:clamp(24px,3vw,34px);margin:0 0 28px 0;">{t.browseByState}</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        {states.map(state => (
+          <a href={`/providers?state=${state.slug}`} class="state-chip">
+            {state.name}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. TOOLS TEASER -->
+  <section class="section" style="background:#181818;border-bottom:1px solid #6e6e6e;">
+    <div class="container">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:36px;flex-wrap:wrap;">
+        <div>
+          <p style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#6e6e6e;margin:0 0 10px 0;">8 FREE TOOLS</p>
+          <h2 class="heading" style="font-size:clamp(24px,3vw,34px);margin:0;color:#f2f2f2;">{t.toolsTeaser}</h2>
+          <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;color:#d6d6cf;margin:10px 0 0 0;max-width:520px;">{t.toolsTeaserSubcopy}</p>
+        </div>
+        <a href="/tools" style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#f2f2f2;text-decoration:none;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;">
+          View all tools <span aria-hidden="true" style="color:#fc523b;">&#8599;</span>
+        </a>
+      </div>
+
+      <div class="tools-grid">
+        {t.toolsItems.map(tool => (
+          <a href={`/tools/${tool.slug}`} class="tool-card">
+            <span aria-hidden="true" style="font-family:'Inter',Helvetica,Arial,sans-serif;font-size:14px;line-height:1;color:#fc523b;">+</span>
+            <span style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#f2f2f2;line-height:1.3;">{tool.label}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. FOR SECURITY FIRMS CTA BAND -->
+  <section style="background:#f2f2f2;border-bottom:1px solid #181818;padding:80px 0;">
+    <div class="container">
+      <hr class="rule" style="margin-bottom:48px;" />
+      <div style="max-width:640px;">
+        <p class="eyebrow" style="margin:0 0 16px 0;color:#6e6e6e;">FOR CYBERSECURITY FIRMS</p>
+        <h2 class="heading" style="font-size:clamp(26px,3.5vw,40px);margin:0 0 18px 0;">
+          {t.forClinicOwners}
+        </h2>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:19px;color:#181818;line-height:1.55;margin:0 0 32px 0;max-width:520px;">
+          {t.forClinicOwnersSubcopy}
+        </p>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;">
+          <a
+            href="/list-your-company"
+            class="btn-primary"
+            data-ph="cta_claim_band"
+            data-ph-locale="en"
+          >
+            {t.claimCta}
+            <span aria-hidden="true" style="color:#fc523b;">&#8599;</span>
+          </a>
+          <a href="/about" class="btn-secondary">
+            How we verify
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. DISCLAIMER -->
+  <section style="background:#f2f2f2;padding:28px 0;">
+    <div class="container">
+      <div style="display:flex;gap:14px;align-items:flex-start;max-width:800px;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:3px;">
+          <circle cx="8" cy="8" r="7" stroke="#6e6e6e" stroke-width="1"/>
+          <path d="M8 7v4" stroke="#6e6e6e" stroke-width="1" stroke-linecap="round"/>
+          <circle cx="8" cy="5" r="0.6" fill="#6e6e6e"/>
+        </svg>
+        <p class="eyebrow" style="letter-spacing:0.04em;text-transform:none;font-size:12px;color:#6e6e6e;line-height:1.65;margin:0;">
+          {t.disclaimer}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <SiteFooter locale="en" currentPath="/" altLocaleHref="/ms" />
+</Base>
+
+<style>
+  .state-chip {
+    font-family: 'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: #181818;
+    background: #f2f2f2;
+    border: 1px solid #181818;
+    border-radius: 0;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background 120ms ease, color 120ms ease;
+    white-space: nowrap;
+    display: inline-block;
+    min-height: 38px;
+    line-height: 22px;
+  }
+  .state-chip:hover { background: #181818; color: #f2f2f2; }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    border: 1px solid #6e6e6e;
+  }
+
+  .tool-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #181818;
+    border: none;
+    padding: 18px 16px;
+    text-decoration: none;
+    transition: background 120ms ease;
+    min-height: 72px;
+  }
+  .tool-card:hover { background: #2a2a2a; }
+
+  @media (max-width: 900px) {
+    .tools-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .tools-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .state-chip, .tool-card { transition: none; }
+  }
+</style>

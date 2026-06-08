@@ -1,0 +1,141 @@
+---
+/**
+ * SchemaOrg.astro: JSON-LD structured data emitter for Cyber Secure SME.
+ * Always emits WebSite + Organization. Adds BreadcrumbList on homepage.
+ * Provider pages use generic Organization + LocalBusiness (not MedicalBusiness).
+ */
+
+interface Props {
+  type?: 'homepage' | 'provider' | 'category' | 'article' | 'breadcrumb';
+  data?: Record<string, unknown>;
+}
+
+const { type = 'homepage', data = {} } = Astro.props;
+
+const SITE = 'https://cybersecuresme.kgstaging.workers.dev';
+
+function buildSchema(): object | object[] {
+  const org = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Cyber Secure SME',
+    url: SITE,
+    logo: `${SITE}/favicon.svg`,
+    description:
+      "Malaysia's independent cybersecurity provider directory for SMEs. Cross-referenced with NACSA, CyberSecurity Malaysia, SSM, and ISO/IEC 27001 certification records.",
+    address: {
+      '@type': 'PostalAddress',
+      addressCountry: 'MY',
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: 'cybersecuresme@agentmail.to',
+      contactType: 'customer service',
+      areaServed: 'MY',
+      availableLanguage: ['English', 'Malay'],
+    },
+    sameAs: [],
+  };
+
+  const website = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Cyber Secure SME',
+    url: SITE,
+    inLanguage: ['en-MY', 'ms-MY'],
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${SITE}/providers?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
+  if (type === 'homepage') {
+    const breadcrumb = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      ],
+    };
+    return [org, website, breadcrumb];
+  }
+
+  if (type === 'provider' && data) {
+    const stateStr = data.state
+      ? String(data.state).replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
+      : 'Malaysia';
+    const provider: Record<string, unknown> = {
+      '@context': 'https://schema.org',
+      '@type': ['Organization', 'LocalBusiness'],
+      '@id': `${SITE}/provider/${data.slug}`,
+      name: data.name,
+      url: `${SITE}/provider/${data.slug}`,
+      description: data.description || `${data.name}: cybersecurity provider in ${stateStr}, Malaysia.`,
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: data.city ? `${data.city}, ${stateStr}` : stateStr,
+        addressRegion: stateStr,
+        addressCountry: 'MY',
+      },
+    };
+    if (data.phone) provider.telephone = data.phone;
+    if (data.website) provider.sameAs = [data.website];
+    const breadcrumb = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+        { '@type': 'ListItem', position: 2, name: 'Providers', item: `${SITE}/providers` },
+        { '@type': 'ListItem', position: 3, name: data.name, item: `${SITE}/provider/${data.slug}` },
+      ],
+    };
+    return [org, website, provider, breadcrumb];
+  }
+
+  if (type === 'article' && data) {
+    const article = {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: data.headline,
+      url: data.url,
+      mainEntityOfPage: { '@type': 'WebPage', '@id': data.url },
+      datePublished: data.datePublished,
+      dateModified: data.dateModified || data.datePublished,
+      inLanguage: data.inLanguage || 'en-MY',
+      author: { '@type': 'Person', name: data.author || 'Cyber Secure SME' },
+      publisher: {
+        '@type': 'Organization',
+        name: 'Cyber Secure SME',
+        url: SITE,
+        logo: { '@type': 'ImageObject', url: `${SITE}/favicon.svg` },
+      },
+    };
+    return [org, website, article];
+  }
+
+  if (type === 'breadcrumb' && data?.items && Array.isArray(data.items)) {
+    const breadcrumb = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: (data.items as Array<{ name: string; url: string }>).map((item, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: item.name,
+        item: item.url,
+      })),
+    };
+    return [org, website, breadcrumb];
+  }
+
+  return [org, website];
+}
+
+const schema = buildSchema();
+const schemaJson = JSON.stringify(Array.isArray(schema) ? schema : [schema]);
+---
+
+<script type="application/ld+json" set:html={schemaJson} />

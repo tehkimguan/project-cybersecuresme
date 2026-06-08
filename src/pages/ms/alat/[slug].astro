@@ -1,0 +1,165 @@
+---
+import Base from '../../../layouts/Base.astro';
+import SiteHeader from '../../../components/SiteHeader.astro';
+import SiteFooter from '../../../components/SiteFooter.astro';
+import { tools } from '../../../data/tools';
+
+import PasswordStrengthCalc from '../../../components/calculators/PasswordStrengthCalc.astro';
+import DataBreachCostCalc from '../../../components/calculators/DataBreachCostCalc.astro';
+import PhishingRiskCalc from '../../../components/calculators/PhishingRiskCalc.astro';
+import PdpaReadinessCalc from '../../../components/calculators/PdpaReadinessCalc.astro';
+import SecurityMaturityCalc from '../../../components/calculators/SecurityMaturityCalc.astro';
+import RansomwareExposureCalc from '../../../components/calculators/RansomwareExposureCalc.astro';
+import DowntimeCostCalc from '../../../components/calculators/DowntimeCostCalc.astro';
+import SecurityBudgetCalc from '../../../components/calculators/SecurityBudgetCalc.astro';
+
+export async function getStaticPaths() {
+  return tools.map(tool => ({
+    params: { slug: tool.slug_ms },
+    props: { tool },
+  }));
+}
+
+const { tool } = Astro.props;
+const locale = 'ms';
+
+// Category CTA links (MS routes)
+const categoryLinks: Record<string, { href: string; label: string }> = {
+  'managed-security':    { href: '/ms/direktori/managed-security',    label: 'Semak imbas pembekal keselamatan terurus' },
+  'endpoint-network':    { href: '/ms/direktori/endpoint-network',    label: 'Semak imbas pembekal keselamatan endpoint' },
+  'penetration-testing': { href: '/ms/direktori/penetration-testing', label: 'Semak imbas firma ujian penembusan' },
+  'cloud-security':      { href: '/ms/direktori/cloud-security',      label: 'Semak imbas pembekal keselamatan awan' },
+  'grc-compliance':      { href: '/ms/direktori/grc-compliance',      label: 'Semak imbas perunding GRC' },
+  'soc-incident':        { href: '/ms/direktori/soc-incident',        label: 'Semak imbas pembekal SOC' },
+  'security-awareness':  { href: '/ms/direktori/security-awareness',  label: 'Semak imbas pembekal latihan keselamatan' },
+  'data-backup':         { href: '/ms/direktori/data-backup',         label: 'Semak imbas pembekal sandaran data' },
+};
+
+const primaryCat = tool.related_categories[0];
+const ctaLink = categoryLinks[primaryCat] ?? { href: '/ms/direktori', label: 'Semak imbas semua pembekal' };
+---
+
+<Base
+  title={`${tool.name_ms} | Cyber Secure SME`}
+  description={tool.description_ms}
+  locale={locale}
+  altLocaleHref={`/tools/${tool.slug}`}
+>
+  <SiteHeader locale={locale} currentPath={`/ms/alat/${tool.slug_ms}`} altLocaleHref={`/tools/${tool.slug}`} />
+
+  <main>
+    <div class="container" style="padding-top:48px;padding-bottom:96px;">
+
+      <!-- Breadcrumb -->
+      <nav aria-label="Breadcrumb" style="margin-bottom:32px;">
+        <ol style="display:flex;align-items:center;gap:8px;list-style:none;margin:0;padding:0;font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.05em;flex-wrap:wrap;">
+          <li><a href="/ms/alat" style="color:#6e6e6e;text-decoration:none;">ALAT</a></li>
+          <li aria-hidden="true" style="color:#d6d6cf;">·</li>
+          <li style="color:#181818;">{tool.name_ms.toUpperCase()}</li>
+        </ol>
+      </nav>
+
+      <!-- Content layout -->
+      <div class="tool-layout">
+
+        <!-- Calculator panel -->
+        <div class="tool-main">
+          <header style="margin-bottom:32px;">
+            <h1 class="heading" style="font-size:clamp(22px,4vw,32px);margin:0 0 14px 0;line-height:1.1;">
+              {tool.name_ms}
+            </h1>
+            <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#181818;line-height:1.6;margin:0;">{tool.description_ms}</p>
+          </header>
+
+          <!-- Calculator card -->
+          <div class="calc-card">
+            {tool.slug === 'password-strength-checker' && <PasswordStrengthCalc locale={locale} />}
+            {tool.slug === 'data-breach-cost-estimator' && <DataBreachCostCalc locale={locale} />}
+            {tool.slug === 'phishing-risk-self-check' && <PhishingRiskCalc locale={locale} />}
+            {tool.slug === 'pdpa-readiness-checker' && <PdpaReadinessCalc locale={locale} />}
+            {tool.slug === 'security-maturity-assessment' && <SecurityMaturityCalc locale={locale} />}
+            {tool.slug === 'ransomware-exposure-score' && <RansomwareExposureCalc locale={locale} />}
+            {tool.slug === 'it-downtime-cost-calculator' && <DowntimeCostCalc locale={locale} />}
+            {tool.slug === 'security-budget-estimator' && <SecurityBudgetCalc locale={locale} />}
+          </div>
+
+          <!-- CTA link -->
+          <a href={ctaLink.href} class="arrow-link" style="font-size:17px;margin-top:20px;display:inline-flex;">
+            {ctaLink.label}
+          </a>
+        </div>
+
+        <!-- Sidebar: other tools -->
+        <aside class="tool-sidebar">
+          <p class="eyebrow" style="margin:0 0 14px 0;color:#6e6e6e;">ALAT LAIN</p>
+          <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;">
+            {tools.filter(t => t.slug !== tool.slug).map(t => (
+              <li style="border-top:1px solid #d6d6cf;">
+                <a
+                  href={`/ms/alat/${t.slug_ms}`}
+                  style="display:block;font-family:'EB Garamond',Garamond,Georgia,serif;font-size:16px;color:#181818;text-decoration:none;padding:12px 0;transition:color 100ms ease;"
+                  class="sidebar-link"
+                >
+                  {t.name_ms}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </div>
+
+    </div>
+  </main>
+
+  <SiteFooter locale={locale} currentPath={`/ms/alat/${tool.slug_ms}`} altLocaleHref={`/tools/${tool.slug}`} />
+</Base>
+
+<style>
+  .tool-layout {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 52px;
+    align-items: flex-start;
+  }
+
+  .tool-main { min-width: 0; }
+
+  .calc-card {
+    background: #ffffff;
+    border: 1px solid #181818;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+
+  .tool-sidebar {
+    position: sticky;
+    top: 80px;
+    border: 1px solid #181818;
+    padding: 24px;
+    background: #f2f2f2;
+  }
+
+  .sidebar-link:hover { color: #fc523b; }
+
+  @media (max-width: 900px) {
+    .tool-layout { grid-template-columns: 1fr; }
+    .tool-sidebar { position: static; }
+  }
+</style>
+
+<script is:inline define:vars={{ toolSlug: tool.slug, toolLocale: locale }}>
+(function () {
+  var captured = false;
+  function fire() {
+    if (captured) return;
+    captured = true;
+    if (window.posthog && typeof window.posthog.capture === 'function') {
+      try { window.posthog.capture('calculator_used', { calculator: toolSlug, locale: toolLocale }); } catch (_) {}
+    }
+  }
+  document.querySelectorAll('main input, main select').forEach(function (el) {
+    el.addEventListener('input', fire, { once: true });
+    el.addEventListener('change', fire, { once: true });
+  });
+})();
+</script>

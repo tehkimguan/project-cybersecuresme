@@ -1,0 +1,244 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import ProviderCard from '../../components/ProviderCard.astro';
+import clinicsData from '../../data/providers.json';
+import categoriesData from '../../data/categories.json';
+
+export async function getStaticPaths() {
+  return categoriesData.map(cat => ({
+    params: { category: cat.slug },
+    props: { category: cat },
+  }));
+}
+
+const { category } = Astro.props;
+const path = `/providers/${category.slug}`;
+const altLocaleHref = `/ms/direktori/${category.slug}`;
+
+const clinics = clinicsData.filter(c => (c.categories || []).includes(category.slug));
+
+// Tool links relevant by category (cybersecurity tools)
+const toolLinks: Record<string, { label: string; slug: string }[]> = {
+  'managed-security': [
+    { label: 'Security Budget Estimator', slug: 'security-budget-estimator' },
+    { label: 'Security Maturity Assessment', slug: 'security-maturity-assessment' },
+    { label: 'IT Downtime Cost Calculator', slug: 'it-downtime-cost-calculator' },
+  ],
+  'endpoint-network': [
+    { label: 'Ransomware Exposure Score', slug: 'ransomware-exposure-score' },
+    { label: 'Password Strength Checker', slug: 'password-strength-checker' },
+    { label: 'Security Maturity Assessment', slug: 'security-maturity-assessment' },
+  ],
+  'penetration-testing': [
+    { label: 'Security Maturity Assessment', slug: 'security-maturity-assessment' },
+    { label: 'Ransomware Exposure Score', slug: 'ransomware-exposure-score' },
+    { label: 'Data Breach Cost Estimator', slug: 'data-breach-cost-estimator' },
+  ],
+  'cloud-security': [
+    { label: 'Phishing Risk Self-Check', slug: 'phishing-risk-self-check' },
+    { label: 'Security Budget Estimator', slug: 'security-budget-estimator' },
+    { label: 'PDPA Readiness Checker', slug: 'pdpa-readiness-checker' },
+  ],
+  'grc-compliance': [
+    { label: 'PDPA Readiness Checker', slug: 'pdpa-readiness-checker' },
+    { label: 'Security Maturity Assessment', slug: 'security-maturity-assessment' },
+    { label: 'Security Budget Estimator', slug: 'security-budget-estimator' },
+  ],
+  'soc-incident': [
+    { label: 'IT Downtime Cost Calculator', slug: 'it-downtime-cost-calculator' },
+    { label: 'Data Breach Cost Estimator', slug: 'data-breach-cost-estimator' },
+    { label: 'Ransomware Exposure Score', slug: 'ransomware-exposure-score' },
+  ],
+  'security-awareness': [
+    { label: 'Phishing Risk Self-Check', slug: 'phishing-risk-self-check' },
+    { label: 'Password Strength Checker', slug: 'password-strength-checker' },
+    { label: 'PDPA Readiness Checker', slug: 'pdpa-readiness-checker' },
+  ],
+  'data-backup': [
+    { label: 'Ransomware Exposure Score', slug: 'ransomware-exposure-score' },
+    { label: 'IT Downtime Cost Calculator', slug: 'it-downtime-cost-calculator' },
+    { label: 'Data Breach Cost Estimator', slug: 'data-breach-cost-estimator' },
+  ],
+};
+
+const tools = toolLinks[category.slug] || [
+  { label: 'Security Maturity Assessment', slug: 'security-maturity-assessment' },
+  { label: 'Security Budget Estimator', slug: 'security-budget-estimator' },
+];
+
+const schemaData = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: `${category.name} in Malaysia`,
+  description: `${category.description} Browse ${clinics.length} verified providers.`,
+  url: `https://cybersecuresme.my/providers/${category.slug}`,
+  inLanguage: 'en-MY',
+  breadcrumb: {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://cybersecuresme.my' },
+      { '@type': 'ListItem', position: 2, name: 'Providers', item: 'https://cybersecuresme.my/providers' },
+      { '@type': 'ListItem', position: 3, name: category.name, item: `https://cybersecuresme.my/providers/${category.slug}` },
+    ],
+  },
+};
+---
+
+<Base
+  title={`${category.name} in Malaysia | Cyber Secure SME`}
+  description={`${category.description} Browse ${clinics.length} verified ${category.name.toLowerCase()} providers across Malaysia.`}
+  locale="en"
+  altLocaleHref={altLocaleHref}
+  canonical={`https://cybersecuresme.my/providers/${category.slug}`}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+  </Fragment>
+
+  <SiteHeader locale="en" currentPath={path} altLocaleHref={altLocaleHref} />
+
+  <main id="main-content">
+
+    <!-- Category hero -->
+    <section style="background:#f2f2f2;border-bottom:1px solid #181818;padding:64px 0 52px;">
+      <div class="container">
+        <!-- Breadcrumb -->
+        <nav aria-label="Breadcrumb" style="margin-bottom:24px;">
+          <ol style="display:flex;align-items:center;gap:8px;list-style:none;margin:0;padding:0;font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.05em;color:#6e6e6e;flex-wrap:wrap;">
+            <li><a href="/" style="color:#6e6e6e;text-decoration:none;">Home</a></li>
+            <li aria-hidden="true" style="color:#d6d6cf;">/</li>
+            <li><a href="/providers" style="color:#6e6e6e;text-decoration:none;">Providers</a></li>
+            <li aria-hidden="true" style="color:#d6d6cf;">/</li>
+            <li aria-current="page" style="color:#181818;">{category.name}</li>
+          </ol>
+        </nav>
+
+        <p class="eyebrow" style="margin:0 0 14px 0;">{category.name.toUpperCase()}</p>
+        <h1 class="heading" style="font-size:clamp(26px,3.5vw,40px);margin:0 0 18px 0;line-height:1.05;">
+          {category.name} in Malaysia
+        </h1>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;color:#181818;line-height:1.55;max-width:640px;margin:0 0 18px 0;">
+          {category.description}
+        </p>
+        <p class="eyebrow" style="margin:0;color:#6e6e6e;">
+          {clinics.length === 0 ? 'NO PROVIDERS LISTED YET' : `${clinics.length} PROVIDER${clinics.length === 1 ? '' : 'S'} LISTED`}
+        </p>
+
+        <!-- Subcategory chips -->
+        {category.subcategories && category.subcategories.length > 0 && (
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;" role="list" aria-label="Subcategories">
+            {category.subcategories.map(sub => (
+              <span
+                role="listitem"
+                style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.05em;color:#6e6e6e;background:transparent;border:1px solid #d6d6cf;padding:4px 10px;"
+              >
+                {sub}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- Provider grid or empty state -->
+    <section style="padding:52px 0 68px;" aria-label={`${category.name} providers`}>
+      <div class="container">
+        {clinics.length === 0 ? (
+          <div style="border:1px solid #181818;padding:64px 32px;text-align:center;background:#ffffff;">
+            <p class="eyebrow" style="margin:0 0 16px 0;color:#6e6e6e;">COMING SOON</p>
+            <h2 class="heading" style="font-size:24px;margin:0 0 14px 0;">Verifying providers in this category</h2>
+            <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#6e6e6e;line-height:1.6;max-width:440px;margin:0 auto 28px auto;">
+              We are verifying {category.name.toLowerCase()} providers for this directory. List your company to be among the first.
+            </p>
+            <a href="/list-your-company" class="btn-primary">
+              List your company
+              <span aria-hidden="true" style="color:#fc523b;">&#8599;</span>
+            </a>
+          </div>
+        ) : (
+          <div class="clinic-grid">
+            {clinics.map(clinic => (
+              <ProviderCard clinic={clinic} locale="en" />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- Related security tools -->
+    <section style="border-top:1px solid #d6d6cf;padding:48px 0;" aria-label="Related security tools">
+      <div class="container">
+        <p class="eyebrow" style="margin:0 0 18px 0;color:#6e6e6e;">RELATED SECURITY TOOLS</p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;">
+          {tools.map(tool => (
+            <a
+              href={`/tools/${tool.slug}`}
+              style="display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 18px;background:#f2f2f2;border:1px solid #181818;font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#181818;text-decoration:none;transition:background 120ms ease,color 120ms ease;border-radius:0;"
+              class="tool-link"
+            >
+              {tool.label}
+              <span aria-hidden="true" style="color:#fc523b;font-size:14px;">&#8599;</span>
+            </a>
+          ))}
+          <a
+            href="/tools"
+            style="display:inline-flex;align-items:center;min-height:40px;padding:0 18px;background:transparent;border:1px solid #d6d6cf;font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:#6e6e6e;text-decoration:none;"
+          >
+            All tools
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related reading -->
+    <section style="border-top:1px solid #d6d6cf;padding:36px 0 52px;" aria-label="Related articles">
+      <div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+        <div>
+          <p class="eyebrow" style="margin:0 0 8px 0;color:#6e6e6e;">RELATED READING</p>
+          <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#181818;margin:0;">
+            Read our guides and articles on {category.name.toLowerCase()}.
+          </p>
+        </div>
+        <a href="/blog" class="btn-secondary">
+          Read the blog
+        </a>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <section style="padding:0 0 64px;">
+      <div class="container">
+        <div style="border:1px solid #d6d6cf;padding:18px 22px;background:#f2f2f2;">
+          <p class="eyebrow" style="margin:0 0 6px 0;color:#6e6e6e;font-size:10px;">DIRECTORY NOTICE</p>
+          <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:15px;color:#6e6e6e;line-height:1.65;margin:0;">
+            Cyber Secure SME is an independent directory and does not provide security advice. Always verify a provider's NACSA licence, certifications, and credentials directly before engaging.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <SiteFooter locale="en" currentPath={path} altLocaleHref={altLocaleHref} />
+
+</Base>
+
+<style>
+  .clinic-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 900px) {
+    .clinic-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .clinic-grid { grid-template-columns: 1fr; }
+  }
+  .tool-link:hover { background: #181818; color: #f2f2f2; }
+  @media (prefers-reduced-motion: reduce) {
+    .tool-link { transition: none; }
+  }
+</style>

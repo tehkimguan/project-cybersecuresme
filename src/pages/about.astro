@@ -1,0 +1,198 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+const tiers = [
+  {
+    id: 'listed',
+    label: 'LISTED',
+    title: 'Listed',
+    desc: 'The provider name, location, and category are in the directory. Sourced from public data. No identity verification has been completed.',
+  },
+  {
+    id: 'claimed',
+    label: 'CLAIMED',
+    title: 'Claimed',
+    desc: 'The business owner has verified email ownership and confirmed the listing details are accurate.',
+  },
+  {
+    id: 'ssm-checked',
+    label: 'SSM CHECKED',
+    title: 'SSM-Checked',
+    desc: 'The company registration number has been cross-referenced against SSM (Suruhanjaya Syarikat Malaysia) records, confirming the entity is a registered Malaysian company.',
+  },
+  {
+    id: 'nacsa-licensed',
+    label: 'NACSA LICENSED',
+    title: 'NACSA-Licensed',
+    desc: 'The provider holds a valid cybersecurity service provider licence under the Cyber Security Act 2024 (Act 854), issued by NACSA (National Cyber Security Agency). This is the highest regulatory verification tier for cybersecurity firms.',
+  },
+  {
+    id: 'premium',
+    label: 'PREMIUM',
+    title: 'Premium Sponsor',
+    desc: 'A paid sponsored profile. Verification status is displayed separately from sponsorship. Premium placement does not imply higher verification or endorsement.',
+  },
+];
+
+const regulators = [
+  {
+    name: 'NACSA - National Cyber Security Agency (Act 854)',
+    full: 'NACSA administers the Cyber Security Act 2024 (Act 854). Providers of cybersecurity services to Critical National Information Infrastructure (CNII) entities must hold a NACSA licence. NACSA also maintains the national cyber threat intelligence function.',
+    url: 'https://www.nacsa.gov.my/',
+    url_label: 'nacsa.gov.my',
+  },
+  {
+    name: 'CyberSecurity Malaysia',
+    full: 'CyberSecurity Malaysia is the national specialist agency under MOSTI. It operates Malaysia\'s Computer Emergency Response Team (MyCERT), runs the MySafe cybersecurity awareness programme, and provides forensic and ICT security evaluation services.',
+    url: 'https://www.cybersecurity.my/',
+    url_label: 'cybersecurity.my',
+  },
+  {
+    name: 'JPDP - Jabatan Perlindungan Data Peribadi (Act 709)',
+    full: 'JPDP (formerly PDPA Commissioner) enforces the Personal Data Protection Act 2010 (Act 709). Data processors and controllers handling Malaysian personal data must comply. The 2024 amendments strengthen breach notification requirements.',
+    url: 'https://www.pdp.gov.my/',
+    url_label: 'pdp.gov.my',
+  },
+  {
+    name: 'MCMC - Malaysian Communications and Multimedia Commission',
+    full: 'MCMC regulates the communications and multimedia industry in Malaysia under the Communications and Multimedia Act 1998 (Act 588). Relevant to providers offering network security, internet services, and cloud infrastructure.',
+    url: 'https://www.mcmc.gov.my/',
+    url_label: 'mcmc.gov.my',
+  },
+  {
+    name: 'BNM RMiT - Bank Negara Malaysia Risk Management in Technology',
+    full: 'BNM\'s Risk Management in Technology (RMiT) policy applies to financial institutions operating in Malaysia. Cybersecurity providers serving Malaysian banks, insurance companies, or e-money operators must understand their clients\' RMiT obligations.',
+    url: 'https://www.bnm.gov.my/',
+    url_label: 'bnm.gov.my',
+  },
+  {
+    name: 'ISO/IEC 27001 and CREST',
+    full: 'ISO/IEC 27001 is the international information security management standard. CREST is a global accreditation body for penetration testing and SOC services. While not Malaysian regulators, these certifications are widely recognised standards of competence for cybersecurity providers.',
+    url: 'https://www.iso.org/isoiec-27001-information-security.html',
+    url_label: 'iso.org',
+  },
+];
+---
+
+<Base
+  title="About Cyber Secure SME: Malaysia's Cybersecurity Directory"
+  description="Cyber Secure SME is an independent directory of cybersecurity providers in Malaysia. Learn how we verify listings and what each verification tier means."
+  locale="en"
+  altLocaleHref="/ms/tentang"
+  schemaType="breadcrumb"
+  schemaData={{ items: [{ name: 'Home', url: '/' }, { name: 'About', url: '/about' }] }}
+>
+  <SiteHeader locale="en" currentPath="/about" altLocaleHref="/ms/tentang" />
+
+  <main>
+    <!-- Hero -->
+    <section style="background:#f2f2f2;border-bottom:1px solid #181818;padding:64px 0 56px;">
+      <div class="container" style="max-width:800px;">
+        <p class="eyebrow" style="margin:0 0 20px 0;">ABOUT</p>
+        <h1 class="heading" style="font-size:clamp(28px,5vw,44px);margin:0 0 22px 0;line-height:1.05;">
+          An independent directory built on verified data
+        </h1>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:19px;color:#181818;line-height:1.55;margin:0;max-width:620px;">
+          Cyber Secure SME is a neutral, non-partisan directory. We do not own, operate, or endorse any cybersecurity firm. Our job is to surface accurate information so Malaysian businesses can find providers with confidence.
+        </p>
+      </div>
+    </section>
+
+    <!-- What we do -->
+    <section style="padding:72px 0;border-bottom:1px solid #d6d6cf;">
+      <div class="container" style="max-width:800px;">
+        <h2 class="heading" style="font-size:26px;margin:0 0 22px 0;">What Cyber Secure SME is</h2>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;color:#181818;line-height:1.65;margin:0 0 20px 0;">
+          Malaysia's cybersecurity market spans managed security service providers, penetration testing firms, cloud security specialists, compliance consultants, and security awareness trainers. The providers are real. Finding a trustworthy, verified one quickly is harder than it should be - especially for the small business owner who is not a security expert.
+        </p>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;color:#181818;line-height:1.65;margin:0 0 20px 0;">
+          Cyber Secure SME cross-references providers against the regulators and standards that matter in this space: NACSA (Cyber Security Act 2024 / Act 854), CyberSecurity Malaysia, the PDPA Commissioner's Office (Act 709 / JPDP), MCMC, and recognised certifications such as ISO/IEC 27001 and CREST. We display what we can confirm and we do not claim to know what we cannot.
+        </p>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;color:#181818;line-height:1.65;margin:0;">
+          This directory covers 8 service categories and all 16 Malaysian states. Listings are informational only. Nothing on this site constitutes security advice for your specific situation. Always verify a provider's credentials directly before engaging.
+        </p>
+      </div>
+    </section>
+
+    <!-- Verification tiers -->
+    <section style="background:#ffffff;padding:72px 0;border-bottom:1px solid #181818;">
+      <div class="container" style="max-width:800px;">
+        <p class="eyebrow" style="margin:0 0 14px 0;">VERIFICATION TIERS</p>
+        <h2 class="heading" style="font-size:26px;margin:0 0 10px 0;">What each badge means</h2>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#6e6e6e;line-height:1.6;margin:0 0 44px 0;">
+          Every listing carries a badge that describes exactly how far verification has gone. We do not conflate verification tiers. Higher-tier badges require more steps.
+        </p>
+
+        <div style="display:flex;flex-direction:column;border:1px solid #181818;">
+          {tiers.map((tier, i) => (
+            <div style={`padding:22px 26px;${i > 0 ? 'border-top:1px solid #d6d6cf;' : ''}display:flex;gap:20px;align-items:flex-start;`}>
+              <span style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#181818;background:transparent;border:1px solid #181818;padding:4px 8px;white-space:nowrap;flex-shrink:0;margin-top:2px;">
+                {tier.label}
+              </span>
+              <div>
+                <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:19px;font-weight:400;color:#181818;margin:0 0 4px 0;">{tier.title}</p>
+                <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:16px;color:#6e6e6e;line-height:1.6;margin:0;">{tier.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Regulators -->
+    <section style="padding:72px 0;border-bottom:1px solid #d6d6cf;">
+      <div class="container" style="max-width:800px;">
+        <p class="eyebrow" style="margin:0 0 14px 0;">REFERENCE BODIES</p>
+        <h2 class="heading" style="font-size:26px;margin:0 0 10px 0;">How we verify credentials</h2>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#6e6e6e;line-height:1.6;margin:0 0 44px 0;">
+          Each verification tier maps to a specific Malaysian regulatory body or international standard. We cross-reference against official registers where available.
+        </p>
+
+        <div style="display:flex;flex-direction:column;gap:0;">
+          {regulators.map((reg, i) => (
+            <div style={`padding:28px 0;${i > 0 ? 'border-top:1px solid #d6d6cf;' : ''}`}>
+              <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:10px;">
+                <h3 class="heading" style="font-size:20px;margin:0;">{reg.name}</h3>
+                <a
+                  href={reg.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="arrow-link"
+                  style="font-size:14px;"
+                >
+                  {reg.url_label}
+                </a>
+              </div>
+              <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:16px;color:#6e6e6e;line-height:1.65;margin:0;">{reg.full}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <section style="background:#f2f2f2;border-top:1px solid #181818;padding:52px 0;">
+      <div class="container" style="max-width:800px;">
+        <p class="eyebrow" style="margin:0 0 14px 0;">IMPORTANT NOTICE</p>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#181818;line-height:1.7;margin:0;">
+          Cyber Secure SME is an independent directory. We do not provide security assessments, advice, or consulting services. Listings on this site do not constitute endorsements. Provider credential data may change; always verify directly with the relevant authority before engaging a cybersecurity firm. For urgent security incidents, contact CyberSecurity Malaysia's emergency line: +603-8008 7000 (24 hours).
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter locale="en" currentPath="/about" altLocaleHref="/ms/tentang" />
+
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cybersecuresme.my/" },
+        { "@type": "ListItem", "position": 2, "name": "About", "item": "https://cybersecuresme.my/about" }
+      ]
+    })}
+  </script>
+</Base>

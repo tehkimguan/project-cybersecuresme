@@ -1,0 +1,198 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { tools } from '../../data/tools';
+
+// Glob all calculator components from src/components/calculators/
+// Keys look like: ../../components/calculators/PasswordStrengthCalc.astro
+const calcModules = import.meta.glob('../../components/calculators/*.astro', { eager: true }) as Record<string, any>;
+
+export async function getStaticPaths() {
+  return tools.map(tool => ({
+    params: { slug: tool.slug },
+    props: { tool },
+  }));
+}
+
+const { tool } = Astro.props;
+const locale = 'en';
+
+// Resolve the calculator component by its filename (from tools.ts `component` field)
+const calcKey = Object.keys(calcModules).find(k => k.endsWith(`/${tool.component}`));
+const CalcComponent = calcKey ? calcModules[calcKey].default : null;
+
+// Category CTA links for cybersecurity service categories
+const categoryLinks: Record<string, { href: string; label: string }> = {
+  'managed-security':   { href: '/providers/managed-security',   label: 'Browse managed security providers' },
+  'endpoint-network':   { href: '/providers/endpoint-network',   label: 'Browse endpoint and network security providers' },
+  'penetration-testing':{ href: '/providers/penetration-testing', label: 'Browse penetration testing providers' },
+  'cloud-security':     { href: '/providers/cloud-security',     label: 'Browse cloud and email security providers' },
+  'grc-compliance':     { href: '/providers/grc-compliance',     label: 'Browse GRC and compliance providers' },
+  'soc-incident':       { href: '/providers/soc-incident',       label: 'Browse SOC and incident response providers' },
+  'security-awareness': { href: '/providers/security-awareness', label: 'Browse security awareness training providers' },
+  'data-backup':        { href: '/providers/data-backup',        label: 'Browse data protection and backup providers' },
+};
+
+const primaryCat = tool.related_categories[0];
+const ctaLink = categoryLinks[primaryCat] ?? { href: '/providers', label: 'Browse all providers' };
+---
+
+<Base
+  title={`${tool.name} | Cyber Secure SME`}
+  description={tool.description}
+  locale={locale}
+  altLocaleHref={`/ms/alat/${tool.slug_ms}`}
+>
+  <SiteHeader locale={locale} currentPath={`/tools/${tool.slug}`} altLocaleHref={`/ms/alat/${tool.slug_ms}`} />
+
+  <main>
+    <div class="container" style="padding-top:48px;padding-bottom:96px;">
+
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/tools" class="breadcrumb-link">TOOLS</a>
+        <span class="breadcrumb-sep" aria-hidden="true">&middot;</span>
+        <span class="breadcrumb-current">{tool.name.toUpperCase()}</span>
+      </nav>
+
+      <!-- Content layout -->
+      <div class="tool-layout">
+
+        <!-- Calculator panel -->
+        <div class="tool-main">
+          <header style="margin-bottom:32px;padding-bottom:28px;border-bottom:1px solid #181818;">
+            <p class="eyebrow" style="margin:0 0 10px 0;color:#6e6e6e;">
+              {tool.category.replace(/-/g,' ')}
+            </p>
+            <h1 class="heading" style="font-size:clamp(24px,4vw,34px);margin:0 0 14px 0;line-height:1.1;">
+              {tool.name}
+            </h1>
+            <p style="font-size:16px;line-height:1.6;color:#3a4047;margin:0;">{tool.description}</p>
+          </header>
+
+          <!-- Calculator card -->
+          <div class="calc-card">
+            {CalcComponent ? (
+              <CalcComponent locale={locale} />
+            ) : (
+              <p style="color:#6e6e6e;font-size:15px;">Calculator loading...</p>
+            )}
+          </div>
+
+          <!-- CTA link -->
+          <a href={ctaLink.href} class="arrow-link" style="font-size:17px;margin-top:8px;display:inline-flex;">
+            {ctaLink.label}
+          </a>
+        </div>
+
+        <!-- Sidebar: other tools -->
+        <aside class="tool-sidebar">
+          <p class="eyebrow" style="margin:0 0 16px 0;color:#6e6e6e;">OTHER TOOLS</p>
+          <ul class="sidebar-list">
+            {tools.filter(t => t.slug !== tool.slug).map(t => (
+              <li>
+                <a href={`/tools/${t.slug}`} class="sidebar-link">
+                  {t.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </div>
+
+    </div>
+  </main>
+
+  <SiteFooter locale={locale} currentPath={`/tools/${tool.slug}`} altLocaleHref={`/ms/alat/${tool.slug_ms}`} />
+</Base>
+
+<style>
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 36px;
+  }
+  .breadcrumb-link {
+    color: #6e6e6e;
+    text-decoration: none;
+    transition: color 100ms;
+  }
+  .breadcrumb-link:hover { color: #181818; }
+  .breadcrumb-sep { color: #6e6e6e; }
+  .breadcrumb-current { color: #181818; }
+
+  .tool-layout {
+    display: grid;
+    grid-template-columns: 1fr 240px;
+    gap: 48px;
+    align-items: flex-start;
+  }
+
+  .tool-main { min-width: 0; }
+
+  .calc-card {
+    border: 1px solid #181818;
+    padding: 32px;
+    margin-bottom: 28px;
+    background: #ffffff;
+  }
+
+  .tool-sidebar {
+    position: sticky;
+    top: 80px;
+    border: 1px solid #d6d6cf;
+    padding: 24px;
+    background: #f2f2f2;
+  }
+
+  .sidebar-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .sidebar-link {
+    display: block;
+    font-family: "EB Garamond", Garamond, Georgia, serif;
+    font-size: 16px;
+    color: #181818;
+    text-decoration: none;
+    padding: 8px 0;
+    border-bottom: 1px solid #d6d6cf;
+    line-height: 1.4;
+    transition: color 100ms;
+  }
+  .sidebar-link:last-child { border-bottom: none; }
+  .sidebar-link:hover { color: #fc523b; }
+
+  @media (max-width: 900px) {
+    .tool-layout { grid-template-columns: 1fr; }
+    .tool-sidebar { position: static; }
+  }
+</style>
+
+<script is:inline define:vars={{ toolSlug: tool.slug, toolLocale: locale }}>
+(function () {
+  var captured = false;
+  function fire() {
+    if (captured) return;
+    captured = true;
+    if (window.posthog && typeof window.posthog.capture === 'function') {
+      try { window.posthog.capture('calculator_used', { calculator: toolSlug, locale: toolLocale }); } catch (_) {}
+    }
+  }
+  document.querySelectorAll('main input, main select').forEach(function (el) {
+    el.addEventListener('input', fire, { once: true });
+    el.addEventListener('change', fire, { once: true });
+  });
+})();
+</script>

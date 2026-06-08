@@ -1,0 +1,142 @@
+---
+interface Props { locale?: string; }
+const { locale = 'en' } = Astro.props;
+---
+
+<div class="sbc-wrap">
+  <div class="sbc-grid">
+    <label class="sbc-label">
+      <span class="sbc-eyebrow">Employee headcount</span>
+      <input type="number" id="sbc-headcount" class="sbc-input" min="1" max="500" placeholder="25" aria-label="Number of employees" />
+    </label>
+    <label class="sbc-label">
+      <span class="sbc-eyebrow">Annual IT spend (RM)</span>
+      <input type="number" id="sbc-itspend" class="sbc-input" min="0" placeholder="120000" aria-label="Annual IT spend in ringgit" />
+      <span class="sbc-hint">Leave blank if unknown; use revenue below instead.</span>
+    </label>
+    <label class="sbc-label">
+      <span class="sbc-eyebrow">Annual revenue (RM) <span class="sbc-optional">if IT spend unknown</span></span>
+      <input type="number" id="sbc-revenue" class="sbc-input" min="0" placeholder="3000000" aria-label="Annual revenue in ringgit (optional)" />
+    </label>
+    <label class="sbc-label">
+      <span class="sbc-eyebrow">Risk profile</span>
+      <select id="sbc-risk" class="sbc-input" aria-label="Risk profile">
+        <option value="low">Low - Internal ops only, no customer data</option>
+        <option value="medium" selected>Medium - Customer data, e-commerce, or regulated</option>
+        <option value="high">High - Finance, healthcare, or critical infrastructure</option>
+      </select>
+    </label>
+  </div>
+
+  <button type="button" id="sbc-btn" class="sbc-btn">Estimate security budget</button>
+
+  <div id="sbc-result" class="sbc-result-panel" hidden aria-live="polite">
+    <div class="sbc-result-top">
+      <span class="sbc-eyebrow">Annual cybersecurity budget range</span>
+      <span class="sbc-big" id="sbc-range">--</span>
+    </div>
+    <div class="sbc-breakdown" id="sbc-breakdown"></div>
+    <div class="sbc-rationale" id="sbc-rationale"></div>
+    <p class="sbc-note">
+      Industry benchmark: cybersecurity typically represents 6-15% of IT spend for SMEs.
+      Higher-risk sectors and regulated businesses trend toward the upper end.
+      For a tailored budget plan, see <a href="/providers/managed-security" class="sbc-link">managed security providers &rarr;</a>
+    </p>
+  </div>
+
+  <p class="sbc-disclaimer">This is a planning aid only. Indicative budget ranges are derived from industry benchmarks and do not constitute professional advice. Engage a qualified provider for a tailored assessment.</p>
+</div>
+
+<style>
+  .sbc-wrap { display:flex; flex-direction:column; gap:20px; font-family:"EB Garamond",Georgia,serif; }
+  .sbc-eyebrow { font-family:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#181818; font-feature-settings:"tnum"; display:block; margin-bottom:4px; }
+  .sbc-optional { font-size:10px; letter-spacing:.06em; color:#6e6e6e; text-transform:none; }
+  .sbc-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .sbc-label { display:flex; flex-direction:column; gap:2px; }
+  .sbc-input { background:#fff; border:1px solid #181818; border-radius:0; padding:10px 14px; font-family:"Inter",Arial,sans-serif; font-size:15px; color:#181818; width:100%; min-height:44px; outline:none; appearance:none; -webkit-appearance:none; }
+  .sbc-input:focus { outline:2px solid #181818; outline-offset:-2px; }
+  .sbc-hint { font-family:"Inter",Arial,sans-serif; font-size:11px; color:#6e6e6e; margin-top:2px; }
+  .sbc-btn { border:1px solid #181818; background:transparent; color:#181818; font-family:"Inter",Arial,sans-serif; font-size:13px; letter-spacing:.06em; text-transform:uppercase; padding:12px 24px; cursor:pointer; align-self:flex-start; }
+  .sbc-btn:hover { background:#181818; color:#f2f2f2; }
+  .sbc-result-panel { background:#f2f2f2; border-top:1px solid #181818; padding:20px; display:flex; flex-direction:column; gap:14px; }
+  .sbc-result-top { display:flex; flex-direction:column; gap:6px; }
+  .sbc-big { font-family:"EB Garamond",Georgia,serif; font-size:32px; color:#181818; line-height:1.1; }
+  .sbc-breakdown { border-top:1px solid #d6d6cf; padding-top:14px; display:flex; flex-direction:column; gap:8px; }
+  .sbc-row { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .sbc-row-label { font-family:"EB Garamond",Georgia,serif; font-size:16px; color:#181818; }
+  .sbc-row-val { font-family:"Inter",Arial,sans-serif; font-size:14px; font-feature-settings:"tnum"; color:#181818; white-space:nowrap; }
+  .sbc-rationale { font-family:"EB Garamond",Georgia,serif; font-size:17px; color:#181818; line-height:1.5; border-top:1px solid #d6d6cf; padding-top:12px; }
+  .sbc-note { font-family:"Inter",Arial,sans-serif; font-size:12px; color:#6e6e6e; line-height:1.5; border-top:1px solid #d6d6cf; padding-top:12px; margin:0; }
+  .sbc-link { color:#181818; text-decoration:underline; }
+  .sbc-link:hover { color:#fc523b; }
+  .sbc-disclaimer { font-family:"Inter",Arial,sans-serif; font-size:12px; color:#6e6e6e; line-height:1.5; border-top:1px solid #d6d6cf; padding-top:14px; margin:0; }
+  @media (max-width:560px) { .sbc-grid { grid-template-columns:1fr; } }
+</style>
+
+<script is:inline>
+(function () {
+  var btn = document.getElementById('sbc-btn');
+  var resultPanel = document.getElementById('sbc-result');
+  var rangeEl = document.getElementById('sbc-range');
+  var breakdownEl = document.getElementById('sbc-breakdown');
+  var rationaleEl = document.getElementById('sbc-rationale');
+  var captured = false;
+
+  // % of IT spend bands by risk (low, medium, high)
+  var bands = {
+    low:    { low: 0.06, high: 0.10, label: 'Low risk', rationale: 'At low risk, a baseline of 6-10% of IT spend covers essential controls: endpoint protection, patching, backups, and basic security awareness.' },
+    medium: { low: 0.08, high: 0.13, label: 'Medium risk', rationale: 'Businesses handling customer data or operating in regulated sectors should allocate 8-13% of IT spend to include email security, MFA, and an incident response retainer.' },
+    high:   { low: 0.12, high: 0.18, label: 'High risk', rationale: 'Finance, healthcare, and critical infrastructure organisations face a larger threat surface and regulatory obligations. A 12-18% allocation supports 24/7 monitoring, penetration testing, and compliance management.' },
+  };
+
+  // IT spend as % of revenue by headcount band (fallback if IT spend not entered)
+  function estimateITSpend(revenue, headcount) {
+    var pct = headcount <= 10 ? 0.025 : headcount <= 50 ? 0.03 : 0.035;
+    return revenue * pct;
+  }
+
+  function fmt(n) {
+    return 'RM ' + Math.round(n).toLocaleString('en-MY');
+  }
+
+  function compute() {
+    var headcount = parseInt(document.getElementById('sbc-headcount').value) || 1;
+    var itSpend = parseFloat(document.getElementById('sbc-itspend').value) || 0;
+    var revenue = parseFloat(document.getElementById('sbc-revenue').value) || 0;
+    var risk = document.getElementById('sbc-risk').value || 'medium';
+
+    var itBase = itSpend;
+    var source = 'IT spend';
+    if (!itBase && revenue) {
+      itBase = estimateITSpend(revenue, headcount);
+      source = 'estimated IT spend (from revenue)';
+    }
+    if (!itBase) return;
+
+    var band = bands[risk];
+    var low = itBase * band.low;
+    var high = itBase * band.high;
+
+    rangeEl.textContent = fmt(low) + ' - ' + fmt(high) + ' / year';
+
+    var rows = [
+      { label: 'IT spend basis (' + source + ')', val: fmt(itBase) },
+      { label: 'Security budget band (' + band.label + ')', val: Math.round(band.low * 100) + '% - ' + Math.round(band.high * 100) + '% of IT' },
+      { label: 'Per-employee security spend', val: fmt((low + high) / 2 / headcount) + '/yr per head' },
+    ];
+    breakdownEl.innerHTML = rows.map(function(r) {
+      return '<div class="sbc-row"><span class="sbc-row-label">' + r.label + '</span><span class="sbc-row-val">' + r.val + '</span></div>';
+    }).join('');
+
+    rationaleEl.textContent = band.rationale;
+    resultPanel.removeAttribute('hidden');
+
+    if (!captured) {
+      captured = true;
+      try { if (window.posthog) window.posthog.capture('calculator_used', { tool: 'security-budget-estimator' }); } catch(_){}
+    }
+  }
+
+  btn.addEventListener('click', compute);
+})();
+</script>

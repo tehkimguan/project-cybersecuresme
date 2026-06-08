@@ -1,0 +1,116 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import ProviderLeadForm from '../components/ProviderLeadForm.astro';
+---
+
+<Base
+  title="Contact Cyber Secure SME"
+  description="Contact Cyber Secure SME for general enquiries, listing corrections, or to claim a provider profile. Email cybersecuresme@agentmail.to or use the form."
+  locale="en"
+  altLocaleHref="/ms/hubungi"
+  schemaType="breadcrumb"
+  schemaData={{ items: [{ name: 'Home', url: '/' }, { name: 'Contact', url: '/contact' }] }}
+>
+  <SiteHeader locale="en" currentPath="/contact" altLocaleHref="/ms/hubungi" />
+
+  <main>
+    <section style="background:#f2f2f2;border-bottom:1px solid #181818;padding:64px 0 52px;">
+      <div class="container" style="max-width:800px;">
+        <p class="eyebrow" style="margin:0 0 20px 0;">CONTACT</p>
+        <h1 class="heading" style="font-size:clamp(26px,5vw,40px);margin:0 0 18px 0;line-height:1.05;">
+          Get in touch
+        </h1>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;color:#181818;line-height:1.55;margin:0;">
+          For general enquiries, listing corrections, inaccurate data reports, or to claim a provider profile, use the form below or email us directly.
+        </p>
+      </div>
+    </section>
+
+    <section style="padding:64px 0;">
+      <div class="container contact-grid">
+        <!-- Form -->
+        <div style="min-width:0;">
+          <h2 class="heading" style="font-size:22px;margin:0 0 26px 0;">Send us a message</h2>
+          <ProviderLeadForm locale="en" mode="general" />
+        </div>
+
+        <!-- Side info -->
+        <aside style="min-width:0;">
+          <div style="background:#ffffff;border:1px solid #181818;padding:28px;margin-bottom:20px;">
+            <p class="eyebrow" style="margin:0 0 18px 0;">DIRECT CONTACT</p>
+            <div style="display:flex;flex-direction:column;gap:18px;">
+              <div>
+                <p class="eyebrow" style="margin:0 0 5px 0;color:#6e6e6e;">Email</p>
+                <a href="mailto:cybersecuresme@agentmail.to" style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;color:#181818;text-decoration:none;" class="arrow-link">cybersecuresme@agentmail.to</a>
+              </div>
+              <div>
+                <p class="eyebrow" style="margin:0 0 5px 0;color:#6e6e6e;">WhatsApp</p>
+                <a href="https://wa.me/601156210500" target="_blank" rel="noopener noreferrer" style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;color:#181818;text-decoration:none;" class="arrow-link">+60 11-5621 0500</a>
+              </div>
+              <div>
+                <p class="eyebrow" style="margin:0 0 5px 0;color:#6e6e6e;">Location</p>
+                <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#181818;margin:0;">Malaysia</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:#ffffff;border:1px solid #181818;padding:28px;margin-bottom:20px;">
+            <p class="eyebrow" style="margin:0 0 18px 0;">RESPONSE TIMES</p>
+            <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;">
+              <li style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#181818;display:flex;gap:12px;align-items:flex-start;">
+                <span aria-hidden="true" style="color:#fc523b;flex-shrink:0;margin-top:4px;font-size:10px;">&#9632;</span>
+                <span>General enquiries: within 2 business days</span>
+              </li>
+              <li style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#181818;display:flex;gap:12px;align-items:flex-start;">
+                <span aria-hidden="true" style="color:#fc523b;flex-shrink:0;margin-top:4px;font-size:10px;">&#9632;</span>
+                <span>Listing inaccuracies: reviewed within 5 business days</span>
+              </li>
+              <li style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#181818;display:flex;gap:12px;align-items:flex-start;">
+                <span aria-hidden="true" style="color:#fc523b;flex-shrink:0;margin-top:4px;font-size:10px;">&#9632;</span>
+                <span>Listing applications: reviewed within 3 business days</span>
+              </li>
+            </ul>
+          </div>
+
+          <div style="background:#f2f2f2;border:1px solid #181818;padding:28px;">
+            <p class="eyebrow" style="margin:0 0 14px 0;">SECURITY FIRMS</p>
+            <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#181818;line-height:1.55;margin:0 0 18px 0;">
+              Looking to list or claim your company profile?
+            </p>
+            <a href="/list-your-company" class="btn-primary" style="font-size:16px;">
+              List your company
+              <span aria-hidden="true" style="color:#fc523b;">&#8599;</span>
+            </a>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter locale="en" currentPath="/contact" altLocaleHref="/ms/hubungi" />
+
+  <style>
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 48px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cybersecuresme.my/" },
+        { "@type": "ListItem", "position": 2, "name": "Contact", "item": "https://cybersecuresme.my/contact" }
+      ]
+    })}
+  </script>
+</Base>

@@ -1,0 +1,128 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+
+const lastUpdated = '1 Jun 2026';
+
+const sections = [
+  {
+    id: 'who-we-are',
+    heading: '1. Siapa kami',
+    body: `Cyber Secure SME mengendalikan laman web di cybersecuresme.my (the "Laman"). Laman ini ialah direktori dalam talian bebas pembekal keselamatan siber di Malaysia. Kami bukan pembekal keselamatan siber dan tidak menawarkan perkhidmatan keselamatan.
+
+Surat-menyurat: cybersecuresme@agentmail.to. Negara operasi: Malaysia.`,
+  },
+  {
+    id: 'data-collected',
+    heading: '2. Maklumat yang kami kumpulkan',
+    body: `Kami hanya mengumpul apa yang perlu untuk mengendalikan direktori dan mengendalikan pertanyaan.
+
+Penghantaran borang hubungan: nama syarikat, nama orang hubungan, alamat e-mel, nombor telefon, negeri, kategori perkhidmatan, dan kandungan mesej. Data ini dihantar oleh klien e-mel anda ke cybersecuresme@agentmail.to dan tidak disimpan di pelayan kami.
+
+Analitik: apabila analitik PostHog didayakan (dikonfigurasi melalui pemboleh ubah persekitaran), Laman mengumpul peristiwa paparan halaman, peristiwa klik, dan metadata peranti serta pelayar secara tanpa nama. Tiada maklumat yang boleh dikenal pasti secara peribadi dihantar ke PostHog secara lalai.
+
+Log pelayan: persekitaran hosting Cloudflare Workers kami merekod log akses standard (alamat IP, URL, status HTTP, ejen pengguna, cap masa) untuk tujuan keselamatan dan prestasi.`,
+  },
+  {
+    id: 'no-sensitive-data',
+    heading: '3. Tiada data perniagaan sensitif dikumpul',
+    body: `Cyber Secure SME tidak mengumpul, memproses, atau menyimpan maklumat perniagaan sulit, penemuan penilaian keselamatan, konfigurasi rangkaian, atau sebarang data berkaitan postur keselamatan organisasi anda. Jangan hantar data keselamatan sensitif melalui borang hubungan atau saluran pertanyaan kami.`,
+  },
+  {
+    id: 'how-we-use',
+    heading: '4. Cara kami menggunakan maklumat anda',
+    body: `Data borang hubungan digunakan semata-mata untuk membalas pertanyaan anda. Kami tidak menggunakannya untuk pemasaran, tidak menjualnya kepada pihak ketiga, dan tidak menambah anda ke mana-mana senarai mel tanpa persetujuan eksplisit anda.
+
+Data analitik digunakan secara agregat untuk memahami cara direktori digunakan dan untuk meningkatkan perkhidmatan.`,
+  },
+  {
+    id: 'cookies',
+    heading: '5. Kuki',
+    body: `Laman ini menggunakan kuki yang minimum. Analitik PostHog menetapkan kuki pihak pertama (ph_*) untuk membezakan sesi unik secara tanpa nama apabila analitik didayakan. Kami tidak menggunakan kuki pengiklanan atau piksel penjejakan pihak ketiga. Anda boleh melumpuhkan kuki dalam tetapan pelayar anda; ini tidak akan menjejaskan fungsi teras direktori.`,
+  },
+  {
+    id: 'third-parties',
+    heading: '6. Perkhidmatan pihak ketiga',
+    body: `Kami menggunakan Cloudflare (hosting dan CDN), Google Fonts (tipografi), dan PostHog (analitik, apabila didayakan). Setiap perkhidmatan beroperasi di bawah dasar privasi sendiri. Kami tidak memindahkan data peribadi anda kepada mana-mana pihak ketiga lain.`,
+  },
+  {
+    id: 'pdpa',
+    heading: '7. Akta Perlindungan Data Peribadi 2010 (PDPA / Akta 709)',
+    body: `Cyber Secure SME beroperasi selaras dengan Akta Perlindungan Data Peribadi 2010 (Akta 709) Malaysia dan pindaan 2024. Di bawah PDPA, anda mempunyai hak untuk mengakses data peribadi yang kami simpan tentang anda, untuk membetulkan data yang tidak tepat, dan untuk menarik balik persetujuan pemprosesan. Untuk menggunakan mana-mana hak ini, hubungi cybersecuresme@agentmail.to.
+
+Kami menyimpan data pertanyaan hubungan hanya selama yang diperlukan untuk menyelesaikan pertanyaan anda, biasanya tidak lebih dari 12 bulan.`,
+  },
+  {
+    id: 'data-security',
+    heading: '8. Keselamatan data',
+    body: `Penghantaran borang hubungan dihalakan melalui mekanisme mailto: terus melalui klien e-mel anda; tiada data borang disimpan di pelayan kami. Data analitik, apabila didayakan, dihantar melalui HTTPS. Kami menggunakan langkah teknikal yang munasabah untuk melindungi maklumat dalam kawalan kami, tetapi tiada penghantaran internet yang benar-benar selamat.`,
+  },
+  {
+    id: 'children',
+    heading: '9. Kanak-kanak',
+    body: `Laman ini tidak ditujukan kepada kanak-kanak bawah 18 tahun. Kami tidak sengaja mengumpul data peribadi daripada kanak-kanak. Jika anda percaya seorang kanak-kanak telah menghantar data melalui Laman ini, hubungi cybersecuresme@agentmail.to dan kami akan memadamnya dengan segera.`,
+  },
+  {
+    id: 'changes',
+    heading: '10. Perubahan dasar ini',
+    body: `Kami mungkin mengemas kini Dasar Privasi ini dari semasa ke semasa. Tarikh di bahagian atas halaman ini mencerminkan semakan terkini. Penggunaan berterusan Laman selepas semakan merupakan penerimaan dasar yang dikemas kini.`,
+  },
+  {
+    id: 'contact-us',
+    heading: '11. Hubungi',
+    body: `Pertanyaan privasi: cybersecuresme@agentmail.to. Masa tindak balas: dalam masa 10 hari bekerja.`,
+  },
+];
+---
+
+<Base
+  title="Dasar Privasi | Cyber Secure SME"
+  description="Dasar privasi Cyber Secure SME: data yang kami kumpulkan, cara penggunaannya, pematuhan PDPA Malaysia (Akta 709), analitik melalui PostHog, dan hak anda."
+  locale="ms"
+  altLocaleHref="/privacy"
+>
+  <SiteHeader locale="ms" currentPath="/ms/privasi" altLocaleHref="/privacy" />
+
+  <main>
+    <section style="background:#f2f2f2;border-bottom:1px solid #181818;padding:64px 0 44px;">
+      <div class="container" style="max-width:760px;">
+        <p class="eyebrow" style="margin:0 0 20px 0;">UNDANG-UNDANG</p>
+        <h1 class="heading" style="font-size:clamp(24px,4vw,36px);margin:0 0 14px 0;line-height:1.05;">
+          Dasar Privasi
+        </h1>
+        <p class="eyebrow" style="margin:0;color:#6e6e6e;">Dikemas kini terakhir: {lastUpdated}</p>
+      </div>
+    </section>
+
+    <section style="padding:56px 0 80px;">
+      <div class="container" style="max-width:760px;">
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;color:#181818;line-height:1.7;margin:0 0 52px 0;">
+          Dasar ini menerangkan cara Cyber Secure SME mengumpul, menggunakan, dan melindungi data peribadi apabila anda menggunakan Laman ini. Ia merujuk kepada Akta Perlindungan Data Peribadi 2010 (PDPA / Akta 709) Malaysia dan pindaan 2024.
+        </p>
+
+        {sections.map(sec => (
+          <div id={sec.id} style="margin-bottom:44px;padding-top:12px;border-top:1px solid #d6d6cf;">
+            <h2 class="heading" style="font-size:21px;margin:12px 0 14px 0;">{sec.heading}</h2>
+            {sec.body.split('\n\n').map(para => (
+              <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#181818;line-height:1.7;margin:0 0 12px 0;">{para}</p>
+            ))}
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter locale="ms" currentPath="/ms/privasi" altLocaleHref="/privacy" />
+
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Utama", "item": "https://cybersecuresme.my/ms" },
+        { "@type": "ListItem", "position": 2, "name": "Dasar Privasi", "item": "https://cybersecuresme.my/ms/privasi" }
+      ]
+    })}
+  </script>
+</Base>

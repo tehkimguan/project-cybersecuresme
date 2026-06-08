@@ -1,0 +1,97 @@
+---
+import '../styles/global.css';
+import SchemaOrg from '../components/SchemaOrg.astro';
+import PostHog from '../components/posthog.astro';
+import { enHrefFor, msHrefFor } from '../lib/localeRoutes';
+
+interface Props {
+  title: string;
+  description: string;
+  locale?: 'en' | 'ms';
+  altLocaleHref?: string;
+  canonical?: string;
+  ogImage?: string;
+  schemaType?: string;
+  schemaData?: Record<string, unknown>;
+}
+
+const {
+  title,
+  description,
+  locale = 'en',
+  altLocaleHref,
+  canonical,
+  ogImage: ogImageProp,
+  schemaType,
+  schemaData = {},
+} = Astro.props;
+
+const siteUrl = 'https://cybersecuresme.kgstaging.workers.dev';
+const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString();
+
+const path = Astro.url.pathname;
+const enRelative = enHrefFor(path, locale === 'ms' ? altLocaleHref : undefined);
+const msRelative = msHrefFor(path, locale === 'en' ? altLocaleHref : undefined);
+const enHref = enRelative.startsWith('http') ? enRelative : `${siteUrl}${enRelative}`;
+const msHref = msRelative.startsWith('http') ? msRelative : `${siteUrl}${msRelative}`;
+
+const ogImage = ogImageProp || `${siteUrl}/og-default.svg`;
+const htmlLang = locale === 'ms' ? 'ms-MY' : 'en-MY';
+---
+<!doctype html>
+<html lang={htmlLang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Hreflang -->
+    <link rel="alternate" hreflang="en-MY" href={enHref} />
+    <link rel="alternate" hreflang="ms-MY" href={msHref} />
+    <link rel="alternate" hreflang="x-default" href={enHref} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content={locale === 'ms' ? 'ms_MY' : 'en_MY'} />
+    <meta property="og:site_name" content="Cyber Secure SME" />
+
+    <!-- Twitter card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Theme -->
+    <meta name="theme-color" content="#181818" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Fonts: EB Garamond (serif voice) + Inter (Helvetica-substitute metadata) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Structured data -->
+    {schemaType && <SchemaOrg type={schemaType as any} data={schemaData} />}
+    {!schemaType && <SchemaOrg type="homepage" />}
+
+    <!-- Head slot for page-level extras -->
+    <slot name="head" />
+
+    <!-- PostHog (env-gated) -->
+    <PostHog />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

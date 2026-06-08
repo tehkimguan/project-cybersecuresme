@@ -1,0 +1,342 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   Cyber Secure SME - "Simon Liesinger" monograph design system
+   Drafting table on bone paper. Garamond serif on a vast off-white canvas,
+   punctuated by a single stroke of vermillion. Flat, square-cornered, hairline
+   rules and whitespace carry the structure. No shadows, no gradients, one accent.
+   Vermillion (#fc523b) touches ONLY link arrows and the wireframe mark.
+   Class names are preserved from the source build so every page keeps working;
+   only the tokens and definitions changed.
+   ========================================================================== */
+
+@theme {
+  /* Core palette */
+  --color-bone: #f2f2f2;          /* page canvas, card surface, the paper */
+  --color-graphite: #181818;      /* primary ink, body, strong rules */
+  --color-ink: #000000;           /* hardest rule weights */
+  --color-ash: #6e6e6e;           /* muted rules, secondary text */
+  --color-vermillion: #fc523b;    /* the only accent, arrows + mark only */
+
+  /* Aliases kept for components that reference the old token names */
+  --color-ink-soft: #3a4047;
+  --color-surface: #ffffff;       /* hover lift surface (subtle, no shadow) */
+  --color-surface-tint: #ececec;
+  --color-line: #181818;          /* strong rule */
+  --color-hairline: #d6d6cf;      /* subtle internal separators */
+  --color-brand: #181818;         /* neutralised: no brand colour, graphite */
+  --color-brand-700: #000000;
+  --color-accent: #fc523b;
+  --color-ok: #181818;
+  --color-warn: #6e6e6e;
+
+  /* Category accents -> all graphite (monochrome, single accent discipline) */
+  --color-cat-managed-security: #181818;
+  --color-cat-penetration-testing: #181818;
+  --color-cat-endpoint-network: #181818;
+  --color-cat-cloud-security: #181818;
+  --color-cat-grc-compliance: #181818;
+  --color-cat-incident-response: #181818;
+  --color-cat-soc-monitoring: #181818;
+  --color-cat-identity-access: #181818;
+  --color-cat-security-awareness: #181818;
+  --color-cat-data-backup: #181818;
+
+  /* Font families */
+  --font-garamond: "EB Garamond", Garamond, Georgia, "Times New Roman", serif;
+  --font-helvetica: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-times: "Times New Roman", Times, Georgia, serif;
+  /* Old aliases */
+  --font-display: "EB Garamond", Garamond, Georgia, serif;
+  --font-body: "EB Garamond", Garamond, Georgia, serif;
+  --font-mono: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* -- Resets -- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #f2f2f2;
+  color: #181818;
+  font-family: "EB Garamond", Garamond, Georgia, "Times New Roman", serif;
+  font-size: 19px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img { max-width: 100%; height: auto; }
+a { color: inherit; }
+
+/* -- Container -- wide, columnar, generous padding */
+.container {
+  max-width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+@media (max-width: 768px) {
+  .container { padding-left: 18px; padding-right: 18px; }
+}
+
+/* -- Section rhythm -- spacious bands separated by whitespace */
+.section { padding-top: 80px; padding-bottom: 80px; }
+@media (max-width: 768px) { .section { padding-top: 48px; padding-bottom: 48px; } }
+
+/* Hairline band dividers */
+.rule { border: none; border-top: 1px solid #181818; margin: 0; }
+.rule-ash { border: none; border-top: 1px solid #6e6e6e; margin: 0; }
+.hairline { border: none; border-top: 1px solid #d6d6cf; margin: 0; }
+
+/* -- Typography helpers -- */
+.font-display { font-family: "EB Garamond", Garamond, Georgia, serif; font-weight: 400; }
+
+/* .font-mono repurposed as the Helvetica tabular metadata voice */
+.font-mono {
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-feature-settings: "tnum", "zero";
+  letter-spacing: 0.017em;
+}
+
+/* Eyebrow / metadata label -- Helvetica 12px tabular, uppercase, graphite */
+.eyebrow {
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #181818;
+  font-feature-settings: "tnum", "zero";
+}
+
+/* Display heading -- Garamond 400, tight leading */
+.heading {
+  font-family: "EB Garamond", Garamond, Georgia, serif;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  line-height: 1.02;
+  color: #181818;
+}
+
+/* Vermillion link-arrow -- the single accent on navigating text links */
+.arrow-link {
+  color: #181818;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+}
+.arrow-link::after {
+  content: "\2197"; /* up-right arrow */
+  color: #fc523b;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  font-size: 0.85em;
+  transition: transform 120ms ease;
+}
+.arrow-link:hover::after { transform: translate(2px, -2px); }
+.arrow-link:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+/* -- Cards / tiles -- boxes drawn in ink, square corners, no shadow -- */
+.card-hover {
+  transition: background-color 120ms ease, border-color 120ms ease;
+  background: #f2f2f2;
+}
+.card-hover:hover { background: #ffffff; border-color: #181818 !important; }
+
+/* -- Grids -- ink boxes on bone paper, separated by whitespace (index cards) -- */
+.grid-categories { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-clinics    { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+@media (max-width: 900px) {
+  .grid-categories { grid-template-columns: repeat(2, 1fr); }
+  .grid-clinics    { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .grid-categories { grid-template-columns: 1fr; }
+  .grid-clinics    { grid-template-columns: 1fr; }
+}
+
+/* -- Buttons -- bordered ink boxes, 0px radius, no fill; invert on hover -- */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 26px;
+  background: transparent;
+  color: #181818;
+  border: 1px solid #181818;
+  border-radius: 0;
+  font-family: "EB Garamond", Garamond, Georgia, serif;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+  white-space: nowrap;
+}
+.btn-primary:hover { background: #181818; color: #f2f2f2; }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 46px;
+  padding: 0 22px;
+  background: transparent;
+  color: #181818;
+  border: 1px solid #6e6e6e;
+  border-radius: 0;
+  font-family: "EB Garamond", Garamond, Georgia, serif;
+  font-size: 18px;
+  font-weight: 400;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 120ms ease;
+  white-space: nowrap;
+}
+.btn-secondary:hover { border-color: #181818; }
+
+/* -- Focus-visible -- vermillion interaction stroke */
+:focus-visible { outline: 2px solid #fc523b; outline-offset: 2px; }
+
+/* -- Gradient utilities neutralised (system forbids gradients) -- */
+.brand-gradient { background: #181818; }
+.brand-gradient-text {
+  background: none;
+  -webkit-text-fill-color: #181818;
+  color: #181818;
+}
+
+/* ============================================================================
+   Prose -- global article typography for markdown via <Content />.
+   MUST stay global: Astro scoped styles do not reach <Content /> children.
+   Garamond body, hairline-ruled headings, vermillion link underline.
+   ========================================================================== */
+.prose {
+  font-family: "EB Garamond", Garamond, Georgia, serif;
+  font-size: 20px;
+  line-height: 1.62;
+  letter-spacing: 0.01em;
+  color: #181818;
+  max-width: 72ch;
+}
+
+.prose p { margin: 0 0 1.15em 0; }
+
+.prose h2 {
+  font-family: "EB Garamond", Garamond, Georgia, serif;
+  font-size: clamp(25px, 3vw, 30px);
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  line-height: 1.08;
+  color: #181818;
+  margin: 2.2em 0 0.7em 0;
+  padding-top: 0.7em;
+  border-top: 1px solid #181818;
+}
+
+.prose h3 {
+  font-family: "EB Garamond", Garamond, Georgia, serif;
+  font-size: 23px;
+  font-weight: 400;
+  line-height: 1.18;
+  color: #181818;
+  margin: 1.7em 0 0.4em 0;
+}
+
+.prose h4 {
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6e6e6e;
+  margin: 1.6em 0 0.5em 0;
+}
+
+.prose ul { list-style: none; padding: 0; margin: 0 0 1.15em 0; }
+.prose ul li { padding-left: 22px; margin-bottom: 0.5em; position: relative; line-height: 1.55; }
+.prose ul li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 8px; height: 1px; background: #181818; }
+
+.prose ol { padding-left: 24px; margin: 0 0 1.15em 0; }
+.prose ol li { margin-bottom: 0.5em; line-height: 1.55; }
+
+.prose strong { font-weight: 600; color: #181818; }
+.prose em { font-style: italic; }
+
+.prose a {
+  color: #181818;
+  text-decoration: underline;
+  text-decoration-color: #fc523b;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 100ms ease;
+}
+.prose a:hover { text-decoration-color: #181818; }
+
+.prose blockquote {
+  border-left: 2px solid #fc523b;
+  padding-left: 20px;
+  margin: 0 0 1.15em 0;
+  color: #3a4047;
+  font-style: italic;
+}
+
+.prose hr { border: none; border-top: 1px solid #6e6e6e; margin: 2em 0; }
+
+.prose table { width: 100%; border-collapse: collapse; margin: 0 0 1.15em 0; font-size: 16px; }
+.prose th {
+  text-align: left;
+  border-bottom: 1px solid #181818;
+  padding: 10px 14px 10px 0;
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  font-weight: 400;
+  color: #181818;
+  text-transform: uppercase;
+  font-feature-settings: "tnum", "zero";
+}
+.prose td { padding: 11px 14px 11px 0; border-bottom: 1px solid #d6d6cf; vertical-align: top; line-height: 1.5; }
+
+.prose code {
+  font-family: "Inter", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 15px;
+  background: #ececec;
+  border: 1px solid #d6d6cf;
+  border-radius: 0;
+  padding: 1px 5px;
+}
+.prose pre { background: #ececec; border: 1px solid #181818; border-radius: 0; padding: 20px 24px; overflow-x: auto; margin: 0 0 1.15em 0; }
+.prose pre code { background: none; border: none; padding: 0; font-size: 14px; }
+
+@media (max-width: 768px) {
+  .prose { font-size: 18px; }
+  .prose table { font-size: 15px; }
+  .prose th, .prose td { padding: 8px 10px 8px 0; }
+}
+
+/* -- Reduced motion -- */
+@media (prefers-reduced-motion: reduce) {
+  .card-hover, .card-hover:hover, .btn-primary, .btn-secondary,
+  .arrow-link::after, .prose a { transition: none !important; }
+}
+
+/* -- Scrollbar -- */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f2f2f2; }
+::-webkit-scrollbar-thumb { background: #cfcfc9; }
+::-webkit-scrollbar-thumb:hover { background: #181818; }
+
+/* -- Selection -- */
+::selection { background: #fc523b; color: #f2f2f2; }

@@ -1,0 +1,149 @@
+{
+  "_comment": "SEO cluster backlog for Cyber Secure SME. The autonomous Blog Autopublish routine drafts the highest-priority status:queued item, gates it (copy/e2e/geo), deploys, then sets status:published. priority 1 = initial human-reviewed wave (FTC small-business modules localised for Malaysian SMEs); 2/3 = autonomous queue. internal_links use REAL category (/providers/<slug>) + tool (/tools/<slug>) routes.",
+  "topics": [
+    {
+      "slug": "cybersecurity-for-malaysian-smes-2026",
+      "title": "Cybersecurity for Malaysian SMEs in 2026: the threats, the law, and where to start",
+      "pillar": "managed-security",
+      "target_keyword": "cybersecurity malaysia sme",
+      "volume": 320,
+      "intent": "informational",
+      "priority": 1,
+      "status": "initial",
+      "locale": "en",
+      "internal_links": ["/providers", "/tools/security-maturity-assessment", "/providers/managed-security"]
+    },
+    {
+      "slug": "how-to-choose-cybersecurity-provider-malaysia",
+      "title": "How to choose a cybersecurity provider in Malaysia: an SME checklist",
+      "pillar": "managed-security",
+      "target_keyword": "cybersecurity provider malaysia",
+      "volume": 210,
+      "intent": "commercial",
+      "priority": 1,
+      "status": "initial",
+      "locale": "en",
+      "internal_links": ["/providers/managed-security", "/providers/penetration-testing", "/about"]
+    },
+    {
+      "slug": "phishing-business-email-scams-malaysia",
+      "title": "Phishing and business email scams in Malaysia: how SMEs get hit and how to stop it",
+      "pillar": "cloud-security",
+      "target_keyword": "phishing scam malaysia business",
+      "volume": 480,
+      "intent": "informational",
+      "priority": 1,
+      "status": "initial",
+      "locale": "en",
+      "internal_links": ["/tools/phishing-risk-self-check", "/providers/cloud-security", "/providers/security-awareness"]
+    },
+    {
+      "slug": "mssp-vs-in-house-it-malaysia",
+      "title": "MSSP vs in-house IT: which cybersecurity model fits your Malaysian SME?",
+      "pillar": "managed-security",
+      "target_keyword": "mssp malaysia",
+      "volume": 140,
+      "intent": "commercial",
+      "priority": 1,
+      "status": "initial",
+      "locale": "en",
+      "internal_links": ["/providers/managed-security", "/tools/security-budget-estimator", "/tools/security-maturity-assessment"]
+    },
+    {
+      "slug": "cybersecurity-mistakes-malaysian-smes",
+      "title": "Top 5 cybersecurity mistakes Malaysian SMEs make (and how to avoid them)",
+      "pillar": "managed-security",
+      "target_keyword": "cybersecurity mistakes small business",
+      "volume": 90,
+      "intent": "informational",
+      "priority": 1,
+      "status": "initial",
+      "locale": "en",
+      "internal_links": ["/tools/security-maturity-assessment", "/providers/data-backup", "/providers/security-awareness"]
+    },
+    {
+      "slug": "ransomware-protection-malaysian-sme",
+      "title": "Ransomware protection for Malaysian SMEs: a practical 2026 playbook",
+      "pillar": "data-backup",
+      "target_keyword": "ransomware protection malaysia",
+      "volume": 170,
+      "intent": "informational",
+      "priority": 2,
+      "status": "queued",
+      "locale": "en",
+      "internal_links": ["/tools/ransomware-exposure-score", "/providers/data-backup", "/providers/soc-incident"]
+    },
+    {
+      "slug": "pdpa-2024-amendments-sme-guide",
+      "title": "The PDPA 2024 amendments: what Malaysian SMEs must do now",
+      "pillar": "grc-compliance",
+      "target_keyword": "pdpa 2024 malaysia",
+      "volume": 390,
+      "intent": "informational",
+      "priority": 2,
+      "status": "queued",
+      "locale": "en",
+      "internal_links": ["/tools/pdpa-readiness-checker", "/providers/grc-compliance"]
+    },
+    {
+      "slug": "cyber-security-act-2024-explained-sme",
+      "title": "The Cyber Security Act 2024 explained for Malaysian businesses",
+      "pillar": "grc-compliance",
+      "target_keyword": "cyber security act 2024 malaysia",
+      "volume": 260,
+      "intent": "informational",
+      "priority": 2,
+      "status": "queued",
+      "locale": "en",
+      "internal_links": ["/providers/managed-security", "/providers/grc-compliance"]
+    },
+    {
+      "slug": "penetration-testing-cost-malaysia",
+      "title": "Penetration testing in Malaysia: what VAPT costs and when SMEs need it",
+      "pillar": "penetration-testing",
+      "target_keyword": "penetration testing malaysia",
+      "volume": 320,
+      "intent": "commercial",
+      "priority": 2,
+      "status": "queued",
+      "locale": "en",
+      "internal_links": ["/providers/penetration-testing", "/tools/security-maturity-assessment"]
+    },
+    {
+      "slug": "iso-27001-malaysia-sme-guide",
+      "title": "ISO 27001 for Malaysian SMEs: is it worth it, and what it takes",
+      "pillar": "grc-compliance",
+      "target_keyword": "iso 27001 malaysia",
+      "volume": 210,
+      "intent": "informational",
+      "priority": 3,
+      "status": "queued",
+      "locale": "en",
+      "internal_links": ["/providers/grc-compliance", "/tools/pdpa-readiness-checker"]
+    },
+    {
+      "slug": "password-mfa-guide-malaysian-business",
+      "title": "Passwords and MFA: the cheapest security upgrade for a Malaysian business",
+      "pillar": "security-awareness",
+      "target_keyword": "multi factor authentication business",
+      "volume": 110,
+      "intent": "informational",
+      "priority": 3,
+      "status": "queued",
+      "locale": "en",
+      "internal_links": ["/tools/password-strength-checker", "/providers/security-awareness"]
+    },
+    {
+      "slug": "data-backup-strategy-malaysian-sme",
+      "title": "A simple data backup strategy for Malaysian small businesses",
+      "pillar": "data-backup",
+      "target_keyword": "data backup small business malaysia",
+      "volume": 90,
+      "intent": "informational",
+      "priority": 3,
+      "status": "queued",
+      "locale": "en",
+      "internal_links": ["/tools/it-downtime-cost-calculator", "/providers/data-backup"]
+    }
+  ]
+}

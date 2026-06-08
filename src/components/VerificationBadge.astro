@@ -1,0 +1,74 @@
+---
+interface Props {
+  level: 'premium' | 'nacsa-licensed' | 'ssm-checked' | 'claimed' | 'listed';
+  locale?: string;
+}
+const { level, locale = 'en' } = Astro.props;
+const isMS = locale === 'ms';
+
+type BadgeVariant = {
+  style: string;
+  label: string;
+  tooltip: string;
+  check?: boolean;
+  star?: boolean;
+};
+
+// Monochrome, square-cornered, hairline labels. Ink-plate (graphite) for the
+// two highest tiers; a vermillion star is the only chromatic mark (premium).
+const variants: Record<string, BadgeVariant> = {
+  premium: {
+    style: 'background:#181818;color:#f2f2f2;border:1px solid #181818;',
+    label: 'PREMIUM',
+    tooltip: isMS
+      ? 'Pembekal ini mempunyai profil premium tajaan yang aktif.'
+      : 'This provider holds an active sponsored premium profile.',
+    star: true,
+  },
+  'nacsa-licensed': {
+    style: 'background:#181818;color:#f2f2f2;border:1px solid #181818;',
+    label: isMS ? 'BERLESEN NACSA' : 'NACSA LICENSED',
+    tooltip: isMS
+      ? 'Pembekal khidmat keselamatan siber berlesen di bawah Akta Keselamatan Siber 2024 (NACSA).'
+      : 'Licensed cyber security service provider under the Cyber Security Act 2024 (NACSA).',
+    check: true,
+  },
+  'ssm-checked': {
+    style: 'background:transparent;color:#181818;border:1px solid #181818;',
+    label: isMS ? 'SSM DISAHKAN' : 'SSM CHECKED',
+    tooltip: isMS
+      ? 'Pendaftaran syarikat disahkan melalui SSM (Suruhanjaya Syarikat Malaysia).'
+      : 'Company registration verified against SSM (Companies Commission of Malaysia).',
+    check: true,
+  },
+  claimed: {
+    style: 'background:transparent;color:#181818;border:1px solid #181818;',
+    label: isMS ? 'DITUNTUT' : 'CLAIMED',
+    tooltip: isMS
+      ? 'Pemilik perniagaan ini telah menuntut dan menguruskan penyenaraian mereka.'
+      : 'The business owner has claimed and manages this listing.',
+  },
+  listed: {
+    style: 'background:transparent;color:#6e6e6e;border:1px solid #6e6e6e;',
+    label: isMS ? 'TERSENARAI' : 'LISTED',
+    tooltip: isMS
+      ? 'Pembekal ini tersenarai daripada sumber awam tetapi belum dituntut atau disahkan.'
+      : 'This provider is listed from public sources but not yet claimed or verified.',
+  },
+};
+
+const v = variants[level] || variants.listed;
+---
+
+<span
+  title={v.tooltip}
+  style={`display:inline-flex;align-items:center;gap:5px;${v.style}border-radius:0;padding:3px 8px;font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;font-weight:400;letter-spacing:0.1em;font-feature-settings:'tnum','zero';cursor:default;white-space:nowrap;`}
+>
+  {v.star && <span aria-hidden="true" style="color:#fc523b;font-size:11px;line-height:1;">&#9733;</span>}
+  {v.check && (
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="flex-shrink:0;">
+      <path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  )}
+  {v.label}
+</span>

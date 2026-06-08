@@ -1,0 +1,133 @@
+---
+interface Props { locale?: string; }
+const { locale = 'en' } = Astro.props;
+---
+
+<div class="dbc-wrap">
+  <div class="dbc-grid">
+    <label class="dbc-label">
+      <span class="dbc-eyebrow">Customer records held</span>
+      <input type="number" id="dbc-records" class="dbc-input" min="1" max="10000000" placeholder="5000" aria-label="Number of customer records" />
+    </label>
+    <label class="dbc-label">
+      <span class="dbc-eyebrow">Estimated downtime (hours)</span>
+      <input type="number" id="dbc-downtime" class="dbc-input" min="0" max="8760" placeholder="24" aria-label="Downtime hours" />
+    </label>
+    <label class="dbc-label">
+      <span class="dbc-eyebrow">Sector</span>
+      <select id="dbc-sector" class="dbc-input" aria-label="Business sector">
+        <option value="general">General / Other</option>
+        <option value="finance">Finance / Banking</option>
+        <option value="healthcare">Healthcare / Medical</option>
+        <option value="retail">Retail / E-commerce</option>
+      </select>
+    </label>
+    <label class="dbc-label">
+      <span class="dbc-eyebrow">Incident response plan in place?</span>
+      <select id="dbc-irplan" class="dbc-input" aria-label="Incident response plan">
+        <option value="no">No</option>
+        <option value="yes">Yes</option>
+      </select>
+    </label>
+  </div>
+
+  <button type="button" id="dbc-btn" class="dbc-btn">Estimate breach cost</button>
+
+  <div id="dbc-result" class="dbc-result-panel" hidden aria-live="polite">
+    <div class="dbc-result-top">
+      <span class="dbc-eyebrow">Indicative cost range</span>
+      <span class="dbc-big" id="dbc-range">--</span>
+    </div>
+    <div class="dbc-breakdown" id="dbc-breakdown"></div>
+    <p class="dbc-note">
+      Indicative only - not a quote or legal assessment. Actual costs depend on breach scope,
+      regulatory outcome, and legal fees. Under PDPA 2010 (2024 amendments) a notifiable breach
+      must be reported to the PDPC within 72 hours.
+      See <a href="/providers/grc-compliance" class="dbc-link">GRC and compliance providers &rarr;</a>
+    </p>
+  </div>
+
+  <p class="dbc-disclaimer">This estimator produces indicative figures for budgeting and awareness only. It is not professional advice.</p>
+</div>
+
+<style>
+  .dbc-wrap { display:flex; flex-direction:column; gap:20px; font-family:"EB Garamond",Georgia,serif; }
+  .dbc-eyebrow { font-family:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#181818; font-feature-settings:"tnum"; display:block; margin-bottom:6px; }
+  .dbc-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .dbc-label { display:flex; flex-direction:column; }
+  .dbc-input { background:#fff; border:1px solid #181818; border-radius:0; padding:10px 14px; font-family:"Inter",Arial,sans-serif; font-size:15px; color:#181818; width:100%; min-height:44px; outline:none; appearance:none; -webkit-appearance:none; }
+  .dbc-input:focus { outline:2px solid #181818; outline-offset:-2px; }
+  .dbc-btn { border:1px solid #181818; background:transparent; color:#181818; font-family:"Inter",Arial,sans-serif; font-size:13px; letter-spacing:.06em; text-transform:uppercase; padding:12px 24px; cursor:pointer; align-self:flex-start; }
+  .dbc-btn:hover { background:#181818; color:#f2f2f2; }
+  .dbc-result-panel { background:#f2f2f2; border-top:1px solid #181818; padding:20px; display:flex; flex-direction:column; gap:16px; }
+  .dbc-result-top { display:flex; flex-direction:column; gap:6px; }
+  .dbc-big { font-family:"EB Garamond",Georgia,serif; font-size:32px; color:#181818; line-height:1.1; }
+  .dbc-breakdown { display:flex; flex-direction:column; gap:8px; border-top:1px solid #d6d6cf; padding-top:14px; }
+  .dbc-row { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .dbc-row-label { font-family:"EB Garamond",Georgia,serif; font-size:16px; color:#181818; }
+  .dbc-row-val { font-family:"Inter",Arial,sans-serif; font-size:14px; font-feature-settings:"tnum"; color:#181818; white-space:nowrap; }
+  .dbc-note { font-family:"Inter",Arial,sans-serif; font-size:12px; color:#6e6e6e; line-height:1.5; border-top:1px solid #d6d6cf; padding-top:12px; margin:0; }
+  .dbc-link { color:#181818; text-decoration:underline; }
+  .dbc-link:hover { color:#fc523b; }
+  .dbc-disclaimer { font-family:"Inter",Arial,sans-serif; font-size:12px; color:#6e6e6e; line-height:1.5; border-top:1px solid #d6d6cf; padding-top:14px; margin:0; }
+  @media (max-width:560px) { .dbc-grid { grid-template-columns:1fr; } }
+</style>
+
+<script is:inline>
+(function () {
+  var btn = document.getElementById('dbc-btn');
+  var resultPanel = document.getElementById('dbc-result');
+  var rangeEl = document.getElementById('dbc-range');
+  var breakdownEl = document.getElementById('dbc-breakdown');
+  var captured = false;
+
+  // Per-record cost by sector (RM)
+  var perRecord = { general: 55, finance: 110, healthcare: 140, retail: 70 };
+  // Hourly revenue opportunity cost proxy (base response cost RM)
+  var baseResponse = { general: 15000, finance: 40000, healthcare: 35000, retail: 20000 };
+  // Hourly downtime cost proxy per SME staff hour (RM)
+  var hourlyDowntime = 150; // RM per downtime-hour baseline labour + ops
+
+  function fmt(n) {
+    return 'RM ' + n.toLocaleString('en-MY', { maximumFractionDigits: 0 });
+  }
+
+  function compute() {
+    var records = Math.max(0, parseInt(document.getElementById('dbc-records').value) || 0);
+    var downtime = Math.max(0, parseFloat(document.getElementById('dbc-downtime').value) || 0);
+    var sector = document.getElementById('dbc-sector').value;
+    var irplan = document.getElementById('dbc-irplan').value;
+
+    var pr = perRecord[sector] || 55;
+    var base = baseResponse[sector] || 15000;
+    var irDiscount = irplan === 'yes' ? 0.65 : 1.0;
+
+    var recordCost = records * pr;
+    var downtimeCost = downtime * hourlyDowntime;
+    var responseCost = base;
+    var totalLow = Math.round((recordCost * 0.7 + downtimeCost + responseCost * 0.8) * irDiscount);
+    var totalHigh = Math.round((recordCost * 1.3 + downtimeCost * 1.2 + responseCost * 1.2) * irDiscount * 1.1);
+
+    rangeEl.textContent = fmt(totalLow) + ' - ' + fmt(totalHigh);
+
+    var rows = [
+      { label: 'Record handling (' + records.toLocaleString() + ' records)', val: fmt(Math.round(recordCost)) },
+      { label: 'Downtime impact (' + downtime + 'h)', val: fmt(Math.round(downtimeCost)) },
+      { label: 'Incident response base cost', val: fmt(Math.round(responseCost)) },
+      { label: 'IR plan discount', val: irplan === 'yes' ? '35% applied' : 'None' },
+    ];
+    breakdownEl.innerHTML = rows.map(function(r) {
+      return '<div class="dbc-row"><span class="dbc-row-label">' + r.label + '</span><span class="dbc-row-val">' + r.val + '</span></div>';
+    }).join('');
+
+    resultPanel.removeAttribute('hidden');
+
+    if (!captured) {
+      captured = true;
+      try { if (window.posthog) window.posthog.capture('calculator_used', { tool: 'data-breach-cost-estimator' }); } catch(_){}
+    }
+  }
+
+  btn.addEventListener('click', compute);
+})();
+</script>

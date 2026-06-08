@@ -1,0 +1,74 @@
+[
+  {
+    "slug": "managed-security",
+    "slug_ms": "khidmat-keselamatan-terurus",
+    "name": "Managed Security Services (MSSP)",
+    "name_ms": "Khidmat Keselamatan Terurus (MSSP)",
+    "description": "Managed security service providers (MSSPs) that run cybersecurity for Malaysian SMEs on an outsourced, monthly basis: device management, patching, monitoring, and helpdesk. Under the Cyber Security Act 2024, providers of managed security operations may require a NACSA licence; confirm a provider's licence status before you sign.",
+    "description_ms": "Pembekal khidmat keselamatan terurus (MSSP) yang mengendalikan keselamatan siber untuk PKS Malaysia secara penyumberan luar bulanan: pengurusan peranti, tampalan, pemantauan dan meja bantuan. Di bawah Akta Keselamatan Siber 2024, pembekal operasi keselamatan terurus mungkin memerlukan lesen NACSA; sahkan status lesen pembekal sebelum anda menandatangani.",
+    "subcategories": ["Outsourced Security", "Device Management", "Patch Management", "Security Helpdesk", "vCISO", "SME Security Packages"]
+  },
+  {
+    "slug": "endpoint-network",
+    "slug_ms": "keselamatan-endpoint-rangkaian",
+    "name": "Endpoint & Network Security",
+    "name_ms": "Keselamatan Endpoint & Rangkaian",
+    "description": "Providers that secure the laptops, servers, and networks an SME runs every day: endpoint protection (EDR/XDR), firewalls, antivirus, VPN and secure remote access. This is the foundation layer for any business that handles customer data under the PDPA 2010.",
+    "description_ms": "Pembekal yang melindungi komputer riba, pelayan dan rangkaian yang digunakan PKS setiap hari: perlindungan endpoint (EDR/XDR), tembok api, antivirus, VPN dan akses jauh selamat. Ini lapisan asas untuk mana-mana perniagaan yang mengendalikan data pelanggan di bawah PDPA 2010.",
+    "subcategories": ["Endpoint Protection (EDR)", "Firewalls", "Antivirus", "Secure Remote Access", "Network Monitoring", "Wi-Fi Security"]
+  },
+  {
+    "slug": "penetration-testing",
+    "slug_ms": "ujian-penembusan",
+    "name": "Penetration Testing & VAPT",
+    "name_ms": "Ujian Penembusan & VAPT",
+    "description": "Penetration testing and vulnerability assessment (VAPT) firms that test your website, app, and network the way an attacker would, then report what to fix. Look for CREST accreditation or CyberSecurity Malaysia recognition, and note that offering pen testing as a commercial service may require a NACSA licence under the Cyber Security Act 2024.",
+    "description_ms": "Firma ujian penembusan dan penilaian kerentanan (VAPT) yang menguji laman web, aplikasi dan rangkaian anda seperti penyerang, kemudian melaporkan apa yang perlu dibaiki. Cari akreditasi CREST atau pengiktirafan CyberSecurity Malaysia, dan ambil perhatian bahawa menawarkan ujian penembusan sebagai khidmat komersial mungkin memerlukan lesen NACSA di bawah Akta Keselamatan Siber 2024.",
+    "subcategories": ["Web App Testing", "Network VAPT", "Mobile App Testing", "Red Teaming", "Vulnerability Assessment", "Source Code Review"]
+  },
+  {
+    "slug": "cloud-security",
+    "slug_ms": "keselamatan-awan",
+    "name": "Cloud & Email Security",
+    "name_ms": "Keselamatan Awan & E-mel",
+    "description": "Specialists who secure cloud workloads and business email: Microsoft 365 and Google Workspace hardening, email authentication (SPF, DKIM, DMARC), and protection against business email compromise. Email scams remain one of the most common ways Malaysian SMEs lose money.",
+    "description_ms": "Pakar yang melindungi beban kerja awan dan e-mel perniagaan: pengukuhan Microsoft 365 dan Google Workspace, pengesahan e-mel (SPF, DKIM, DMARC), dan perlindungan daripada kompromi e-mel perniagaan. Penipuan e-mel kekal antara cara paling biasa PKS Malaysia kehilangan wang.",
+    "subcategories": ["Microsoft 365 Security", "Google Workspace Security", "Email Authentication (DMARC)", "Cloud Posture (CSPM)", "SaaS Security", "Anti-Phishing"]
+  },
+  {
+    "slug": "grc-compliance",
+    "slug_ms": "grc-pematuhan",
+    "name": "GRC, Audit & Compliance",
+    "name_ms": "GRC, Audit & Pematuhan",
+    "description": "Governance, risk and compliance consultancies that help Malaysian SMEs meet PDPA 2010 obligations, prepare for ISO/IEC 27001 certification, and satisfy sector rules such as Bank Negara's RMiT for financial firms. Useful when a customer or regulator asks for proof of your security posture.",
+    "description_ms": "Perunding tadbir urus, risiko dan pematuhan yang membantu PKS Malaysia memenuhi kewajipan PDPA 2010, bersedia untuk pensijilan ISO/IEC 27001, dan mematuhi peraturan sektor seperti RMiT Bank Negara untuk firma kewangan. Berguna apabila pelanggan atau pengawal selia meminta bukti postur keselamatan anda.",
+    "subcategories": ["PDPA Compliance", "ISO 27001 Readiness", "Security Audit", "Risk Assessment", "BNM RMiT", "Policy & Governance"]
+  },
+  {
+    "slug": "soc-incident",
+    "slug_ms": "soc-tindak-balas-insiden",
+    "name": "SOC, Monitoring & Incident Response",
+    "name_ms": "SOC, Pemantauan & Tindak Balas Insiden",
+    "description": "Security operations centre (SOC), threat monitoring, and incident response providers who watch for attacks 24/7 and help you recover when something goes wrong, including ransomware and digital forensics. Under the Cyber Security Act 2024, certain incidents affecting critical sectors must be reported to NACSA.",
+    "description_ms": "Pembekal pusat operasi keselamatan (SOC), pemantauan ancaman dan tindak balas insiden yang memantau serangan 24/7 dan membantu anda pulih apabila berlaku masalah, termasuk ransomware dan forensik digital. Di bawah Akta Keselamatan Siber 2024, insiden tertentu yang menjejaskan sektor kritikal mesti dilaporkan kepada NACSA.",
+    "subcategories": ["Managed SOC", "Threat Monitoring (MDR)", "Incident Response", "Ransomware Recovery", "Digital Forensics", "SIEM"]
+  },
+  {
+    "slug": "security-awareness",
+    "slug_ms": "latihan-kesedaran",
+    "name": "Security Awareness Training",
+    "name_ms": "Latihan Kesedaran Keselamatan",
+    "description": "Training providers that teach your staff to spot phishing, handle data safely, and follow good password habits. People are the most common entry point for attackers, so awareness training is often the highest-return security spend for a small business.",
+    "description_ms": "Pembekal latihan yang mengajar kakitangan anda mengenal pasti pancingan data, mengendalikan data dengan selamat, dan mengamalkan tabiat kata laluan yang baik. Manusia adalah titik masuk paling biasa untuk penyerang, jadi latihan kesedaran selalunya perbelanjaan keselamatan berpulangan tertinggi untuk perniagaan kecil.",
+    "subcategories": ["Phishing Simulation", "Staff Training", "Security Onboarding", "PDPA Awareness", "Cyber Drills", "E-Learning"]
+  },
+  {
+    "slug": "data-backup",
+    "slug_ms": "perlindungan-data-sandaran",
+    "name": "Data Protection & Backup",
+    "name_ms": "Perlindungan Data & Sandaran",
+    "description": "Providers that protect business data with managed backup, disaster recovery, and business continuity planning. A tested, offline backup is the single most reliable defence against ransomware for a Malaysian SME.",
+    "description_ms": "Pembekal yang melindungi data perniagaan dengan sandaran terurus, pemulihan bencana, dan perancangan kesinambungan perniagaan. Sandaran luar talian yang telah diuji adalah pertahanan paling boleh dipercayai terhadap ransomware untuk PKS Malaysia.",
+    "subcategories": ["Managed Backup", "Disaster Recovery", "Business Continuity", "Ransomware Protection", "Cloud Backup", "Data Recovery"]
+  }
+]

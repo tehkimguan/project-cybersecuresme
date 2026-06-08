@@ -1,0 +1,260 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import ProviderLeadForm from '../components/ProviderLeadForm.astro';
+
+const plans = [
+  {
+    id: 'basic',
+    name: 'Basic Listing',
+    price: 'Free',
+    priceSub: 'Always free',
+    highlight: false,
+    features: [
+      'Company name, location, and contact',
+      'Service category and state tagging',
+      'Listed verification badge',
+      'Visible in directory search',
+      'Link to your website',
+    ],
+    notIncluded: [
+      'Claim and ownership verification',
+      'Featured placement',
+      'Analytics report',
+    ],
+    cta: 'Apply for basic listing',
+  },
+  {
+    id: 'featured',
+    name: 'Featured Company',
+    price: 'RM 199',
+    priceSub: 'per month',
+    highlight: true,
+    features: [
+      'Everything in Basic',
+      'Claimed badge and SSM check',
+      'Priority placement in service pages',
+      'Full services list and description',
+      'Monthly analytics report',
+      'WhatsApp and call button',
+    ],
+    notIncluded: [
+      'Premium sponsor placement',
+    ],
+    cta: 'Apply for featured listing',
+  },
+  {
+    id: 'premium',
+    name: 'Premium Sponsor',
+    price: 'RM 899',
+    priceSub: 'per month',
+    highlight: false,
+    features: [
+      'Everything in Featured',
+      'NACSA licence verification check',
+      'Premium badge (ink-plate)',
+      'Homepage and category hero placement',
+      'Blog feature article (once per quarter)',
+      'Priority WhatsApp support',
+      'Dedicated account manager',
+    ],
+    notIncluded: [],
+    cta: 'Apply for premium sponsorship',
+  },
+];
+
+const faqs = [
+  {
+    q: 'Is there a contract or minimum term?',
+    a: 'Paid plans are month-to-month. Cancel any time with 30 days notice. Basic listing has no commitment.',
+  },
+  {
+    q: 'What do I need to apply?',
+    a: 'Your company name, a contact email and phone number, your state, and the service category you want to be listed under. For SSM-checked and NACSA-licensed tiers, we will request your company registration number and licence number during onboarding.',
+  },
+  {
+    q: 'How long does verification take?',
+    a: 'SSM check: typically 2 business days. NACSA licence check: 3 to 5 business days depending on registry response time.',
+  },
+  {
+    q: 'Does premium placement mean I am endorsed?',
+    a: 'No. Premium is a paid placement service. Verification status is shown separately and is based solely on regulatory cross-referencing. Paid placement does not affect the verification tier displayed on your listing.',
+  },
+  {
+    q: 'Can I update my listing information later?',
+    a: 'Yes. Claimed and above tiers can request listing updates by emailing cybersecuresme@agentmail.to. Updates are processed within 2 business days.',
+  },
+];
+---
+
+<Base
+  title="List Your Company | Cyber Secure SME: Basic, Featured and Premium Plans"
+  description="List your cybersecurity company on Cyber Secure SME. Basic listing is free. Featured from RM 199/mo. Premium sponsor from RM 899/mo with NACSA licence check and homepage placement."
+  locale="en"
+  altLocaleHref="/ms/senaraikan-syarikat"
+  schemaType="breadcrumb"
+  schemaData={{ items: [{ name: 'Home', url: '/' }, { name: 'List Your Company', url: '/list-your-company' }] }}
+>
+  <SiteHeader locale="en" currentPath="/list-your-company" altLocaleHref="/ms/senaraikan-syarikat" />
+
+  <main>
+    <!-- Hero -->
+    <section style="background:#f2f2f2;border-bottom:1px solid #181818;padding:64px 0 52px;">
+      <div class="container" style="max-width:760px;">
+        <p class="eyebrow" style="margin:0 0 20px 0;">FOR CYBERSECURITY FIRMS</p>
+        <h1 class="heading" style="font-size:clamp(26px,5vw,42px);margin:0 0 22px 0;line-height:1.05;">
+          Reach Malaysian SMEs that are actively searching for security help
+        </h1>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:19px;color:#181818;line-height:1.55;margin:0;max-width:580px;">
+          Cyber Secure SME lists verified cybersecurity providers across Malaysia. Start with a free basic listing, or upgrade to featured or premium to stand out in your service category.
+        </p>
+      </div>
+    </section>
+
+    <!-- Why list here -->
+    <section style="padding:64px 0;background:#ffffff;border-bottom:1px solid #181818;">
+      <div class="container" style="max-width:900px;">
+        <p class="eyebrow" style="margin:0 0 14px 0;">WHY LIST HERE</p>
+        <h2 class="heading" style="font-size:24px;margin:0 0 40px 0;">What you get on Cyber Secure SME</h2>
+        <div class="why-grid">
+          {[
+            { title: 'Credential-verified presence', desc: 'Your listing carries the correct verification tier based on actual regulatory cross-checks. Malaysian SMEs trust verified providers when making security purchasing decisions.' },
+            { title: 'Service and state search', desc: 'Businesses browse by service category (managed security, pen testing, GRC, etc.) and state. Targeted placement in the exact category your firm operates in.' },
+            { title: 'No fake engagement metrics', desc: 'We show real data: verification tier, services, and contact information. No star ratings from unverifiable sources.' },
+            { title: 'Low cost, clear terms', desc: 'Month-to-month pricing. No long contracts, no hidden setup fees. Cancel any time.' },
+          ].map(item => (
+            <div style="background:#f2f2f2;border:1px solid #181818;padding:24px;">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" style="display:block;margin-bottom:12px;">
+                <path d="M3 9l4 4 8-8" stroke="#181818" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <h3 class="heading" style="font-size:19px;margin:0 0 8px 0;">{item.title}</h3>
+              <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:16px;color:#6e6e6e;line-height:1.6;margin:0;">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section style="padding:72px 0;border-bottom:1px solid #181818;">
+      <div class="container" style="max-width:960px;">
+        <p class="eyebrow" style="margin:0 0 14px 0;text-align:center;">PLANS</p>
+        <h2 class="heading" style="font-size:26px;margin:0 0 8px 0;text-align:center;">Simple, transparent pricing</h2>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#6e6e6e;text-align:center;margin:0 0 52px 0;">
+          All prices in Malaysian Ringgit (RM). Month-to-month. No setup fees.
+        </p>
+
+        <div class="pricing-grid">
+          {plans.map(plan => (
+            <div style={`background:#f2f2f2;border:${plan.highlight ? '2px solid #181818' : '1px solid #181818'};padding:32px 28px;display:flex;flex-direction:column;position:relative;`}>
+              {plan.highlight && (
+                <span style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:#181818;color:#f2f2f2;padding:4px 12px;white-space:nowrap;">
+                  MOST POPULAR
+                </span>
+              )}
+              <p class="eyebrow" style="margin:0 0 10px 0;color:#6e6e6e;">{plan.name}</p>
+              <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:4px;">
+                <span class="heading" style="font-size:34px;">{plan.price}</span>
+              </div>
+              <p class="eyebrow" style="margin:0 0 32px 0;color:#6e6e6e;">{plan.priceSub}</p>
+
+              <ul style="list-style:none;margin:0 0 28px 0;padding:0;display:flex;flex-direction:column;gap:10px;flex:1;">
+                {plan.features.map(f => (
+                  <li style="display:flex;gap:10px;align-items:flex-start;">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:4px;">
+                      <path d="M2 7l3.5 3.5 6.5-6.5" stroke="#181818" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:16px;color:#181818;">{f}</span>
+                  </li>
+                ))}
+                {plan.notIncluded.map(f => (
+                  <li style="display:flex;gap:10px;align-items:flex-start;opacity:0.4;">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:4px;">
+                      <path d="M3 3l8 8M11 3l-8 8" stroke="#6e6e6e" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    <span style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:16px;color:#6e6e6e;">{f}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <a
+                href="#listing-form"
+                class={plan.highlight ? 'btn-primary' : 'btn-secondary'}
+                style="justify-content:center;"
+              >
+                {plan.cta}
+              </a>
+            </div>
+          ))}
+        </div>
+
+        <p class="eyebrow" style="text-align:center;margin-top:24px;color:#6e6e6e;font-size:11px;letter-spacing:0.04em;text-transform:none;">
+          Prices shown in MYR. All plans include listing on the Cyber Secure SME directory. Premium placement does not affect verification tier.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section style="background:#ffffff;border-bottom:1px solid #181818;padding:64px 0;">
+      <div class="container" style="max-width:720px;">
+        <p class="eyebrow" style="margin:0 0 14px 0;">FAQ</p>
+        <h2 class="heading" style="font-size:26px;margin:0 0 40px 0;">Common questions</h2>
+        <div style="display:flex;flex-direction:column;gap:0;">
+          {faqs.map((faq, i) => (
+            <div style={`padding:26px 0;${i > 0 ? 'border-top:1px solid #d6d6cf;' : ''}`}>
+              <h3 class="heading" style="font-size:20px;margin:0 0 10px 0;">{faq.q}</h3>
+              <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#6e6e6e;line-height:1.65;margin:0;">{faq.a}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Form -->
+    <section id="listing-form" style="padding:72px 0;border-bottom:1px solid #d6d6cf;">
+      <div class="container" style="max-width:760px;">
+        <p class="eyebrow" style="margin:0 0 14px 0;">APPLY</p>
+        <h2 class="heading" style="font-size:26px;margin:0 0 10px 0;">Apply for a listing</h2>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#6e6e6e;line-height:1.6;margin:0 0 36px 0;">
+          Fill in your company details below. Indicate your preferred plan in the message field. We will contact you within 2 business days.
+        </p>
+        <ProviderLeadForm locale="en" mode="list" />
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter locale="en" currentPath="/list-your-company" altLocaleHref="/ms/senaraikan-syarikat" />
+
+  <style>
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .why-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cybersecuresme.my/" },
+        { "@type": "ListItem", "position": 2, "name": "List Your Company", "item": "https://cybersecuresme.my/list-your-company" }
+      ]
+    })}
+  </script>
+</Base>

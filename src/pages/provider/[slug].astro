@@ -1,0 +1,438 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import ProviderCard from '../../components/ProviderCard.astro';
+import VerificationBadge from '../../components/VerificationBadge.astro';
+import clinicsData from '../../data/providers.json';
+import categoriesData from '../../data/categories.json';
+
+export async function getStaticPaths() {
+  return clinicsData.map(clinic => ({
+    params: { slug: clinic.slug },
+    props: { clinic },
+  }));
+}
+
+const { clinic } = Astro.props;
+const path = `/provider/${clinic.slug}`;
+const altLocaleHref = `/ms/pembekal/${clinic.slug}`;
+
+// Build categories map
+const catsMap: Record<string, { name: string; name_ms: string }> = Object.fromEntries(
+  categoriesData.map(c => [c.slug, { name: c.name, name_ms: c.name_ms }])
+);
+
+// Related providers: share at least one category, not self, up to 3
+const relatedClinics = clinicsData
+  .filter(c => c.slug !== clinic.slug && (c.categories || []).some(cat => (clinic.categories || []).includes(cat)))
+  .slice(0, 3);
+
+// State label
+const stateLabel = clinic.state
+  ? clinic.state.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
+  : '';
+const locationParts = [stateLabel, clinic.city].filter(Boolean);
+const locationStr = locationParts.join(', ');
+
+// Verification level type (cybersecurity tiers)
+const rawLevel = clinic.verification_level || 'listed';
+const level = (['premium', 'nacsa-licensed', 'ssm-checked', 'claimed', 'listed'].includes(rawLevel)
+  ? rawLevel
+  : 'listed') as 'premium' | 'nacsa-licensed' | 'ssm-checked' | 'claimed' | 'listed';
+
+const primaryCat = (clinic.categories || [])[0] || '';
+
+// Regulator trust mapping by category (cybersecurity context)
+type RegulatorInfo = {
+  name: string;
+  url: string;
+  note: string;
+};
+
+function getRegulatorsForCategories(cats: string[]): RegulatorInfo[] {
+  const regs: RegulatorInfo[] = [];
+  const seen = new Set<string>();
+
+  const add = (r: RegulatorInfo) => {
+    if (!seen.has(r.name)) {
+      seen.add(r.name);
+      regs.push(r);
+    }
+  };
+
+  const catSet = new Set(cats);
+
+  // NACSA is relevant for managed security, SOC, and pen testing
+  if (catSet.has('managed-security') || catSet.has('soc-incident') || catSet.has('penetration-testing')) {
+    add({
+      name: 'NACSA - Cyber Security Act 2024 (Act 854)',
+      url: 'https://www.nacsa.gov.my/',
+      note: 'Verify whether this provider holds a valid NACSA licence under the Cyber Security Act 2024. Providers of certain managed security and monitoring services to CNII sectors must be licensed.',
+    });
+  }
+
+  // CREST for pen testing
+  if (catSet.has('penetration-testing')) {
+    add({
+      name: 'CREST International Accreditation',
+      url: 'https://www.crest-approved.org/',
+      note: 'For penetration testing, confirm whether the firm and its consultants hold CREST accreditation - a recognised standard of competence for offensive security services.',
+    });
+  }
+
+  // ISO 27001 for GRC and managed security
+  if (catSet.has('grc-compliance') || catSet.has('managed-security') || catSet.has('soc-incident')) {
+    add({
+      name: 'ISO/IEC 27001 Certification',
+      url: 'https://www.iso.org/isoiec-27001-information-security.html',
+      note: 'Check whether the provider is ISO/IEC 27001 certified. A certified MSSP, SOC, or GRC consultancy must maintain its certification through an accredited certification body.',
+    });
+  }
+
+  // SSM company registration applies to all
+  add({
+    name: 'SSM - Companies Commission of Malaysia',
+    url: 'https://www.ssm.com.my/',
+    note: 'Verify the provider is a registered Malaysian company through the Companies Commission of Malaysia (Suruhanjaya Syarikat Malaysia).',
+  });
+
+  // PDPA for compliance consultancies and data handling
+  if (catSet.has('grc-compliance') || catSet.has('cloud-security') || catSet.has('data-backup')) {
+    add({
+      name: 'JPDP - Personal Data Protection (Act 709)',
+      url: 'https://www.pdp.gov.my/',
+      note: 'If the provider handles or processes Malaysian personal data on your behalf, ensure they understand their obligations under the Personal Data Protection Act 2010 (Act 709) and its 2024 amendments.',
+    });
+  }
+
+  return regs;
+}
+
+const regulators = getRegulatorsForCategories(clinic.categories || []);
+
+// Schema.org type - all cybersecurity providers are ProfessionalService or LocalBusiness
+const siteUrl = 'https://cybersecuresme.my';
+const clinicUrl = `${siteUrl}/provider/${clinic.slug}`;
+
+const schemaData = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  '@id': clinicUrl,
+  name: clinic.name,
+  url: clinicUrl,
+  description: clinic.description || `${clinic.name}: cybersecurity provider in ${stateLabel}, Malaysia.`,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: clinic.city || stateLabel,
+    addressRegion: stateLabel,
+    addressCountry: 'MY',
+  },
+  areaServed: {
+    '@type': 'State',
+    name: stateLabel,
+    containedInPlace: { '@type': 'Country', name: 'Malaysia' },
+  },
+  ...(clinic.phone ? { telephone: clinic.phone } : {}),
+  ...(clinic.website ? { sameAs: [clinic.website] } : {}),
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+    { '@type': 'ListItem', position: 2, name: 'Providers', item: `${siteUrl}/providers` },
+    ...(primaryCat ? [{ '@type': 'ListItem', position: 3, name: catsMap[primaryCat]?.name || primaryCat, item: `${siteUrl}/providers/${primaryCat}` }] : []),
+    { '@type': 'ListItem', position: primaryCat ? 4 : 3, name: clinic.name, item: clinicUrl },
+  ],
+};
+---
+
+<Base
+  title={`${clinic.name}: ${locationStr} | Cyber Secure SME`}
+  description={clinic.description || `${clinic.name} is a cybersecurity provider in ${locationStr}, Malaysia.`}
+  locale="en"
+  altLocaleHref={altLocaleHref}
+  canonical={clinicUrl}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify([schemaData, breadcrumbSchema])} />
+  </Fragment>
+
+  <SiteHeader locale="en" currentPath={path} altLocaleHref={altLocaleHref} />
+
+  <main id="main-content">
+
+    <!-- Profile header -->
+    <section style="border-bottom:1px solid #181818;padding:52px 0 44px;background:#f2f2f2;">
+      <div class="container">
+        <!-- Breadcrumb -->
+        <nav aria-label="Breadcrumb" style="margin-bottom:28px;">
+          <ol style="display:flex;align-items:center;gap:8px;list-style:none;margin:0;padding:0;font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.05em;color:#6e6e6e;flex-wrap:wrap;">
+            <li><a href="/" style="color:#6e6e6e;text-decoration:none;">Home</a></li>
+            <li aria-hidden="true" style="color:#d6d6cf;">/</li>
+            <li><a href="/providers" style="color:#6e6e6e;text-decoration:none;">Providers</a></li>
+            {primaryCat && (
+              <>
+                <li aria-hidden="true" style="color:#d6d6cf;">/</li>
+                <li>
+                  <a href={`/providers/${primaryCat}`} style="color:#6e6e6e;text-decoration:none;">
+                    {catsMap[primaryCat]?.name || primaryCat}
+                  </a>
+                </li>
+              </>
+            )}
+            <li aria-hidden="true" style="color:#d6d6cf;">/</li>
+            <li aria-current="page" style="color:#181818;">{clinic.name}</li>
+          </ol>
+        </nav>
+
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:28px;">
+          <div style="flex:1;min-width:280px;">
+            <!-- Verification badge -->
+            <div style="margin-bottom:14px;">
+              <VerificationBadge level={level} locale="en" />
+            </div>
+
+            <!-- Name -->
+            <h1 class="heading" style="font-size:clamp(24px,3vw,36px);margin:0 0 10px 0;line-height:1.1;">
+              {clinic.name}
+            </h1>
+
+            <!-- Business type + location -->
+            <p class="eyebrow" style="margin:0 0 14px 0;color:#6e6e6e;">
+              {clinic.business_type ? clinic.business_type.replace(/-/g, ' ').toUpperCase() : 'CYBERSECURITY PROVIDER'}
+              {locationStr && ` · ${locationStr}`}
+            </p>
+
+            <!-- Category chips -->
+            {(clinic.categories || []).length > 0 && (
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;">
+                {(clinic.categories || []).map(cat => {
+                  const catName = catsMap[cat]?.name || cat;
+                  return (
+                    <a
+                      href={`/providers/${cat}`}
+                      style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:#181818;background:transparent;border:1px solid #181818;padding:3px 9px;text-decoration:none;transition:background 100ms ease,color 100ms ease;border-radius:0;"
+                      class="cat-chip"
+                    >
+                      {catName}
+                    </a>
+                  );
+                })}
+              </div>
+            )}
+
+            <!-- Branches -->
+            {clinic.branches > 0 && (
+              <p class="eyebrow" style="margin:0 0 8px 0;color:#6e6e6e;">
+                {clinic.branches} {clinic.branches === 1 ? 'BRANCH' : 'BRANCHES'} NATIONWIDE
+              </p>
+            )}
+          </div>
+
+          <!-- Contact actions -->
+          <aside style="display:flex;flex-direction:column;gap:10px;min-width:200px;" aria-label="Contact this provider">
+            {clinic.website && (
+              <a
+                href={clinic.website}
+                rel="noopener nofollow"
+                target="_blank"
+                class="btn-primary"
+                style="justify-content:center;gap:8px;"
+                data-ph="provider_website_click"
+                data-ph-clinic={clinic.slug}
+              >
+                Visit website
+                <span aria-hidden="true" style="color:#fc523b;">&#8599;</span>
+              </a>
+            )}
+            {clinic.phone && (
+              <>
+                <a
+                  href={`tel:${clinic.phone.replace(/\s/g, '')}`}
+                  class="btn-secondary"
+                  style="justify-content:center;gap:8px;"
+                  data-ph="provider_call_click"
+                  data-ph-clinic={clinic.slug}
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M2.5 2.5c0 0 1 1 1.5 2.5S4.5 8 2.5 9.5s1.5 2.5 2 2l2-2c.5-.5 2.5.5 2.5.5s1 .5 1 1.5v1c0 .5-.5 1-1 1C4 13.5 0.5 10 0.5 5 0.5 4.5 1 4 1.5 4h1c1 0 1.5 1 1.5 1" stroke="#181818" stroke-width="1.3" stroke-linecap="round"/>
+                  </svg>
+                  Call
+                </a>
+                <a
+                  href={`https://wa.me/${clinic.phone.replace(/\D/g, '')}`}
+                  rel="noopener nofollow"
+                  target="_blank"
+                  class="btn-secondary"
+                  style="justify-content:center;gap:8px;"
+                  data-ph="provider_wa_click"
+                  data-ph-clinic={clinic.slug}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366" aria-hidden="true">
+                    <path d="M17.47 14.38c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.49-.9-.8-1.5-1.78-1.68-2.08-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51H6.2c-.2 0-.52.07-.79.37s-1.04 1.02-1.04 2.48c0 1.47 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.49.71.31 1.27.5 1.7.64.72.23 1.37.2 1.89.12.58-.09 1.77-.72 2.02-1.41.25-.69.25-1.28.17-1.41-.07-.12-.27-.2-.57-.35z"/>
+                    <path d="M12 2C6.48 2 2 6.48 2 12c0 1.75.46 3.39 1.26 4.82L2 22l5.34-1.4C8.73 21.44 10.32 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.6 0-3.1-.44-4.37-1.2l-.31-.19-3.2.84.85-3.12-.2-.32A7.96 7.96 0 014 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z"/>
+                  </svg>
+                  WhatsApp
+                </a>
+              </>
+            )}
+            <a
+              href={`mailto:cybersecuresme@agentmail.to?subject=Enquiry about ${encodeURIComponent(clinic.name)}`}
+              class="btn-secondary"
+              style="justify-content:center;font-size:14px;"
+              data-ph="provider_contact_via_css"
+              data-ph-clinic={clinic.slug}
+            >
+              Contact via Cyber Secure SME
+            </a>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- Profile body -->
+    <section style="padding:52px 0;">
+      <div class="container">
+        <div class="profile-layout">
+
+          <!-- Main content -->
+          <div>
+            <!-- Description -->
+            {clinic.description && (
+              <div style="margin-bottom:44px;">
+                <h2 class="heading" style="font-size:22px;margin:0 0 18px 0;padding-bottom:12px;border-bottom:1px solid #d6d6cf;">
+                  About {clinic.name}
+                </h2>
+                <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;color:#181818;line-height:1.65;margin:0;">
+                  {clinic.description}
+                </p>
+              </div>
+            )}
+
+            <!-- Services -->
+            {(clinic.services || []).length > 0 && (
+              <div style="margin-bottom:44px;">
+                <h2 class="heading" style="font-size:22px;margin:0 0 18px 0;padding-bottom:12px;border-bottom:1px solid #d6d6cf;">
+                  Services offered
+                </h2>
+                <ul style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;" role="list">
+                  {(clinic.services || []).map(svc => (
+                    <li style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:16px;color:#181818;display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:#ffffff;border:1px solid #d6d6cf;">
+                      <span aria-hidden="true" style="color:#fc523b;flex-shrink:0;margin-top:4px;font-size:10px;">&#9632;</span>
+                      {svc}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <!-- Directory notice -->
+            <div style="border:1px solid #d6d6cf;padding:18px 22px;margin-bottom:44px;background:#f2f2f2;">
+              <p class="eyebrow" style="margin:0 0 8px 0;color:#6e6e6e;font-size:10px;">DIRECTORY NOTICE</p>
+              <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:15px;color:#6e6e6e;line-height:1.65;margin:0;">
+                Cyber Secure SME is an independent directory. This listing is not an endorsement. Always confirm the provider's NACSA licence, certifications, and track record before engaging their services.
+              </p>
+            </div>
+          </div>
+
+          <!-- Sidebar -->
+          <aside>
+            <!-- Location -->
+            <div style="border:1px solid #181818;padding:24px;margin-bottom:18px;background:#ffffff;">
+              <p class="eyebrow" style="margin:0 0 16px 0;color:#6e6e6e;">LOCATION</p>
+              {locationStr && (
+                <p class="heading" style="font-size:18px;margin:0 0 6px 0;">{locationStr}</p>
+              )}
+              <p class="eyebrow" style="margin:0;color:#6e6e6e;">Malaysia</p>
+            </div>
+
+            <!-- Verify credentials -->
+            {regulators.length > 0 && (
+              <div style="border:1px solid #181818;padding:24px;background:#ffffff;">
+                <p class="eyebrow" style="margin:0 0 6px 0;color:#181818;">VERIFY CREDENTIALS</p>
+                <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:15px;color:#6e6e6e;line-height:1.5;margin:0 0 18px 0;">
+                  Confirm this provider is registered or certified with the relevant authority before engaging.
+                </p>
+                <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;">
+                  {regulators.map((reg, i) => (
+                    <li style={`${i > 0 ? 'border-top:1px solid #d6d6cf;' : ''}padding-top:${i > 0 ? '14px' : '0'};padding-bottom:14px;`}>
+                      <a
+                        href={reg.url}
+                        rel="noopener nofollow"
+                        target="_blank"
+                        class="arrow-link"
+                        style="font-size:15px;display:block;margin-bottom:5px;"
+                      >
+                        {reg.name}
+                      </a>
+                      <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:14px;color:#6e6e6e;line-height:1.55;margin:0;">
+                        {reg.note}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related providers -->
+    {relatedClinics.length > 0 && (
+      <section style="border-top:1px solid #181818;padding:52px 0 80px;" aria-label="Related providers">
+        <div class="container">
+          <p class="eyebrow" style="margin:0 0 22px 0;color:#6e6e6e;">RELATED PROVIDERS</p>
+          <div class="related-grid">
+            {relatedClinics.map(related => (
+              <ProviderCard clinic={related} locale="en" />
+            ))}
+          </div>
+          <div style="margin-top:26px;">
+            <a
+              href={primaryCat ? `/providers/${primaryCat}` : '/providers'}
+              class="arrow-link"
+              style="font-size:17px;"
+            >
+              View all {primaryCat && catsMap[primaryCat] ? catsMap[primaryCat].name.toLowerCase() : ''} providers
+            </a>
+          </div>
+        </div>
+      </section>
+    )}
+
+  </main>
+
+  <SiteFooter locale="en" currentPath={path} altLocaleHref={altLocaleHref} />
+
+</Base>
+
+<style>
+  .profile-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 44px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .profile-layout { grid-template-columns: 1fr; }
+  }
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 900px) {
+    .related-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .related-grid { grid-template-columns: 1fr; }
+  }
+  .cat-chip:hover { background: #181818; color: #f2f2f2; }
+  @media (prefers-reduced-motion: reduce) {
+    .cat-chip { transition: none; }
+  }
+</style>

@@ -1,0 +1,129 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+const lastUpdated = '1 June 2026';
+
+const sections = [
+  {
+    id: 'acceptance',
+    heading: '1. Acceptance of terms',
+    body: `By accessing or using cybersecuresme.my (the "Site"), you agree to these Terms of Use. If you do not agree, do not use the Site. These terms govern all visitors, cybersecurity firms, and any other users of the Site.`,
+  },
+  {
+    id: 'directory-nature',
+    heading: '2. The directory is informational only',
+    body: `Cyber Secure SME is an independent online directory. All information on the Site (provider names, addresses, services, verification badges, categories, and contact details) is provided for informational purposes only.
+
+Nothing on this Site constitutes security advice, a security assessment, a risk recommendation, or a guarantee of protection. Do not make any security or compliance decision based solely on information found on this Site. Always engage a qualified and licensed cybersecurity professional.`,
+  },
+  {
+    id: 'not-endorsements',
+    heading: '3. Listings are not endorsements',
+    body: `A listing on Cyber Secure SME does not constitute an endorsement, recommendation, or approval of any provider by Cyber Secure SME. Verification badges indicate only what has been confirmed against a specific regulatory register at the time of verification; they do not guarantee quality, capability, or the ongoing validity of a licence.
+
+Premium or sponsored placement is a paid service. Paid placement does not affect verification tier and does not constitute an endorsement.`,
+  },
+  {
+    id: 'verify-credentials',
+    heading: '4. Verify credentials yourself',
+    body: `Licence and certification data changes. Providers may have their licences suspended, revoked, or updated after our last verification check. Before engaging any cybersecurity provider, verify their active credentials directly with the relevant authority:
+
+- NACSA licence: nacsa.gov.my
+- CyberSecurity Malaysia recognition: cybersecurity.my
+- SSM company registration: ssm.com.my
+- PDPA compliance status: pdp.gov.my
+- ISO/IEC 27001 certification: check the certifying body's register directly
+- CREST accreditation: crest-approved.org
+
+Cyber Secure SME accepts no liability for any security outcome arising from failure to independently verify a provider's credentials.`,
+  },
+  {
+    id: 'accuracy',
+    heading: '5. Accuracy disclaimer',
+    body: `We take reasonable steps to ensure the accuracy of listing data, but we do not warrant that information is complete, current, or error-free. Provider details (including address, phone number, services, and certifications) are subject to change without notice and may not reflect the provider's current situation.
+
+If you find inaccurate data, please report it to cybersecuresme@agentmail.to. We will review and update within a reasonable time.`,
+  },
+  {
+    id: 'user-conduct',
+    heading: '6. Acceptable use',
+    body: `You agree not to: (a) use the Site for any unlawful purpose; (b) scrape or harvest listing data in bulk without written permission; (c) submit false information through any form; (d) attempt to interfere with the Site's operation or security; (e) impersonate another person or company.`,
+  },
+  {
+    id: 'ip',
+    heading: '7. Intellectual property',
+    body: `All content on this Site (including page design, copy, category taxonomy, and the Cyber Secure SME wordmark and logo) is the property of Cyber Secure SME or its licensors and is protected under applicable Malaysian copyright law. You may not reproduce, distribute, or create derivative works without prior written consent.
+
+Provider names, trademarks, and logos referenced in listings remain the property of their respective owners.`,
+  },
+  {
+    id: 'liability',
+    heading: '8. Limitation of liability',
+    body: `To the fullest extent permitted by Malaysian law, Cyber Secure SME shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from your use of, or inability to use, this Site or its content, including any damages resulting from reliance on directory information for security or compliance decisions.`,
+  },
+  {
+    id: 'governing-law',
+    heading: '9. Governing law',
+    body: `These Terms of Use are governed by and construed in accordance with the laws of Malaysia. Any disputes arising from these terms shall be subject to the exclusive jurisdiction of the courts of Malaysia.`,
+  },
+  {
+    id: 'changes',
+    heading: '10. Changes to these terms',
+    body: `We may revise these terms at any time. The date at the top of this page reflects the most recent update. Continued use of the Site after a revision constitutes acceptance of the updated terms.`,
+  },
+  {
+    id: 'contact',
+    heading: '11. Contact',
+    body: `Questions about these terms: cybersecuresme@agentmail.to.`,
+  },
+];
+---
+
+<Base
+  title="Terms of Use | Cyber Secure SME"
+  description="Terms of use for Cyber Secure SME: the directory is informational only, listings are not endorsements, accuracy disclaimer, verify-credentials responsibility. Governing law: Malaysia."
+  locale="en"
+  altLocaleHref="/ms/terma"
+>
+  <SiteHeader locale="en" currentPath="/terms" altLocaleHref="/ms/terma" />
+
+  <main>
+    <section style="background:#f2f2f2;border-bottom:1px solid #181818;padding:64px 0 44px;">
+      <div class="container" style="max-width:760px;">
+        <p class="eyebrow" style="margin:0 0 20px 0;">LEGAL</p>
+        <h1 class="heading" style="font-size:clamp(24px,4vw,36px);margin:0 0 14px 0;line-height:1.05;">
+          Terms of Use
+        </h1>
+        <p class="eyebrow" style="margin:0;color:#6e6e6e;">Last updated: {lastUpdated}</p>
+      </div>
+    </section>
+
+    <section style="padding:56px 0 80px;">
+      <div class="container" style="max-width:760px;">
+        {sections.map(sec => (
+          <div id={sec.id} style="margin-bottom:44px;padding-top:12px;border-top:1px solid #d6d6cf;">
+            <h2 class="heading" style="font-size:21px;margin:12px 0 14px 0;">{sec.heading}</h2>
+            {sec.body.split('\n\n').map(para => (
+              <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#181818;line-height:1.7;margin:0 0 12px 0;">{para}</p>
+            ))}
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter locale="en" currentPath="/terms" altLocaleHref="/ms/terma" />
+
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cybersecuresme.my/" },
+        { "@type": "ListItem", "position": 2, "name": "Terms of Use", "item": "https://cybersecuresme.my/terms" }
+      ]
+    })}
+  </script>
+</Base>

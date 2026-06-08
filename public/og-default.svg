@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#f2f2f2"/>
+  <!-- hairline frame -->
+  <rect x="60" y="60" width="1080" height="510" fill="none" stroke="#181818" stroke-width="1"/>
+  <!-- eyebrow -->
+  <text x="96" y="150" font-family="Inter, Helvetica, Arial, sans-serif" font-size="22" letter-spacing="6" fill="#181818">MALAYSIA&#8217;S CYBERSECURITY DIRECTORY FOR SMEs</text>
+  <line x1="96" y1="176" x2="1104" y2="176" stroke="#181818" stroke-width="1"/>
+  <!-- wordmark -->
+  <text x="92" y="330" font-family="'EB Garamond', Garamond, Georgia, serif" font-size="118" fill="#181818">Cyber Secure SME</text>
+  <!-- subline -->
+  <text x="96" y="410" font-family="'EB Garamond', Garamond, Georgia, serif" font-size="40" fill="#3a4047">Find a cybersecurity provider you can trust.</text>
+  <!-- wireframe shield mark, vermillion -->
+  <g transform="translate(980,420)">
+    <path d="M60 0 L120 24 V72 C120 108 96 132 60 144 C24 132 0 108 0 72 V24 Z" fill="none" stroke="#fc523b" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="60" cy="66" r="13" fill="none" stroke="#fc523b" stroke-width="2"/>
+    <path d="M60 79 V100" stroke="#fc523b" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <line x1="96" y1="500" x2="1104" y2="500" stroke="#181818" stroke-width="1"/>
+  <text x="96" y="540" font-family="Inter, Helvetica, Arial, sans-serif" font-size="20" letter-spacing="2" fill="#6e6e6e">Managed security &#183; VAPT &#183; PDPA &#183; Ransomware recovery &#183; 16 states</text>
+</svg>

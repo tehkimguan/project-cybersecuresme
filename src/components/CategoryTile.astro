@@ -1,0 +1,61 @@
+---
+interface Category {
+  slug: string;
+  slug_ms?: string;
+  name: string;
+  name_ms?: string;
+  subcategories?: string[];
+}
+
+interface Props {
+  category: Category;
+  count: number;
+  locale?: string;
+}
+
+const { category, count, locale = 'en' } = Astro.props;
+
+const isMS = locale === 'ms';
+const prefix = isMS ? '/ms' : '';
+const dirSlug = isMS ? '/direktori/' : '/providers/';
+const href = `${prefix}${dirSlug}${category.slug}`;
+const displayName = isMS && category.name_ms ? category.name_ms : category.name;
+const subcats = (category.subcategories || []).slice(0, 3);
+
+const countLabel = isMS
+  ? (count === 1 ? '1 pembekal' : `${count} pembekal`)
+  : (count === 1 ? '1 provider' : `${count} providers`);
+---
+
+<a
+  href={href}
+  class="category-tile card-hover"
+  style="display:flex;flex-direction:column;gap:14px;padding:26px 24px;background:#f2f2f2;border:1px solid #181818;border-radius:0;text-decoration:none;height:100%;"
+  aria-label={`${displayName}: ${countLabel}`}
+>
+  <!-- Count eyebrow -->
+  <span style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#6e6e6e;font-feature-settings:'tnum','zero';">
+    {countLabel}
+  </span>
+
+  <!-- Name (Garamond) -->
+  <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:24px;font-weight:400;line-height:1.1;color:#181818;margin:0;">
+    {displayName}
+  </p>
+
+  <!-- Subcategory labels -->
+  {subcats.length > 0 && (
+    <div style="display:flex;flex-wrap:wrap;gap:5px 12px;margin-top:2px;">
+      {subcats.map((sub: string) => (
+        <span style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.04em;color:#3a4047;">
+          {sub}
+        </span>
+      ))}
+    </div>
+  )}
+
+  <!-- Arrow row (the single vermillion mark) -->
+  <div style="display:flex;align-items:center;justify-content:flex-end;margin-top:auto;padding-top:8px;">
+    <span aria-hidden="true" style="font-family:'Inter',Helvetica,Arial,sans-serif;font-size:18px;line-height:1;color:#fc523b;">&#8599;</span>
+  </div>
+</a>

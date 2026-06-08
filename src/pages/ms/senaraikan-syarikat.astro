@@ -1,0 +1,260 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import ProviderLeadForm from '../../components/ProviderLeadForm.astro';
+
+const plans = [
+  {
+    id: 'basic',
+    name: 'Penyenaraian Asas',
+    price: 'Percuma',
+    priceSub: 'Sentiasa percuma',
+    highlight: false,
+    features: [
+      'Nama syarikat, lokasi, dan hubungan',
+      'Kategori perkhidmatan dan penandaan negeri',
+      'Lencana pengesahan Tersenarai',
+      'Kelihatan dalam carian direktori',
+      'Pautan ke laman web anda',
+    ],
+    notIncluded: [
+      'Pengesahan tuntutan dan pemilikan',
+      'Penempatan pilihan',
+      'Laporan analitik',
+    ],
+    cta: 'Mohon penyenaraian asas',
+  },
+  {
+    id: 'featured',
+    name: 'Syarikat Pilihan',
+    price: 'RM 199',
+    priceSub: 'sebulan',
+    highlight: true,
+    features: [
+      'Semua dalam Asas',
+      'Lencana Dituntut dan semakan SSM',
+      'Penempatan keutamaan dalam halaman perkhidmatan',
+      'Senarai penuh perkhidmatan dan huraian',
+      'Laporan analitik bulanan',
+      'Butang WhatsApp dan panggilan',
+    ],
+    notIncluded: [
+      'Penempatan penaja premium',
+    ],
+    cta: 'Mohon penyenaraian pilihan',
+  },
+  {
+    id: 'premium',
+    name: 'Penaja Premium',
+    price: 'RM 899',
+    priceSub: 'sebulan',
+    highlight: false,
+    features: [
+      'Semua dalam Pilihan',
+      'Semakan pengesahan lesen NACSA',
+      'Lencana Premium (plat tinta)',
+      'Penempatan utama laman utama dan kategori',
+      'Artikel ciri blog (sekali setiap suku tahun)',
+      'Sokongan WhatsApp keutamaan',
+      'Pengurus akaun khusus',
+    ],
+    notIncluded: [],
+    cta: 'Mohon tajaan premium',
+  },
+];
+
+const faqs = [
+  {
+    q: 'Adakah ada kontrak atau tempoh minimum?',
+    a: 'Pelan berbayar adalah bulan ke bulan. Batal bila-bila masa dengan notis 30 hari. Penyenaraian asas tiada komitmen.',
+  },
+  {
+    q: 'Apa yang saya perlukan untuk memohon?',
+    a: 'Nama syarikat anda, e-mel hubungan dan nombor telefon, negeri anda, dan kategori perkhidmatan yang ingin anda senaraikan. Untuk tahap Disemak SSM dan Berlesen NACSA, kami akan meminta nombor pendaftaran syarikat dan nombor lesen anda semasa onboarding.',
+  },
+  {
+    q: 'Berapa lama pengesahan mengambil masa?',
+    a: 'Semakan SSM: biasanya 2 hari bekerja. Semakan lesen NACSA: 3 hingga 5 hari bekerja bergantung pada masa tindak balas daftar.',
+  },
+  {
+    q: 'Adakah penempatan premium bermakna saya disokong?',
+    a: 'Tidak. Premium ialah perkhidmatan penempatan berbayar. Status pengesahan ditunjukkan secara berasingan dan berdasarkan semata-mata pada rujukan silang kawal selia. Penempatan berbayar tidak menjejaskan tahap pengesahan yang dipaparkan pada penyenaraian anda.',
+  },
+  {
+    q: 'Bolehkah saya mengemas kini maklumat penyenaraian saya kemudian?',
+    a: 'Ya. Tahap Dituntut ke atas boleh meminta kemas kini penyenaraian dengan menghantar e-mel cybersecuresme@agentmail.to. Kemas kini diproses dalam masa 2 hari bekerja.',
+  },
+];
+---
+
+<Base
+  title="Senaraikan Syarikat Anda | Cyber Secure SME: Pelan Asas, Pilihan dan Premium"
+  description="Senaraikan syarikat keselamatan siber anda di Cyber Secure SME. Penyenaraian asas percuma. Pilihan dari RM 199/bulan. Penaja premium dari RM 899/bulan dengan semakan lesen NACSA dan penempatan laman utama."
+  locale="ms"
+  altLocaleHref="/list-your-company"
+  schemaType="breadcrumb"
+  schemaData={{ items: [{ name: 'Utama', url: '/ms' }, { name: 'Senaraikan Syarikat', url: '/ms/senaraikan-syarikat' }] }}
+>
+  <SiteHeader locale="ms" currentPath="/ms/senaraikan-syarikat" altLocaleHref="/list-your-company" />
+
+  <main>
+    <!-- Hero -->
+    <section style="background:#f2f2f2;border-bottom:1px solid #181818;padding:64px 0 52px;">
+      <div class="container" style="max-width:760px;">
+        <p class="eyebrow" style="margin:0 0 20px 0;">UNTUK FIRMA KESELAMATAN SIBER</p>
+        <h1 class="heading" style="font-size:clamp(26px,5vw,42px);margin:0 0 22px 0;line-height:1.05;">
+          Jangkau PKS Malaysia yang sedang mencari bantuan keselamatan
+        </h1>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:19px;color:#181818;line-height:1.55;margin:0;max-width:580px;">
+          Cyber Secure SME menyenaraikan pembekal keselamatan siber yang disahkan di seluruh Malaysia. Mulakan dengan penyenaraian asas percuma, atau naik taraf ke pilihan atau premium untuk menonjol dalam kategori perkhidmatan anda.
+        </p>
+      </div>
+    </section>
+
+    <!-- Why list here -->
+    <section style="padding:64px 0;background:#ffffff;border-bottom:1px solid #181818;">
+      <div class="container" style="max-width:900px;">
+        <p class="eyebrow" style="margin:0 0 14px 0;">KENAPA SENARAI DI SINI</p>
+        <h2 class="heading" style="font-size:24px;margin:0 0 40px 0;">Apa yang anda dapat di Cyber Secure SME</h2>
+        <div class="why-grid">
+          {[
+            { title: 'Kehadiran yang disahkan kelayakan', desc: 'Penyenaraian anda membawa tahap pengesahan yang betul berdasarkan semakan silang kawal selia sebenar. PKS Malaysia mempercayai pembekal yang disahkan apabila membuat keputusan pembelian keselamatan.' },
+            { title: 'Carian perkhidmatan dan negeri', desc: 'Perniagaan menyemak imbas mengikut kategori perkhidmatan (keselamatan terurus, ujian penembusan, GRC, dll.) dan negeri. Penempatan yang disasarkan dalam kategori tepat firma anda beroperasi.' },
+            { title: 'Tiada metrik penglibatan palsu', desc: 'Kami memaparkan data nyata: tahap pengesahan, perkhidmatan, dan maklumat hubungan. Tiada penilaian bintang dari sumber yang tidak dapat disahkan.' },
+            { title: 'Kos rendah, terma jelas', desc: 'Harga bulan ke bulan. Tiada kontrak panjang, tiada yuran persediaan tersembunyi. Batal bila-bila masa.' },
+          ].map(item => (
+            <div style="background:#f2f2f2;border:1px solid #181818;padding:24px;">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" style="display:block;margin-bottom:12px;">
+                <path d="M3 9l4 4 8-8" stroke="#181818" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <h3 class="heading" style="font-size:19px;margin:0 0 8px 0;">{item.title}</h3>
+              <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:16px;color:#6e6e6e;line-height:1.6;margin:0;">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section style="padding:72px 0;border-bottom:1px solid #181818;">
+      <div class="container" style="max-width:960px;">
+        <p class="eyebrow" style="margin:0 0 14px 0;text-align:center;">PELAN</p>
+        <h2 class="heading" style="font-size:26px;margin:0 0 8px 0;text-align:center;">Harga yang mudah dan telus</h2>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#6e6e6e;text-align:center;margin:0 0 52px 0;">
+          Semua harga dalam Ringgit Malaysia (RM). Bulan ke bulan. Tiada yuran persediaan.
+        </p>
+
+        <div class="pricing-grid">
+          {plans.map(plan => (
+            <div style={`background:#f2f2f2;border:${plan.highlight ? '2px solid #181818' : '1px solid #181818'};padding:32px 28px;display:flex;flex-direction:column;position:relative;`}>
+              {plan.highlight && (
+                <span style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:#181818;color:#f2f2f2;padding:4px 12px;white-space:nowrap;">
+                  PALING POPULAR
+                </span>
+              )}
+              <p class="eyebrow" style="margin:0 0 10px 0;color:#6e6e6e;">{plan.name}</p>
+              <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:4px;">
+                <span class="heading" style="font-size:34px;">{plan.price}</span>
+              </div>
+              <p class="eyebrow" style="margin:0 0 32px 0;color:#6e6e6e;">{plan.priceSub}</p>
+
+              <ul style="list-style:none;margin:0 0 28px 0;padding:0;display:flex;flex-direction:column;gap:10px;flex:1;">
+                {plan.features.map(f => (
+                  <li style="display:flex;gap:10px;align-items:flex-start;">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:4px;">
+                      <path d="M2 7l3.5 3.5 6.5-6.5" stroke="#181818" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:16px;color:#181818;">{f}</span>
+                  </li>
+                ))}
+                {plan.notIncluded.map(f => (
+                  <li style="display:flex;gap:10px;align-items:flex-start;opacity:0.4;">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:4px;">
+                      <path d="M3 3l8 8M11 3l-8 8" stroke="#6e6e6e" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    <span style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:16px;color:#6e6e6e;">{f}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <a
+                href="#listing-form"
+                class={plan.highlight ? 'btn-primary' : 'btn-secondary'}
+                style="justify-content:center;"
+              >
+                {plan.cta}
+              </a>
+            </div>
+          ))}
+        </div>
+
+        <p class="eyebrow" style="text-align:center;margin-top:24px;color:#6e6e6e;font-size:11px;letter-spacing:0.04em;text-transform:none;">
+          Harga dalam MYR. Semua pelan termasuk penyenaraian di direktori Cyber Secure SME. Penempatan premium tidak menjejaskan tahap pengesahan.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section style="background:#ffffff;border-bottom:1px solid #181818;padding:64px 0;">
+      <div class="container" style="max-width:720px;">
+        <p class="eyebrow" style="margin:0 0 14px 0;">SOALAN LAZIM</p>
+        <h2 class="heading" style="font-size:26px;margin:0 0 40px 0;">Soalan biasa</h2>
+        <div style="display:flex;flex-direction:column;gap:0;">
+          {faqs.map((faq, i) => (
+            <div style={`padding:26px 0;${i > 0 ? 'border-top:1px solid #d6d6cf;' : ''}`}>
+              <h3 class="heading" style="font-size:20px;margin:0 0 10px 0;">{faq.q}</h3>
+              <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#6e6e6e;line-height:1.65;margin:0;">{faq.a}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Form -->
+    <section id="listing-form" style="padding:72px 0;border-bottom:1px solid #d6d6cf;">
+      <div class="container" style="max-width:760px;">
+        <p class="eyebrow" style="margin:0 0 14px 0;">MOHON</p>
+        <h2 class="heading" style="font-size:26px;margin:0 0 10px 0;">Mohon penyenaraian</h2>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#6e6e6e;line-height:1.6;margin:0 0 36px 0;">
+          Isi butiran syarikat anda di bawah. Nyatakan pelan pilihan anda dalam medan mesej. Kami akan menghubungi anda dalam masa 2 hari bekerja.
+        </p>
+        <ProviderLeadForm locale="ms" mode="list" />
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter locale="ms" currentPath="/ms/senaraikan-syarikat" altLocaleHref="/list-your-company" />
+
+  <style>
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .why-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Utama", "item": "https://cybersecuresme.my/ms" },
+        { "@type": "ListItem", "position": 2, "name": "Senaraikan Syarikat", "item": "https://cybersecuresme.my/ms/senaraikan-syarikat" }
+      ]
+    })}
+  </script>
+</Base>

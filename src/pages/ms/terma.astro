@@ -1,0 +1,129 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+
+const lastUpdated = '1 Jun 2026';
+
+const sections = [
+  {
+    id: 'acceptance',
+    heading: '1. Penerimaan terma',
+    body: `Dengan mengakses atau menggunakan cybersecuresme.my (the "Laman"), anda bersetuju dengan Terma Penggunaan ini. Jika anda tidak bersetuju, jangan gunakan Laman. Terma ini mengawal semua pelawat, firma keselamatan siber, dan pengguna lain Laman.`,
+  },
+  {
+    id: 'directory-nature',
+    heading: '2. Direktori adalah untuk maklumat sahaja',
+    body: `Cyber Secure SME ialah direktori dalam talian bebas. Semua maklumat di Laman (nama pembekal, alamat, perkhidmatan, lencana pengesahan, kategori, dan butiran hubungan) disediakan untuk tujuan maklumat sahaja.
+
+Tiada apa-apa di Laman ini merupakan nasihat keselamatan, penilaian keselamatan, cadangan risiko, atau jaminan perlindungan. Jangan buat sebarang keputusan keselamatan atau pematuhan berdasarkan semata-mata maklumat yang terdapat di Laman ini. Sentiasa libatkan pakar keselamatan siber yang berkelayakan dan berlesen.`,
+  },
+  {
+    id: 'not-endorsements',
+    heading: '3. Penyenaraian bukan pengesahan',
+    body: `Penyenaraian di Cyber Secure SME bukan merupakan pengesahan, cadangan, atau kelulusan mana-mana pembekal oleh Cyber Secure SME. Lencana pengesahan menunjukkan hanya apa yang telah disahkan terhadap daftar kawal selia tertentu pada masa pengesahan; ia tidak menjamin kualiti, keupayaan, atau kesahan lesen yang berterusan.
+
+Penempatan premium atau penajaan ialah perkhidmatan berbayar. Penempatan berbayar tidak menjejaskan tahap pengesahan dan bukan merupakan pengesahan.`,
+  },
+  {
+    id: 'verify-credentials',
+    heading: '4. Sahkan kelayakan sendiri',
+    body: `Data lesen dan pensijilan berubah. Pembekal mungkin mempunyai lesen mereka yang digantung, dibatalkan, atau dikemas kini selepas semakan pengesahan terakhir kami. Sebelum melibatkan mana-mana pembekal keselamatan siber, sahkan kelayakan aktif mereka terus dengan pihak berkuasa yang berkaitan:
+
+- Lesen NACSA: nacsa.gov.my
+- Pengiktirafan CyberSecurity Malaysia: cybersecurity.my
+- Pendaftaran syarikat SSM: ssm.com.my
+- Status pematuhan PDPA: pdp.gov.my
+- Pensijilan ISO/IEC 27001: semak daftar badan pensijilan secara langsung
+- Akreditasi CREST: crest-approved.org
+
+Cyber Secure SME tidak menerima sebarang liabiliti untuk sebarang hasil keselamatan yang timbul daripada kegagalan untuk mengesahkan kelayakan pembekal secara bebas.`,
+  },
+  {
+    id: 'accuracy',
+    heading: '5. Penafian ketepatan',
+    body: `Kami mengambil langkah yang munasabah untuk memastikan ketepatan data penyenaraian, tetapi kami tidak menjamin bahawa maklumat adalah lengkap, terkini, atau bebas ralat. Butiran pembekal (termasuk alamat, nombor telefon, perkhidmatan, dan pensijilan) boleh berubah tanpa notis dan mungkin tidak mencerminkan situasi semasa pembekal.
+
+Jika anda menemui data yang tidak tepat, sila laporkan ke cybersecuresme@agentmail.to. Kami akan menyemak dan mengemas kini dalam masa yang munasabah.`,
+  },
+  {
+    id: 'user-conduct',
+    heading: '6. Penggunaan yang boleh diterima',
+    body: `Anda bersetuju untuk tidak: (a) menggunakan Laman untuk sebarang tujuan yang menyalahi undang-undang; (b) mengikis atau memanen data penyenaraian secara pukal tanpa kebenaran bertulis; (c) menghantar maklumat palsu melalui mana-mana borang; (d) mencuba mengganggu operasi atau keselamatan Laman; (e) menyamar sebagai orang atau syarikat lain.`,
+  },
+  {
+    id: 'ip',
+    heading: '7. Harta intelek',
+    body: `Semua kandungan di Laman ini (termasuk reka bentuk halaman, salinan, taksonomi kategori, dan tanda kata dan logo Cyber Secure SME) adalah hak milik Cyber Secure SME atau pemberi lisensnya dan dilindungi di bawah undang-undang hak cipta Malaysia yang berkenaan. Anda tidak boleh menghasilkan semula, mengedarkan, atau mencipta karya terbitan tanpa persetujuan bertulis terlebih dahulu.
+
+Nama, tanda dagangan, dan logo pembekal yang dirujuk dalam penyenaraian kekal sebagai hak milik pemilik masing-masing.`,
+  },
+  {
+    id: 'liability',
+    heading: '8. Had liabiliti',
+    body: `Setakat yang dibenarkan oleh undang-undang Malaysia, Cyber Secure SME tidak akan bertanggungjawab atas sebarang kerosakan langsung, tidak langsung, sampingan, khas, atau berbangkit yang timbul daripada penggunaan anda, atau ketidakupayaan untuk menggunakan, Laman ini atau kandungannya, termasuk sebarang kerosakan akibat pergantungan pada maklumat direktori untuk keputusan keselamatan atau pematuhan.`,
+  },
+  {
+    id: 'governing-law',
+    heading: '9. Undang-undang yang mengawal',
+    body: `Terma Penggunaan ini ditadbir dan ditafsirkan selaras dengan undang-undang Malaysia. Sebarang pertikaian yang timbul daripada terma ini tertakluk kepada bidang kuasa eksklusif mahkamah Malaysia.`,
+  },
+  {
+    id: 'changes',
+    heading: '10. Perubahan terma ini',
+    body: `Kami mungkin menyemak semula terma ini pada bila-bila masa. Tarikh di bahagian atas halaman ini mencerminkan kemas kini terkini. Penggunaan berterusan Laman selepas semakan merupakan penerimaan terma yang dikemas kini.`,
+  },
+  {
+    id: 'contact',
+    heading: '11. Hubungi',
+    body: `Soalan tentang terma ini: cybersecuresme@agentmail.to.`,
+  },
+];
+---
+
+<Base
+  title="Terma Penggunaan | Cyber Secure SME"
+  description="Terma penggunaan Cyber Secure SME: direktori adalah untuk maklumat sahaja, penyenaraian bukan pengesahan, penafian ketepatan, tanggungjawab sahkan kelayakan. Undang-undang yang mengawal: Malaysia."
+  locale="ms"
+  altLocaleHref="/terms"
+>
+  <SiteHeader locale="ms" currentPath="/ms/terma" altLocaleHref="/terms" />
+
+  <main>
+    <section style="background:#f2f2f2;border-bottom:1px solid #181818;padding:64px 0 44px;">
+      <div class="container" style="max-width:760px;">
+        <p class="eyebrow" style="margin:0 0 20px 0;">UNDANG-UNDANG</p>
+        <h1 class="heading" style="font-size:clamp(24px,4vw,36px);margin:0 0 14px 0;line-height:1.05;">
+          Terma Penggunaan
+        </h1>
+        <p class="eyebrow" style="margin:0;color:#6e6e6e;">Dikemas kini terakhir: {lastUpdated}</p>
+      </div>
+    </section>
+
+    <section style="padding:56px 0 80px;">
+      <div class="container" style="max-width:760px;">
+        {sections.map(sec => (
+          <div id={sec.id} style="margin-bottom:44px;padding-top:12px;border-top:1px solid #d6d6cf;">
+            <h2 class="heading" style="font-size:21px;margin:12px 0 14px 0;">{sec.heading}</h2>
+            {sec.body.split('\n\n').map(para => (
+              <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#181818;line-height:1.7;margin:0 0 12px 0;">{para}</p>
+            ))}
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter locale="ms" currentPath="/ms/terma" altLocaleHref="/terms" />
+
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Utama", "item": "https://cybersecuresme.my/ms" },
+        { "@type": "ListItem", "position": 2, "name": "Terma Penggunaan", "item": "https://cybersecuresme.my/ms/terma" }
+      ]
+    })}
+  </script>
+</Base>

@@ -1,0 +1,128 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+const lastUpdated = '1 June 2026';
+
+const sections = [
+  {
+    id: 'who-we-are',
+    heading: '1. Who we are',
+    body: `Cyber Secure SME operates the website at cybersecuresme.my (the "Site"). The Site is an independent online directory of cybersecurity providers in Malaysia. We are not a cybersecurity provider and do not offer security services.
+
+Correspondence: cybersecuresme@agentmail.to. Country of operation: Malaysia.`,
+  },
+  {
+    id: 'data-collected',
+    heading: '2. Information we collect',
+    body: `We collect only what is necessary to operate the directory and handle enquiries.
+
+Contact form submissions: company name, contact person name, email address, phone number, state, service category, and message content. This data is transmitted by your email client to cybersecuresme@agentmail.to and is not stored on our servers.
+
+Analytics: when PostHog analytics is enabled (configured via environment variable), the Site collects anonymous page-view events, click events, and device and browser metadata. No personally identifiable information is sent to PostHog by default. PostHog is a product analytics platform; their privacy policy is available at posthog.com/privacy.
+
+Server logs: our Cloudflare Workers hosting environment records standard access logs (IP address, URL, HTTP status, user agent, timestamp) for security and performance purposes. These logs are retained per Cloudflare's standard retention policy.`,
+  },
+  {
+    id: 'no-sensitive-data',
+    heading: '3. No sensitive business data collected',
+    body: `Cyber Secure SME does not collect, process, or store confidential business information, security assessment findings, network configurations, or any data relating to your organisation's security posture. Do not submit sensitive security data through our contact forms or enquiry channels.`,
+  },
+  {
+    id: 'how-we-use',
+    heading: '4. How we use your information',
+    body: `Contact form data is used solely to respond to your enquiry. We do not use it for marketing, do not sell it to third parties, and do not add you to any mailing list without your explicit consent.
+
+Analytics data is used in aggregate to understand how the directory is used and to improve the service.`,
+  },
+  {
+    id: 'cookies',
+    heading: '5. Cookies',
+    body: `The Site uses minimal cookies. PostHog analytics sets a first-party cookie (ph_*) to distinguish unique sessions anonymously when analytics is enabled. We do not use advertising cookies or third-party tracking pixels. You may disable cookies in your browser settings; this will not affect core directory functionality.`,
+  },
+  {
+    id: 'third-parties',
+    heading: '6. Third-party services',
+    body: `We use Cloudflare (hosting and CDN), Google Fonts (typography), and PostHog (analytics, when enabled). Each service operates under its own privacy policy. We do not transfer your personal data to any other third parties.`,
+  },
+  {
+    id: 'pdpa',
+    heading: '7. Personal Data Protection Act 2010 (PDPA / Act 709)',
+    body: `Cyber Secure SME operates in compliance with the Personal Data Protection Act 2010 (Act 709) of Malaysia and its 2024 amendments. Under PDPA, you have the right to access personal data we hold about you, to correct inaccurate data, and to withdraw consent for processing. To exercise any of these rights, contact cybersecuresme@agentmail.to.
+
+We retain contact enquiry data only as long as necessary to resolve your enquiry, typically no longer than 12 months.`,
+  },
+  {
+    id: 'data-security',
+    heading: '8. Data security',
+    body: `Contact form submissions are routed via the mailto: mechanism directly through your email client; no form data is stored on our servers. Analytics data, where enabled, is transmitted over HTTPS. We apply reasonable technical measures to protect information in our control, but no internet transmission is completely secure.`,
+  },
+  {
+    id: 'children',
+    heading: '9. Children',
+    body: `This Site is not directed at children under 18. We do not knowingly collect personal data from minors. If you believe a minor has submitted data through this Site, contact cybersecuresme@agentmail.to and we will delete it promptly.`,
+  },
+  {
+    id: 'changes',
+    heading: '10. Changes to this policy',
+    body: `We may update this Privacy Policy from time to time. The date at the top of this page reflects the most recent revision. Continued use of the Site after a revision constitutes acceptance of the updated policy.`,
+  },
+  {
+    id: 'contact-us',
+    heading: '11. Contact',
+    body: `Privacy enquiries: cybersecuresme@agentmail.to. Response time: within 10 business days.`,
+  },
+];
+---
+
+<Base
+  title="Privacy Policy | Cyber Secure SME"
+  description="Cyber Secure SME privacy policy: what data we collect, how we use it, PDPA Malaysia compliance (Act 709), analytics via PostHog, and your rights."
+  locale="en"
+  altLocaleHref="/ms/privasi"
+>
+  <SiteHeader locale="en" currentPath="/privacy" altLocaleHref="/ms/privasi" />
+
+  <main>
+    <section style="background:#f2f2f2;border-bottom:1px solid #181818;padding:64px 0 44px;">
+      <div class="container" style="max-width:760px;">
+        <p class="eyebrow" style="margin:0 0 20px 0;">LEGAL</p>
+        <h1 class="heading" style="font-size:clamp(24px,4vw,36px);margin:0 0 14px 0;line-height:1.05;">
+          Privacy Policy
+        </h1>
+        <p class="eyebrow" style="margin:0;color:#6e6e6e;">Last updated: {lastUpdated}</p>
+      </div>
+    </section>
+
+    <section style="padding:56px 0 80px;">
+      <div class="container" style="max-width:760px;">
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;color:#181818;line-height:1.7;margin:0 0 52px 0;">
+          This policy describes how Cyber Secure SME collects, uses, and protects personal data when you use this Site. It references the Personal Data Protection Act 2010 (PDPA / Act 709) of Malaysia and its 2024 amendments.
+        </p>
+
+        {sections.map(sec => (
+          <div id={sec.id} style="margin-bottom:44px;padding-top:12px;border-top:1px solid #d6d6cf;">
+            <h2 class="heading" style="font-size:21px;margin:12px 0 14px 0;">{sec.heading}</h2>
+            {sec.body.split('\n\n').map(para => (
+              <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:17px;color:#181818;line-height:1.7;margin:0 0 12px 0;">{para}</p>
+            ))}
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter locale="en" currentPath="/privacy" altLocaleHref="/ms/privasi" />
+
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cybersecuresme.my/" },
+        { "@type": "ListItem", "position": 2, "name": "Privacy Policy", "item": "https://cybersecuresme.my/privacy" }
+      ]
+    })}
+  </script>
+</Base>

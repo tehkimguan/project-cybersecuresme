@@ -1,0 +1,239 @@
+---
+import categoriesData from '../data/categories.json';
+import statesData from '../data/states.json';
+import { enHrefFor, msHrefFor, tEN, tMS } from '../lib/localeRoutes';
+
+interface Props {
+  locale?: string;
+  currentPath?: string;
+  altLocaleHref?: string;
+}
+
+const { locale = 'en', currentPath = '', altLocaleHref } = Astro.props;
+
+const isMS = locale === 'ms';
+const t = isMS ? tMS : tEN;
+const prefix = isMS ? '/ms' : '';
+
+const categories = categoriesData;
+const popularStates = statesData.filter(s =>
+  ['kuala-lumpur', 'selangor', 'penang', 'johor', 'perak', 'sabah'].includes(s.slug)
+);
+
+const enHref = enHrefFor(currentPath, altLocaleHref);
+const msHref = msHrefFor(currentPath, altLocaleHref);
+
+// Security tools from localeRoutes (first 4)
+const toolItems = (isMS ? tMS.toolsItems : tEN.toolsItems).slice(0, 4);
+
+const company = isMS
+  ? [
+      { label: 'Tentang Kami', href: `${prefix}/tentang` },
+      { label: 'Hubungi Kami', href: `${prefix}/hubungi` },
+      { label: 'Privasi', href: `${prefix}/privasi` },
+      { label: 'Terma', href: `${prefix}/terma` },
+      { label: 'Senaraikan syarikat anda', href: `${prefix}/senaraikan-syarikat` },
+      { label: 'Blog', href: `${prefix}/blog` },
+    ]
+  : [
+      { label: 'About', href: '/about' },
+      { label: 'Contact', href: '/contact' },
+      { label: 'Privacy', href: '/privacy' },
+      { label: 'Terms', href: '/terms' },
+      { label: 'List your company', href: '/list-your-company' },
+      { label: 'Blog', href: '/blog' },
+    ];
+
+// Trust and verification: Malaysian cybersecurity regulators
+const regulators = isMS
+  ? [
+      { label: 'NACSA', note: 'Akta Keselamatan Siber 2024 (Akta 854)' },
+      { label: 'CyberSecurity Malaysia', note: 'Agensi pakar keselamatan siber negara' },
+      { label: 'PDPA / JPDP', note: 'Perlindungan Data Peribadi (Akta 709)' },
+      { label: 'MCMC', note: 'Suruhanjaya Komunikasi & Multimedia' },
+      { label: 'BNM RMiT', note: 'Dasar risiko teknologi Bank Negara' },
+      { label: 'ISO/IEC 27001', note: 'Standard ISMS antarabangsa' },
+    ]
+  : [
+      { label: 'NACSA', note: 'Cyber Security Act 2024 (Act 854)' },
+      { label: 'CyberSecurity Malaysia', note: 'National cyber security specialist agency' },
+      { label: 'PDPA / JPDP', note: 'Personal Data Protection (Act 709)' },
+      { label: 'MCMC', note: 'Communications and Multimedia Commission' },
+      { label: 'BNM RMiT', note: 'Bank Negara technology risk policy' },
+      { label: 'ISO/IEC 27001', note: 'International ISMS standard' },
+    ];
+---
+
+<footer style="background:#181818;color:#f2f2f2;margin-top:96px;">
+  <div class="container" style="padding-top:80px;padding-bottom:0;">
+
+    <!-- Wordmark + brief tagline -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:56px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,0.12);">
+      <svg width="22" height="24" viewBox="0 0 20 22" fill="none" aria-hidden="true" style="flex-shrink:0;">
+        <path d="M10 1L2 4.5v6C2 15.1 5.4 19.4 10 21c4.6-1.6 8-5.9 8-10.5v-6L10 1z" stroke="#f2f2f2" stroke-width="1.2" fill="none"/>
+        <circle cx="10" cy="11" r="2.2" stroke="#fc523b" stroke-width="1.2" fill="none"/>
+        <line x1="10" y1="13.2" x2="10" y2="15.5" stroke="#fc523b" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <span style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;font-weight:400;letter-spacing:0.01em;color:#f2f2f2;">Cyber Secure SME</span>
+        <span style="display:block;font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#6e6e6e;margin-top:4px;">
+          {isMS ? 'Direktori pembekal keselamatan siber Malaysia' : "Malaysia's cybersecurity provider directory"}
+        </span>
+      </div>
+    </div>
+
+    <!-- Columns grid -->
+    <div class="footer-cols">
+
+      <!-- Services (all 8 categories) -->
+      <div>
+        <p class="footer-col-heading">{isMS ? 'Perkhidmatan' : 'Services'}</p>
+        <ul class="footer-list" style="columns:2;column-gap:16px;">
+          {categories.map(cat => (
+            <li style="margin-bottom:10px;break-inside:avoid;">
+              <a
+                href={isMS ? `/ms/direktori/${cat.slug}` : `/providers/${cat.slug}`}
+                class="footer-link"
+              >
+                {isMS ? cat.name_ms : cat.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Popular States + Security Tools -->
+      <div>
+        <p class="footer-col-heading">{isMS ? 'Negeri Popular' : 'Popular States'}</p>
+        <ul class="footer-list">
+          {popularStates.map(state => (
+            <li style="margin-bottom:10px;">
+              <a
+                href={isMS ? `/ms/direktori?state=${state.slug}` : `/providers?state=${state.slug}`}
+                class="footer-link"
+              >
+                {isMS ? state.name_ms : state.name}
+              </a>
+            </li>
+          ))}
+          <li style="margin-bottom:10px;">
+            <a href={isMS ? '/ms/direktori' : '/providers'} class="footer-link footer-link-accent">
+              {isMS ? 'Semua negeri' : 'All states'}
+              <span aria-hidden="true" style="color:#fc523b;margin-left:4px;">&#8599;</span>
+            </a>
+          </li>
+        </ul>
+
+        <p class="footer-col-heading" style="margin-top:32px;">{isMS ? 'Alat Keselamatan' : 'Security Tools'}</p>
+        <ul class="footer-list">
+          {toolItems.map(tool => (
+            <li style="margin-bottom:10px;">
+              <a href={isMS ? `/ms/alat/${tool.slug}` : `/tools/${tool.slug}`} class="footer-link">{tool.label}</a>
+            </li>
+          ))}
+          <li style="margin-bottom:10px;">
+            <a href={isMS ? '/ms/alat' : '/tools'} class="footer-link footer-link-accent">
+              {isMS ? 'Semua alat' : 'All tools'}
+              <span aria-hidden="true" style="color:#fc523b;margin-left:4px;">&#8599;</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Company + Trust block -->
+      <div>
+        <p class="footer-col-heading">{isMS ? 'Syarikat' : 'Company'}</p>
+        <ul class="footer-list">
+          {company.map(item => (
+            <li style="margin-bottom:10px;">
+              <a href={item.href} class="footer-link">{item.label}</a>
+            </li>
+          ))}
+        </ul>
+
+        <!-- Trust and verification block -->
+        <div style="margin-top:32px;padding:16px 18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:0;">
+          <p style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#6e6e6e;margin:0 0 12px 0;">
+            {isMS ? 'KEPERCAYAAN & PENGESAHAN' : 'TRUST & VERIFICATION'}
+          </p>
+          <ul class="footer-list" style="display:flex;flex-direction:column;gap:7px;">
+            {regulators.map(reg => (
+              <li style="display:flex;flex-direction:column;gap:1px;">
+                <span style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.04em;color:#d6d6cf;">{reg.label}</span>
+                <span style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:0.02em;color:#6e6e6e;">{reg.note}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Disclaimer + copyright bar -->
+    <div style="border-top:1px solid rgba(255,255,255,0.12);padding:28px 0;margin-top:48px;">
+      <p style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.02em;color:#6e6e6e;line-height:1.65;margin:0 0 18px 0;max-width:860px;">
+        {t.footerDisclaimer}
+      </p>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+        <p style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.02em;color:#6e6e6e;margin:0;">
+          {t.copyright}. {isMS ? 'Hak cipta terpelihara.' : 'All rights reserved.'}
+        </p>
+        <div style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;display:flex;align-items:center;gap:8px;">
+          <a href={enHref} style={`text-decoration:none;color:${!isMS ? '#f2f2f2' : '#6e6e6e'};transition:color 100ms;`}>EN</a>
+          <span style="color:#6e6e6e;">|</span>
+          <a href={msHref} style={`text-decoration:none;color:${isMS ? '#f2f2f2' : '#6e6e6e'};transition:color 100ms;`}>BM</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer-cols {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .footer-col-heading {
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #f2f2f2;
+    margin: 0 0 16px 0;
+  }
+
+  .footer-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer-link {
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.01em;
+    color: #6e6e6e;
+    text-decoration: none;
+    transition: color 100ms;
+  }
+  .footer-link:hover { color: #f2f2f2; }
+  .footer-link-accent { color: #d6d6cf; }
+  .footer-link-accent:hover { color: #f2f2f2; }
+
+  @media (max-width: 900px) {
+    .footer-cols {
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+  }
+  @media (max-width: 560px) {
+    .footer-cols {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+</style>

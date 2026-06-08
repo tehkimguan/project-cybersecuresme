@@ -1,0 +1,76 @@
+---
+import Base from '../../../layouts/Base.astro';
+import SiteHeader from '../../../components/SiteHeader.astro';
+import SiteFooter from '../../../components/SiteFooter.astro';
+import { tools } from '../../../data/tools';
+---
+
+<Base
+  title="Alat Keselamatan Siber Percuma | Cyber Secure SME"
+  description="Kalkulator dan semakan kendiri percuma untuk membantu PKS anda menilai dan mengurangkan risiko siber. Semak kekuatan kata laluan, kos pelanggaran data, kesediaan PDPA, dan banyak lagi."
+  locale="ms"
+  altLocaleHref="/tools"
+>
+  <SiteHeader locale="ms" currentPath="/ms/alat" altLocaleHref="/tools" />
+
+  <main>
+    <div class="container" style="padding-top:64px;padding-bottom:96px;">
+
+      <!-- Page header -->
+      <header style="margin-bottom:52px;border-bottom:1px solid #181818;padding-bottom:36px;">
+        <p class="eyebrow" style="margin:0 0 16px 0;color:#6e6e6e;">ALAT KESELAMATAN SIBER · PERCUMA</p>
+        <h1 class="heading" style="font-size:clamp(28px,5vw,44px);margin:0 0 18px 0;line-height:1.05;">
+          Kalkulator Keselamatan Siber
+        </h1>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:18px;color:#181818;line-height:1.55;max-width:560px;margin:0;">
+          Alat percuma untuk membantu perniagaan anda memahami dan mengurangkan risiko siber. Keputusan dikemas kini semasa anda menaip. Tiada pendaftaran diperlukan.
+        </p>
+      </header>
+
+      <!-- Tool grid -->
+      <div class="tools-grid">
+        {tools.map((tool) => (
+          <a
+            href={`/ms/alat/${tool.slug_ms}`}
+            class="tool-card card-hover"
+            style="border:1px solid #181818;display:block;text-decoration:none;padding:28px 24px;"
+          >
+            <p class="eyebrow" style="margin:0 0 12px 0;color:#6e6e6e;">{tool.category.replace(/-/g, ' ').toUpperCase()}</p>
+            <h2 class="heading" style="font-size:clamp(17px,2vw,20px);margin:0 0 10px 0;line-height:1.2;">{tool.name_ms}</h2>
+            <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:16px;color:#6e6e6e;line-height:1.55;margin:0 0 18px 0;">{tool.description_ms}</p>
+            <span style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:#181818;display:inline-flex;align-items:center;gap:5px;">
+              Buka alat <span aria-hidden="true" style="color:#fc523b;">&#8599;</span>
+            </span>
+          </a>
+        ))}
+      </div>
+
+      <!-- Disclaimer -->
+      <div style="margin-top:52px;border-top:1px solid #d6d6cf;padding-top:24px;max-width:720px;">
+        <p class="eyebrow" style="margin:0 0 8px 0;color:#6e6e6e;font-size:10px;">PENAFIAN</p>
+        <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:14px;color:#6e6e6e;line-height:1.65;margin:0;">
+          Semua kalkulator menyediakan anggaran umum sahaja dan bukan pengganti nasihat keselamatan profesional. Sentiasa sahkan pilihan keselamatan dengan pembekal keselamatan siber yang berlesen. Cyber Secure SME ialah direktori bebas dan tidak menyediakan nasihat keselamatan.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <SiteFooter locale="ms" currentPath="/ms/alat" altLocaleHref="/tools" />
+</Base>
+
+<style>
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 900px) {
+    .tools-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .tools-grid { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tool-card { transition: none; }
+  }
+</style>

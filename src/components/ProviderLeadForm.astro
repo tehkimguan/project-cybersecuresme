@@ -1,0 +1,408 @@
+---
+import statesData from '../data/states.json';
+import categoriesData from '../data/categories.json';
+
+interface Props {
+  locale?: 'en' | 'ms';
+  mode?: 'general' | 'list';
+}
+
+const { locale = 'en', mode = 'general' } = Astro.props;
+const isMS = locale === 'ms';
+
+const states = statesData;
+const categories = categoriesData;
+
+const formId = `plf-${Math.random().toString(36).slice(2, 8)}`;
+
+const copy = isMS
+  ? {
+      heading: mode === 'list' ? 'Daftarkan syarikat anda' : 'Hubungi kami',
+      subheading:
+        mode === 'list'
+          ? 'Isi borang di bawah. Kami akan menghubungi anda dalam tempoh 1 hingga 2 hari bekerja.'
+          : 'Isi borang di bawah atau e-mel terus kepada kami.',
+      companyName: 'NAMA SYARIKAT *',
+      contactPerson: 'NAMA PEGAWAI HUBUNGAN *',
+      email: 'E-MEL *',
+      phone: 'NO. TELEFON *',
+      state: 'NEGERI',
+      statePlaceholder: 'Pilih negeri',
+      category: 'KATEGORI PERKHIDMATAN',
+      categoryPlaceholder: 'Pilih kategori',
+      message: mode === 'list' ? 'MAKLUMAT TAMBAHAN' : 'MESEJ *',
+      messagePlaceholder:
+        mode === 'list'
+          ? 'Terangkan firma anda, perkhidmatan yang ditawarkan, pensijilan (contoh ISO 27001, CREST), dan sebarang soalan...'
+          : 'Bagaimana kami boleh membantu anda?',
+      submit: mode === 'list' ? 'Hantar Permohonan' : 'Hantar Mesej',
+      privacy: 'Dengan menghantar, anda bersetuju dengan',
+      privacyLink: 'Notis Privasi',
+      privacyHref: '/ms/privasi',
+      fallback: 'Atau hubungi kami terus:',
+      fallbackEmail: 'E-mel: cybersecuresme@agentmail.to',
+      fallbackWhatsapp: 'WhatsApp: +60 11-5621 0500',
+    }
+  : {
+      heading: mode === 'list' ? 'List your company' : 'Get in touch',
+      subheading:
+        mode === 'list'
+          ? 'Fill in the form below. We will follow up within 1 to 2 business days.'
+          : 'Fill in the form below or reach us directly.',
+      companyName: 'COMPANY NAME *',
+      contactPerson: 'CONTACT PERSON *',
+      email: 'EMAIL *',
+      phone: 'PHONE *',
+      state: 'STATE',
+      statePlaceholder: 'Select state',
+      category: 'SERVICE CATEGORY',
+      categoryPlaceholder: 'Select category',
+      message: mode === 'list' ? 'ADDITIONAL INFORMATION' : 'MESSAGE *',
+      messagePlaceholder:
+        mode === 'list'
+          ? 'Describe your firm, services offered, certifications (e.g. ISO 27001, CREST), and any questions...'
+          : 'How can we help you?',
+      submit: mode === 'list' ? 'Submit application' : 'Send message',
+      privacy: 'By submitting, you agree to our',
+      privacyLink: 'Privacy Policy',
+      privacyHref: '/privacy',
+      fallback: 'Or reach us directly:',
+      fallbackEmail: 'Email: cybersecuresme@agentmail.to',
+      fallbackWhatsapp: 'WhatsApp: +60 11-5621 0500',
+    };
+---
+
+<div id={`plf-wrapper-${formId}`}>
+  <!-- Direct contact bar -->
+  <div style="background:#f2f2f2;border:1px solid #d6d6cf;border-radius:0;padding:16px 20px;margin-bottom:24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;">
+    <span style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#6e6e6e;">{copy.fallback}</span>
+    <a href="mailto:cybersecuresme@agentmail.to" style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;color:#181818;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;">{copy.fallbackEmail}</a>
+    <a href="https://wa.me/601156210500" target="_blank" rel="noopener noreferrer" style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;color:#181818;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;">{copy.fallbackWhatsapp}</a>
+  </div>
+
+  <form
+    id={formId}
+    novalidate
+    style="background:#ffffff;border:1px solid #181818;border-radius:0;padding:32px;"
+  >
+    <!-- Honeypot -->
+    <input
+      type="text"
+      name="_gotcha"
+      tabindex="-1"
+      autocomplete="off"
+      style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;"
+      aria-hidden="true"
+    />
+
+    <div class="plf-grid">
+      <!-- Company name -->
+      <div class="plf-field plf-full">
+        <label for={`${formId}-company`} class="plf-label">{copy.companyName}</label>
+        <input
+          id={`${formId}-company`}
+          type="text"
+          name="company_name"
+          required
+          autocomplete="organization"
+          placeholder={isMS ? 'cth. SecureNet Sdn Bhd, CyberShield Solutions' : 'e.g. SecureNet Sdn Bhd, CyberShield Solutions'}
+          class="plf-input"
+        />
+      </div>
+
+      <!-- Contact person -->
+      <div class="plf-field">
+        <label for={`${formId}-contact`} class="plf-label">{copy.contactPerson}</label>
+        <input
+          id={`${formId}-contact`}
+          type="text"
+          name="contact_person"
+          required
+          autocomplete="name"
+          placeholder={isMS ? 'Nama penuh anda' : 'Your full name'}
+          class="plf-input"
+        />
+      </div>
+
+      <!-- Email -->
+      <div class="plf-field">
+        <label for={`${formId}-email`} class="plf-label">{copy.email}</label>
+        <input
+          id={`${formId}-email`}
+          type="email"
+          name="email"
+          required
+          autocomplete="email"
+          placeholder={isMS ? 'anda@syarikat.com' : 'you@company.com'}
+          class="plf-input"
+        />
+      </div>
+
+      <!-- Phone -->
+      <div class="plf-field">
+        <label for={`${formId}-phone`} class="plf-label">{copy.phone}</label>
+        <input
+          id={`${formId}-phone`}
+          type="tel"
+          name="phone"
+          required
+          autocomplete="tel"
+          placeholder="+60 12 345 6789"
+          class="plf-input"
+        />
+      </div>
+
+      <!-- State -->
+      <div class="plf-field">
+        <label for={`${formId}-state`} class="plf-label">{copy.state}</label>
+        <select id={`${formId}-state`} name="state" class="plf-select">
+          <option value="">{copy.statePlaceholder}</option>
+          {states.map(s => (
+            <option value={s.slug}>{isMS ? s.name_ms : s.name}</option>
+          ))}
+        </select>
+      </div>
+
+      <!-- Service category -->
+      <div class="plf-field">
+        <label for={`${formId}-category`} class="plf-label">{copy.category}</label>
+        <select id={`${formId}-category`} name="category" class="plf-select">
+          <option value="">{copy.categoryPlaceholder}</option>
+          {categories.map(c => (
+            <option value={c.slug}>{isMS ? c.name_ms : c.name}</option>
+          ))}
+        </select>
+      </div>
+
+      <!-- Message -->
+      <div class="plf-field plf-full">
+        <label for={`${formId}-msg`} class="plf-label">{copy.message}</label>
+        <textarea
+          id={`${formId}-msg`}
+          name="message"
+          required={mode === 'general'}
+          rows="5"
+          placeholder={copy.messagePlaceholder}
+          class="plf-textarea"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Validation error -->
+    <div
+      id={`plf-error-${formId}`}
+      role="alert"
+      style="display:none;background:#f2f2f2;border:1px solid #181818;border-radius:0;padding:12px 16px;margin-top:16px;font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:0.04em;color:#181818;"
+    ></div>
+
+    <div style="margin-top:24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+      <button
+        type="submit"
+        id={`plf-submit-${formId}`}
+        class="plf-submit"
+      >
+        {copy.submit}
+      </button>
+      <p style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.04em;text-transform:uppercase;color:#6e6e6e;margin:0;">
+        {copy.privacy}
+        {' '}
+        <a href={copy.privacyHref} style="color:#181818;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;">{copy.privacyLink}</a>.
+      </p>
+    </div>
+  </form>
+
+  <!-- Confirmation (shown after mailto opens) -->
+  <div
+    id={`plf-sent-${formId}`}
+    style="display:none;background:#ffffff;border:1px solid #181818;border-radius:0;padding:40px 32px;text-align:center;margin-top:0;"
+  >
+    <!-- Confirmation mark: 1px ink checkmark inside a thin square -->
+    <div style="margin:0 auto 20px;width:44px;height:44px;border:1px solid #181818;display:flex;align-items:center;justify-content:center;">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M4 10l4.5 4.5 7.5-9" stroke="#181818" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <p style="font-family:'EB Garamond',Garamond,Georgia,serif;font-size:24px;font-weight:400;color:#181818;margin:0 0 10px 0;line-height:1.2;">
+      {isMS ? 'Mesej dihantar' : 'Message sent'}
+    </p>
+    <p style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:0.02em;color:#6e6e6e;margin:0 0 14px 0;max-width:400px;margin-inline:auto;line-height:1.6;">
+      {isMS
+        ? 'Aplikasi e-mel anda telah dibuka dengan butiran borang ini. Jika tiada apa-apa berlaku, e-mel kami terus di '
+        : "Your email app opened with this form's details. If nothing happened, email us directly at "}
+      <a href="mailto:cybersecuresme@agentmail.to" style="color:#181818;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;">cybersecuresme@agentmail.to</a>.
+    </p>
+    <p style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.04em;text-transform:uppercase;color:#6e6e6e;margin:0;">
+      {isMS ? 'Kami menyasarkan untuk membalas dalam tempoh 1 hingga 2 hari bekerja.' : 'We aim to reply within 1 to 2 business days.'}
+    </p>
+  </div>
+</div>
+
+<style>
+  .plf-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .plf-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .plf-full {
+    grid-column: 1 / -1;
+  }
+  .plf-label {
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #181818;
+    font-feature-settings: 'tnum', 'zero';
+  }
+  .plf-input,
+  .plf-select,
+  .plf-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 44px;
+    padding: 10px 14px;
+    background: #f2f2f2;
+    border: 1px solid #d6d6cf;
+    border-radius: 0;
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    color: #181818;
+    outline: none;
+    transition: border-color 120ms;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .plf-select {
+    background-color: #f2f2f2;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23181818' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+  .plf-textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  .plf-input:focus,
+  .plf-select:focus,
+  .plf-textarea:focus {
+    border-color: #181818;
+  }
+  .plf-input::placeholder,
+  .plf-textarea::placeholder {
+    color: #6e6e6e;
+    font-size: 14px;
+  }
+  /* Submit button: btn-primary pattern */
+  .plf-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 28px;
+    background: transparent;
+    color: #181818;
+    border: 1px solid #181818;
+    border-radius: 0;
+    font-family: 'EB Garamond', Garamond, Georgia, serif;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: background 120ms, color 120ms;
+    white-space: nowrap;
+  }
+  .plf-submit:hover { background: #181818; color: #f2f2f2; }
+
+  @media (max-width: 600px) {
+    .plf-grid {
+      grid-template-columns: 1fr;
+    }
+    .plf-full {
+      grid-column: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .plf-input, .plf-select, .plf-textarea, .plf-submit { transition: none; }
+  }
+</style>
+
+<script define:vars={{ formId, isMS, mode }}>
+(function () {
+  var form = document.getElementById(formId);
+  var errorEl = document.getElementById('plf-error-' + formId);
+  var submitBtn = document.getElementById('plf-submit-' + formId);
+  var sentEl = document.getElementById('plf-sent-' + formId);
+  if (!form || !errorEl || !submitBtn || !sentEl) return;
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    errorEl.style.display = 'none';
+
+    var fd = new FormData(form);
+
+    // Honeypot check
+    if (fd.get('_gotcha')) return;
+
+    // Basic validation
+    var company = (fd.get('company_name') || '').toString().trim();
+    var contact = (fd.get('contact_person') || '').toString().trim();
+    var email = (fd.get('email') || '').toString().trim();
+    var phone = (fd.get('phone') || '').toString().trim();
+    var message = (fd.get('message') || '').toString().trim();
+    var state = (fd.get('state') || '').toString().trim();
+    var category = (fd.get('category') || '').toString().trim();
+
+    if (!company || !contact || !email || !phone) {
+      errorEl.textContent = isMS
+        ? 'Sila isi semua medan yang diperlukan (*).'
+        : 'Please fill in all required fields (*).';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    if (mode === 'general' && !message) {
+      errorEl.textContent = isMS
+        ? 'Sila masukkan mesej anda.'
+        : 'Please enter your message.';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    // Build mailto URL
+    var subject = mode === 'list'
+      ? (isMS ? 'Permohonan Penyenaraian Syarikat: ' : 'Company Listing Application: ') + company
+      : (isMS ? 'Pertanyaan Am: ' : 'General Enquiry: ') + company;
+
+    var body = [
+      (isMS ? 'Nama Syarikat' : 'Company Name') + ': ' + company,
+      (isMS ? 'Pegawai Hubungan' : 'Contact Person') + ': ' + contact,
+      'Email: ' + email,
+      (isMS ? 'Telefon' : 'Phone') + ': ' + phone,
+      state ? (isMS ? 'Negeri' : 'State') + ': ' + state : '',
+      category ? (isMS ? 'Kategori' : 'Category') + ': ' + category : '',
+      message ? '\n' + (isMS ? 'Mesej' : 'Message') + ':\n' + message : '',
+      '\n---\n' + (isMS ? 'Dihantar daripada Cyber Secure SME' : 'Sent from Cyber Secure SME'),
+    ].filter(Boolean).join('\n');
+
+    var mailto = 'mailto:cybersecuresme@agentmail.to'
+      + '?subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(body);
+
+    // Open the mailto link
+    window.location.href = mailto;
+
+    // Show confirmation after a short delay
+    setTimeout(function () {
+      form.style.display = 'none';
+      sentEl.style.display = 'block';
+    }, 800);
+  });
+})();
+</script>

@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cybersecuresme",
+  "account_id": "9ba22d36843b7e828b0b5a971fab4e16",
+  "compatibility_date": "2026-05-26",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+    "html_handling": "drop-trailing-slash"
+  }
+}

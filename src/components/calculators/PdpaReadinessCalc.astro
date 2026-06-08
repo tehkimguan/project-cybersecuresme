@@ -1,0 +1,165 @@
+---
+interface Props { locale?: string; }
+const { locale = 'en' } = Astro.props;
+---
+
+<div class="pdpa-wrap">
+  <p class="pdpa-intro">
+    Seven checkboxes based on the Personal Data Protection Act 2010 and the 2024 amendments
+    (mandatory breach notification within 72 hours; expanded Data Protection Officer requirements).
+  </p>
+
+  <form id="pdpa-form" autocomplete="off">
+    <div class="pdpa-checks">
+      <label class="pdpa-check-item">
+        <input type="checkbox" id="pdpa-c1" class="pdpa-cb" />
+        <div class="pdpa-check-text">
+          <span class="pdpa-check-title">Privacy notice published</span>
+          <span class="pdpa-check-desc">A clear privacy policy is accessible to customers explaining what data you collect and how it is used.</span>
+        </div>
+      </label>
+      <label class="pdpa-check-item">
+        <input type="checkbox" id="pdpa-c2" class="pdpa-cb" />
+        <div class="pdpa-check-text">
+          <span class="pdpa-check-title">Consent captured at collection</span>
+          <span class="pdpa-check-desc">You obtain explicit, informed consent before collecting personal data, with an opt-out mechanism.</span>
+        </div>
+      </label>
+      <label class="pdpa-check-item">
+        <input type="checkbox" id="pdpa-c3" class="pdpa-cb" />
+        <div class="pdpa-check-text">
+          <span class="pdpa-check-title">Data Protection Officer (DPO) or contact named</span>
+          <span class="pdpa-check-desc">Required under the 2024 amendments for organisations processing significant volumes of personal data. A named contact must exist.</span>
+        </div>
+      </label>
+      <label class="pdpa-check-item">
+        <input type="checkbox" id="pdpa-c4" class="pdpa-cb" />
+        <div class="pdpa-check-text">
+          <span class="pdpa-check-title">Breach response process documented</span>
+          <span class="pdpa-check-desc">Under the 2024 PDPA amendments, notifiable breaches must be reported to the PDPC within 72 hours. A written process must exist.</span>
+        </div>
+      </label>
+      <label class="pdpa-check-item">
+        <input type="checkbox" id="pdpa-c5" class="pdpa-cb" />
+        <div class="pdpa-check-text">
+          <span class="pdpa-check-title">Data retention limits defined</span>
+          <span class="pdpa-check-desc">Personal data is not kept longer than necessary; retention periods are documented and actioned.</span>
+        </div>
+      </label>
+      <label class="pdpa-check-item">
+        <input type="checkbox" id="pdpa-c6" class="pdpa-cb" />
+        <div class="pdpa-check-text">
+          <span class="pdpa-check-title">Reasonable security measures in place</span>
+          <span class="pdpa-check-desc">Technical and organisational controls protect personal data from unauthorised access, loss, or disclosure (PDPA Principle 7).</span>
+        </div>
+      </label>
+      <label class="pdpa-check-item">
+        <input type="checkbox" id="pdpa-c7" class="pdpa-cb" />
+        <div class="pdpa-check-text">
+          <span class="pdpa-check-title">Staff trained on data handling</span>
+          <span class="pdpa-check-desc">Employees who handle personal data understand their obligations under PDPA and relevant internal policies.</span>
+        </div>
+      </label>
+    </div>
+
+    <button type="submit" class="pdpa-btn">Check readiness</button>
+  </form>
+
+  <div id="pdpa-result" class="pdpa-result-panel" hidden aria-live="polite">
+    <div class="pdpa-result-top">
+      <span class="pdpa-eyebrow">PDPA readiness</span>
+      <span class="pdpa-pct" id="pdpa-pct">0%</span>
+    </div>
+    <div class="pdpa-bar-track"><div class="pdpa-bar-fill" id="pdpa-bar" style="width:0%"></div></div>
+    <div id="pdpa-gaps" class="pdpa-gaps"></div>
+    <p class="pdpa-note">
+      Based on PDPA 2010 (Act 709) and the Personal Data Protection (Amendment) Act 2024.
+      For formal compliance assessment, see <a href="/providers/grc-compliance" class="pdpa-link">GRC and compliance providers &rarr;</a>
+    </p>
+  </div>
+
+  <p class="pdpa-disclaimer">This checklist is indicative only. It does not constitute legal or compliance advice. Engage a qualified consultant for a formal PDPA audit.</p>
+</div>
+
+<style>
+  .pdpa-wrap { display:flex; flex-direction:column; gap:20px; font-family:"EB Garamond",Georgia,serif; }
+  .pdpa-intro { font-size:17px; color:#6e6e6e; margin:0; line-height:1.5; }
+  .pdpa-eyebrow { font-family:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#181818; font-feature-settings:"tnum"; }
+  .pdpa-checks { display:flex; flex-direction:column; gap:0; border-top:1px solid #181818; }
+  .pdpa-check-item { display:flex; align-items:flex-start; gap:14px; padding:16px 0; border-bottom:1px solid #d6d6cf; cursor:pointer; }
+  .pdpa-check-item:last-child { border-bottom:none; }
+  .pdpa-cb { width:18px; height:18px; flex-shrink:0; margin-top:3px; accent-color:#181818; cursor:pointer; }
+  .pdpa-check-text { display:flex; flex-direction:column; gap:4px; }
+  .pdpa-check-title { font-family:"EB Garamond",Georgia,serif; font-size:18px; color:#181818; }
+  .pdpa-check-desc { font-family:"Inter",Arial,sans-serif; font-size:13px; color:#6e6e6e; line-height:1.4; }
+  .pdpa-btn { border:1px solid #181818; background:transparent; color:#181818; font-family:"Inter",Arial,sans-serif; font-size:13px; letter-spacing:.06em; text-transform:uppercase; padding:12px 24px; cursor:pointer; align-self:flex-start; margin-top:4px; }
+  .pdpa-btn:hover { background:#181818; color:#f2f2f2; }
+  .pdpa-result-panel { background:#f2f2f2; border-top:1px solid #181818; padding:20px; display:flex; flex-direction:column; gap:14px; }
+  .pdpa-result-top { display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+  .pdpa-pct { font-family:"EB Garamond",Georgia,serif; font-size:40px; line-height:1; color:#181818; }
+  .pdpa-bar-track { height:4px; background:#d6d6cf; }
+  .pdpa-bar-fill { height:4px; background:#181818; transition:width 300ms; }
+  .pdpa-gaps { display:flex; flex-direction:column; gap:8px; border-top:1px solid #d6d6cf; padding-top:14px; }
+  .pdpa-gap-item { font-family:"EB Garamond",Georgia,serif; font-size:17px; color:#181818; padding-left:16px; position:relative; }
+  .pdpa-gap-item::before { content:"-"; position:absolute; left:0; }
+  .pdpa-gap-label { font-family:"Inter",Arial,sans-serif; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:#6e6e6e; margin-bottom:4px; display:block; }
+  .pdpa-note { font-family:"Inter",Arial,sans-serif; font-size:12px; color:#6e6e6e; line-height:1.5; border-top:1px solid #d6d6cf; padding-top:12px; margin:0; }
+  .pdpa-link { color:#181818; text-decoration:underline; }
+  .pdpa-link:hover { color:#fc523b; }
+  .pdpa-disclaimer { font-family:"Inter",Arial,sans-serif; font-size:12px; color:#6e6e6e; line-height:1.5; border-top:1px solid #d6d6cf; padding-top:14px; margin:0; }
+</style>
+
+<script is:inline>
+(function () {
+  var form = document.getElementById('pdpa-form');
+  var resultPanel = document.getElementById('pdpa-result');
+  var pctEl = document.getElementById('pdpa-pct');
+  var barEl = document.getElementById('pdpa-bar');
+  var gapsEl = document.getElementById('pdpa-gaps');
+  var captured = false;
+
+  var items = [
+    { id: 'pdpa-c1', title: 'Privacy notice published' },
+    { id: 'pdpa-c2', title: 'Consent captured at collection' },
+    { id: 'pdpa-c3', title: 'DPO or data protection contact named (2024 amendment requirement)' },
+    { id: 'pdpa-c4', title: 'Breach response process documented (72-hour notification under 2024 amendment)' },
+    { id: 'pdpa-c5', title: 'Data retention limits defined' },
+    { id: 'pdpa-c6', title: 'Reasonable security measures in place (PDPA Principle 7)' },
+    { id: 'pdpa-c7', title: 'Staff trained on data handling obligations' },
+  ];
+
+  function compute(e) {
+    if (e) e.preventDefault();
+    var checked = 0;
+    var unmet = [];
+    items.forEach(function(item) {
+      var el = document.getElementById(item.id);
+      if (el && el.checked) { checked++; }
+      else { unmet.push(item.title); }
+    });
+    var pct = Math.round((checked / items.length) * 100);
+    pctEl.textContent = pct + '%';
+    barEl.style.width = pct + '%';
+
+    if (unmet.length === 0) {
+      gapsEl.innerHTML = '<p class="pdpa-gap-label">All items complete</p><p class="pdpa-gap-item">No gaps identified. Schedule an annual review to maintain compliance as regulations evolve.</p>';
+    } else {
+      gapsEl.innerHTML = '<span class="pdpa-gap-label">Unmet items (' + unmet.length + ')</span>' +
+        unmet.map(function(u) { return '<p class="pdpa-gap-item">' + u + '</p>'; }).join('');
+    }
+
+    resultPanel.removeAttribute('hidden');
+
+    if (!captured) {
+      captured = true;
+      try { if (window.posthog) window.posthog.capture('calculator_used', { tool: 'pdpa-readiness-checker' }); } catch(_){}
+    }
+  }
+
+  form.addEventListener('submit', compute);
+  // Also recompute on checkbox change for instant feedback
+  form.addEventListener('change', function() {
+    if (!resultPanel.hasAttribute('hidden')) compute(null);
+  });
+})();
+</script>

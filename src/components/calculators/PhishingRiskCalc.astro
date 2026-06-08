@@ -1,0 +1,166 @@
+---
+interface Props { locale?: string; }
+const { locale = 'en' } = Astro.props;
+---
+
+<div class="prc-wrap">
+  <p class="prc-intro">Answer five questions about your current controls. Takes under two minutes.</p>
+
+  <form id="prc-form" class="prc-questions" autocomplete="off">
+    <fieldset class="prc-fieldset">
+      <legend class="prc-question">1. Is multi-factor authentication (MFA) enabled on your business email accounts?</legend>
+      <div class="prc-options">
+        <label class="prc-option"><input type="radio" name="q1" value="yes" class="prc-radio" /> Yes, for all accounts</label>
+        <label class="prc-option"><input type="radio" name="q1" value="partial" class="prc-radio" /> Some accounts only</label>
+        <label class="prc-option"><input type="radio" name="q1" value="no" class="prc-radio" /> No</label>
+      </div>
+    </fieldset>
+
+    <fieldset class="prc-fieldset">
+      <legend class="prc-question">2. Have all customer-facing staff completed phishing awareness training in the last 12 months?</legend>
+      <div class="prc-options">
+        <label class="prc-option"><input type="radio" name="q2" value="yes" class="prc-radio" /> Yes</label>
+        <label class="prc-option"><input type="radio" name="q2" value="partial" class="prc-radio" /> Partially / informally</label>
+        <label class="prc-option"><input type="radio" name="q2" value="no" class="prc-radio" /> No</label>
+      </div>
+    </fieldset>
+
+    <fieldset class="prc-fieldset">
+      <legend class="prc-question">3. Does your organisation have DMARC and SPF email authentication records published?</legend>
+      <div class="prc-options">
+        <label class="prc-option"><input type="radio" name="q3" value="yes" class="prc-radio" /> Yes, both configured</label>
+        <label class="prc-option"><input type="radio" name="q3" value="partial" class="prc-radio" /> Only one, or unsure</label>
+        <label class="prc-option"><input type="radio" name="q3" value="no" class="prc-radio" /> No</label>
+      </div>
+    </fieldset>
+
+    <fieldset class="prc-fieldset">
+      <legend class="prc-question">4. Is there a clear, easy way for staff to report a suspicious email internally?</legend>
+      <div class="prc-options">
+        <label class="prc-option"><input type="radio" name="q4" value="yes" class="prc-radio" /> Yes, with a defined process</label>
+        <label class="prc-option"><input type="radio" name="q4" value="partial" class="prc-radio" /> Informally only</label>
+        <label class="prc-option"><input type="radio" name="q4" value="no" class="prc-radio" /> No</label>
+      </div>
+    </fieldset>
+
+    <fieldset class="prc-fieldset">
+      <legend class="prc-question">5. Are finance or payment instructions always verified by phone or in person before acting on an email request?</legend>
+      <div class="prc-options">
+        <label class="prc-option"><input type="radio" name="q5" value="yes" class="prc-radio" /> Yes, always</label>
+        <label class="prc-option"><input type="radio" name="q5" value="partial" class="prc-radio" /> Sometimes</label>
+        <label class="prc-option"><input type="radio" name="q5" value="no" class="prc-radio" /> No</label>
+      </div>
+    </fieldset>
+
+    <button type="submit" class="prc-btn">See my risk level</button>
+  </form>
+
+  <div id="prc-result" class="prc-result-panel" hidden aria-live="polite">
+    <div class="prc-result-top">
+      <span class="prc-eyebrow">Phishing risk level</span>
+      <span class="prc-risk-badge" id="prc-badge">--</span>
+    </div>
+    <div class="prc-bar-wrap">
+      <div class="prc-bar-track"><div class="prc-bar-fill" id="prc-bar" style="width:0%"></div></div>
+    </div>
+    <div class="prc-steps" id="prc-steps"></div>
+    <p class="prc-note">
+      For structured phishing simulations and staff training, see
+      <a href="/providers/security-awareness" class="prc-link">security awareness providers &rarr;</a>
+    </p>
+  </div>
+
+  <p class="prc-disclaimer">This self-check gives an indicative risk level based on your answers. It is not a security audit or professional assessment.</p>
+</div>
+
+<style>
+  .prc-wrap { display:flex; flex-direction:column; gap:20px; font-family:"EB Garamond",Georgia,serif; }
+  .prc-intro { font-size:17px; color:#6e6e6e; margin:0; font-family:"EB Garamond",Georgia,serif; }
+  .prc-eyebrow { font-family:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#181818; font-feature-settings:"tnum"; display:block; }
+  .prc-questions { display:flex; flex-direction:column; gap:20px; }
+  .prc-fieldset { border:none; margin:0; padding:0; }
+  .prc-question { font-family:"EB Garamond",Georgia,serif; font-size:18px; color:#181818; margin-bottom:10px; display:block; }
+  .prc-options { display:flex; flex-direction:column; gap:6px; padding-left:4px; }
+  .prc-option { display:flex; align-items:center; gap:10px; font-family:"EB Garamond",Georgia,serif; font-size:17px; color:#181818; cursor:pointer; }
+  .prc-radio { accent-color:#181818; width:16px; height:16px; cursor:pointer; }
+  .prc-btn { border:1px solid #181818; background:transparent; color:#181818; font-family:"Inter",Arial,sans-serif; font-size:13px; letter-spacing:.06em; text-transform:uppercase; padding:12px 24px; cursor:pointer; align-self:flex-start; margin-top:4px; }
+  .prc-btn:hover { background:#181818; color:#f2f2f2; }
+  .prc-result-panel { background:#f2f2f2; border-top:1px solid #181818; padding:20px; display:flex; flex-direction:column; gap:14px; }
+  .prc-result-top { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .prc-risk-badge { font-family:"Inter",Arial,sans-serif; font-size:13px; letter-spacing:.08em; text-transform:uppercase; padding:4px 12px; border:1px solid #181818; }
+  .prc-bar-wrap { }
+  .prc-bar-track { height:4px; background:#d6d6cf; }
+  .prc-bar-fill { height:4px; background:#fc523b; transition:width 300ms; }
+  .prc-steps { display:flex; flex-direction:column; gap:10px; border-top:1px solid #d6d6cf; padding-top:14px; }
+  .prc-step { font-family:"EB Garamond",Georgia,serif; font-size:17px; color:#181818; padding-left:16px; position:relative; }
+  .prc-step::before { content:"-"; position:absolute; left:0; }
+  .prc-note { font-family:"Inter",Arial,sans-serif; font-size:12px; color:#6e6e6e; line-height:1.5; border-top:1px solid #d6d6cf; padding-top:12px; margin:0; }
+  .prc-link { color:#181818; text-decoration:underline; }
+  .prc-link:hover { color:#fc523b; }
+  .prc-disclaimer { font-family:"Inter",Arial,sans-serif; font-size:12px; color:#6e6e6e; line-height:1.5; border-top:1px solid #d6d6cf; padding-top:14px; margin:0; }
+</style>
+
+<script is:inline>
+(function () {
+  var form = document.getElementById('prc-form');
+  var resultPanel = document.getElementById('prc-result');
+  var badgeEl = document.getElementById('prc-badge');
+  var barEl = document.getElementById('prc-bar');
+  var stepsEl = document.getElementById('prc-steps');
+  var captured = false;
+
+  // Weight: yes=0 risk, partial=1, no=2
+  var weights = { q1: 3, q2: 2, q3: 2, q4: 1, q5: 3 }; // max risk per question
+  var maxScore = 3 + 2 + 2 + 1 + 3; // 11
+
+  var impacts = [
+    { q: 'q1', label: 'Enable MFA on all email accounts immediately - this single control stops most credential-based phishing attacks.' },
+    { q: 'q5', label: 'Enforce phone verification for any finance or payment instructions received by email - Business Email Compromise is Malaysia\'s most common fraud type.' },
+    { q: 'q3', label: 'Publish DMARC and SPF records for your domain to prevent attackers from spoofing your email address.' },
+    { q: 'q2', label: 'Run annual phishing simulation training - staff who know how to spot social-engineering attempts catch attacks before they land.' },
+    { q: 'q4', label: 'Create a simple reporting channel (e.g. a shared mailbox) so staff can flag suspicious email quickly.' },
+  ];
+
+  function val(name) {
+    var el = form.querySelector('[name="' + name + '"]:checked');
+    return el ? el.value : null;
+  }
+
+  function riskPoints(name) {
+    var v = val(name);
+    if (v === 'yes') return 0;
+    if (v === 'partial') return Math.round(weights[name] * 0.5);
+    if (v === 'no') return weights[name];
+    return weights[name]; // unanswered = max
+  }
+
+  function compute(e) {
+    if (e) e.preventDefault();
+    var score = 0;
+    ['q1','q2','q3','q4','q5'].forEach(function(q) { score += riskPoints(q); });
+    var pct = Math.round((score / maxScore) * 100);
+    var level = pct < 30 ? 'Low' : pct < 60 ? 'Medium' : 'High';
+
+    badgeEl.textContent = level;
+    badgeEl.style.background = level === 'Low' ? 'transparent' : (level === 'Medium' ? '#181818' : '#fc523b');
+    badgeEl.style.color = level === 'Low' ? '#181818' : '#f2f2f2';
+    badgeEl.style.borderColor = level === 'High' ? '#fc523b' : '#181818';
+    barEl.style.width = pct + '%';
+
+    // Top 2 highest-impact gaps
+    var gaps = impacts.filter(function(i) { return val(i.q) !== 'yes'; }).slice(0, 2);
+    if (gaps.length === 0) gaps = [{ label: 'No critical gaps identified. Continue quarterly reviews and simulate phishing exercises annually.' }];
+    stepsEl.innerHTML = '<p class="prc-eyebrow" style="margin-bottom:6px">Priority next steps</p>' +
+      gaps.map(function(g) { return '<p class="prc-step">' + g.label + '</p>'; }).join('');
+
+    resultPanel.removeAttribute('hidden');
+
+    if (!captured) {
+      captured = true;
+      try { if (window.posthog) window.posthog.capture('calculator_used', { tool: 'phishing-risk-self-check' }); } catch(_){}
+    }
+  }
+
+  form.addEventListener('submit', compute);
+})();
+</script>

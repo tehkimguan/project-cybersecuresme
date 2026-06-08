@@ -1,0 +1,238 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import SchemaOrg from '../../components/SchemaOrg.astro';
+import { getCollection } from 'astro:content';
+import categoriesData from '../../data/categories.json';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => {
+    return data.locale === 'en' && !data.draft;
+  });
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+const siteUrl = 'https://cybersecuresme.kgstaging.workers.dev';
+const postUrl = `${siteUrl}/blog/${post.slug}`;
+
+// Related categories (cybersecurity service categories)
+const relatedCategories = categoriesData.filter(c => post.data.categories.includes(c.slug)).slice(0, 4);
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-MY', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+const altLocaleHref = post.data.altLocaleSlug
+  ? `/ms/blog/${post.data.altLocaleSlug}`
+  : '/ms/blog';
+---
+
+<Base
+  title={`${post.data.title} | Cyber Secure SME`}
+  description={post.data.description}
+  locale="en"
+  altLocaleHref={altLocaleHref}
+  canonical={postUrl}
+  ogImage={post.data.hero || undefined}
+>
+  <SchemaOrg
+    slot="head"
+    type="article"
+    data={{
+      headline: post.data.title,
+      datePublished: post.data.publishedAt.toISOString(),
+      dateModified: (post.data.updatedAt || post.data.publishedAt).toISOString(),
+      author: post.data.author,
+      image: post.data.hero || undefined,
+      url: postUrl,
+      inLanguage: 'en-MY',
+    }}
+  />
+  <SchemaOrg
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'Home', url: siteUrl },
+        { name: 'Blog', url: `${siteUrl}/blog` },
+        { name: post.data.title, url: postUrl },
+      ],
+    }}
+  />
+
+  <SiteHeader locale="en" currentPath={`/blog/${post.slug}`} altLocaleHref={altLocaleHref} />
+
+  <main>
+    <div class="container" style="max-width:760px;padding-top:48px;padding-bottom:96px;">
+
+      <!-- Breadcrumb -->
+      <nav style="margin-bottom:32px;" aria-label="Breadcrumb">
+        <span class="eyebrow" style="color:#6e6e6e;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <a href="/blog" class="breadcrumb-link">BLOG</a>
+          <span aria-hidden="true">&rsaquo;</span>
+          {post.data.categories.length > 0 && (
+            <>
+              <a
+                href={`/providers/${post.data.categories[0]}`}
+                class="breadcrumb-link"
+              >
+                {post.data.categories[0].replace(/-/g,' ').toUpperCase()}
+              </a>
+              <span aria-hidden="true">&rsaquo;</span>
+            </>
+          )}
+          <span style="color:#181818;">{post.data.title.substring(0, 50)}{post.data.title.length > 50 ? '...' : ''}</span>
+        </span>
+      </nav>
+
+      <!-- Hero image -->
+      {post.data.hero && (
+        <figure style="margin:0 0 36px 0;">
+          <img
+            src={post.data.hero}
+            alt={post.data.heroCaption || post.data.title}
+            style="width:100%;display:block;aspect-ratio:16/9;object-fit:cover;border:1px solid #181818;"
+          />
+          {post.data.heroCaption && (
+            <figcaption class="eyebrow" style="color:#6e6e6e;margin:8px 0 0 0;text-transform:none;font-size:11px;">
+              {post.data.heroCaption}
+            </figcaption>
+          )}
+        </figure>
+      )}
+
+      <!-- Article header -->
+      <header style="margin-bottom:36px;padding-bottom:36px;border-bottom:1px solid #181818;">
+
+        <!-- Category chips -->
+        {post.data.categories.length > 0 && (
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;">
+            {post.data.categories.map(cat => (
+              <a
+                href={`/providers/${cat}`}
+                class="cat-chip"
+              >
+                {cat.replace(/-/g,' ')}
+              </a>
+            ))}
+          </div>
+        )}
+
+        <!-- Title -->
+        <h1 class="heading" style="font-size:clamp(26px,4vw,40px);margin:0 0 22px 0;line-height:1.08;">
+          {post.data.title}
+        </h1>
+
+        <!-- Byline -->
+        <div class="eyebrow" style="color:#6e6e6e;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <span>{post.data.author}</span>
+          <span aria-hidden="true">&middot;</span>
+          <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt).toUpperCase()}</time>
+          {post.data.readingTime && (
+            <>
+              <span aria-hidden="true">&middot;</span>
+              <span>{post.data.readingTime} MIN READ</span>
+            </>
+          )}
+          {post.data.altLocaleSlug && (
+            <span style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+              <span style="color:#181818;">EN</span>
+              <span style="color:#d6d6cf;">|</span>
+              <a href={altLocaleHref} class="breadcrumb-link">MS</a>
+            </span>
+          )}
+        </div>
+      </header>
+
+      <!-- Article body: global .prose styles the markdown output -->
+      <article class="prose">
+        <Content />
+      </article>
+
+      <!-- Tags -->
+      {post.data.tags.length > 0 && (
+        <div style="margin-top:52px;padding-top:28px;border-top:1px solid #d6d6cf;">
+          <span class="eyebrow" style="color:#6e6e6e;margin-right:10px;">TAGS</span>
+          {post.data.tags.slice(0, 8).map(tag => (
+            <span style="display:inline-block;font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:#3a4047;border:1px solid #d6d6cf;padding:3px 9px;margin:0 4px 4px 0;">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+
+      <!-- Related categories -->
+      {relatedCategories.length > 0 && (
+        <div style="margin-top:52px;padding-top:28px;border-top:1px solid #d6d6cf;">
+          <p class="eyebrow" style="color:#6e6e6e;margin:0 0 18px 0;">
+            BROWSE RELATED SERVICES
+          </p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            {relatedCategories.map(cat => (
+              <a
+                href={`/providers/${cat.slug}`}
+                class="arrow-link btn-secondary"
+                style="font-size:15px;padding:8px 16px;"
+              >
+                {cat.name}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- CTA block -->
+      <div style="margin-top:52px;padding:32px;border:1px solid #181818;background:#f2f2f2;">
+        <p class="eyebrow" style="margin:0 0 12px 0;color:#6e6e6e;">
+          VERIFIED DIRECTORY
+        </p>
+        <p class="heading" style="font-size:22px;margin:0 0 10px 0;">
+          Find a cybersecurity provider near you
+        </p>
+        <p style="font-size:15px;line-height:1.6;color:#3a4047;margin:0 0 22px 0;max-width:520px;">
+          Every listing is cross-referenced with NACSA, CyberSecurity Malaysia, and SSM records.
+          Verify a provider's licence before you sign.
+        </p>
+        <a href="/providers" class="btn-primary">
+          Browse all providers
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <SiteFooter locale="en" currentPath={`/blog/${post.slug}`} altLocaleHref={altLocaleHref} />
+</Base>
+
+<style>
+  .breadcrumb-link {
+    color: #6e6e6e;
+    text-decoration: none;
+    transition: color 100ms;
+  }
+  .breadcrumb-link:hover { color: #181818; }
+
+  .cat-chip {
+    font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #181818;
+    background: #ececec;
+    border: 1px solid #d6d6cf;
+    padding: 3px 9px;
+    text-decoration: none;
+    transition: background 100ms, border-color 100ms;
+  }
+  .cat-chip:hover {
+    background: #181818;
+    color: #f2f2f2;
+    border-color: #181818;
+  }
+</style>

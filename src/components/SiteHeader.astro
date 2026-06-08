@@ -1,0 +1,434 @@
+---
+import categoriesData from '../data/categories.json';
+import { enHrefFor, msHrefFor, tEN, tMS } from '../lib/localeRoutes';
+
+interface Props {
+  locale?: string;
+  currentPath?: string;
+  altLocaleHref?: string;
+}
+
+const { locale = 'en', currentPath = '', altLocaleHref } = Astro.props;
+
+const isMS = locale === 'ms';
+const t = isMS ? tMS : tEN;
+const prefix = isMS ? '/ms' : '';
+
+const categories = categoriesData;
+
+const enHref = enHrefFor(currentPath, altLocaleHref);
+const msHref = msHrefFor(currentPath, altLocaleHref);
+
+const nav = [
+  { label: t.clinics, href: isMS ? '/ms/direktori' : '/providers' },
+  { label: t.tools, href: isMS ? '/ms/alat' : '/tools' },
+  { label: t.blog, href: isMS ? '/ms/blog' : '/blog' },
+  { label: t.about, href: isMS ? '/ms/tentang' : '/about' },
+];
+---
+
+<header id="site-header" style="background:#f2f2f2;border-bottom:1px solid #181818;position:sticky;top:0;z-index:200;">
+  <div class="container">
+    <div class="header-inner">
+
+      <!-- Logo wordmark: serif mark + wireframe shield icon -->
+      <a href={prefix || '/'} class="logo" aria-label="Cyber Secure SME home">
+        <!-- Wireframe shield with vermillion keyhole -->
+        <svg width="20" height="22" viewBox="0 0 20 22" fill="none" aria-hidden="true" style="flex-shrink:0;">
+          <path d="M10 1L2 4.5v6C2 15.1 5.4 19.4 10 21c4.6-1.6 8-5.9 8-10.5v-6L10 1z" stroke="#181818" stroke-width="1.2" fill="none"/>
+          <circle cx="10" cy="11" r="2.2" stroke="#fc523b" stroke-width="1.2" fill="none"/>
+          <line x1="10" y1="13.2" x2="10" y2="15.5" stroke="#fc523b" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="logo-text">Cyber Secure SME</span>
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="primary-nav" aria-label="Main navigation">
+
+        <!-- Providers link -->
+        <a href={isMS ? '/ms/direktori' : '/providers'} class="nav-link">{t.clinics}</a>
+
+        <!-- Services dropdown -->
+        <div class="nav-dropdown" style="position:relative;">
+          <button
+            type="button"
+            class="nav-link nav-dropdown-btn"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="cat-dropdown"
+          >
+            {t.categories}
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style="margin-left:4px;">
+              <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div id="cat-dropdown" class="dropdown-panel" hidden>
+            <div class="dropdown-grid">
+              {categories.map(cat => (
+                <a
+                  href={isMS ? `/ms/direktori/${cat.slug}` : `/providers/${cat.slug}`}
+                  class="dropdown-item"
+                >
+                  {isMS ? cat.name_ms : cat.name}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- Remaining nav links (tools, blog, about) -->
+        {nav.slice(1).map(item => (
+          <a href={item.href} class="nav-link">{item.label}</a>
+        ))}
+      </nav>
+
+      <!-- Right controls -->
+      <div class="header-right">
+        <!-- EN/MS toggle -->
+        <div class="lang-toggle" role="navigation" aria-label="Language switcher">
+          <a href={enHref} class={`lang-link${!isMS ? ' lang-active' : ''}`} aria-label="English" hreflang="en-MY">EN</a>
+          <span aria-hidden="true" style="color:#d6d6cf;">|</span>
+          <a href={msHref} class={`lang-link${isMS ? ' lang-active' : ''}`} aria-label="Bahasa Malaysia" hreflang="ms-MY">BM</a>
+        </div>
+
+        <!-- List your company CTA -->
+        <a href={isMS ? '/ms/senaraikan-syarikat' : '/list-your-company'} class="btn-list-company" data-ph="cta_list_company" data-ph-locale={locale}>
+          {t.listYourClinic}
+        </a>
+
+        <!-- Hamburger -->
+        <button
+          type="button"
+          class="menu-toggle"
+          aria-label={isMS ? 'Buka menu navigasi' : 'Open navigation menu'}
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="mobile-menu" hidden role="navigation" aria-label={isMS ? 'Navigasi mudah alih' : 'Mobile navigation'}>
+    <div class="container">
+      <div class="mobile-nav">
+        <a href={isMS ? '/ms/direktori' : '/providers'} class="mobile-nav-link">{t.clinics}</a>
+
+        <!-- Services accordion -->
+        <details class="mobile-cat-details">
+          <summary class="mobile-nav-link mobile-summary">{t.categories}</summary>
+          <div class="mobile-cat-grid">
+            {categories.map(cat => (
+              <a href={isMS ? `/ms/direktori/${cat.slug}` : `/providers/${cat.slug}`} class="mobile-cat-link">
+                {isMS ? cat.name_ms : cat.name}
+              </a>
+            ))}
+          </div>
+        </details>
+
+        {nav.slice(1).map(item => (
+          <a href={item.href} class="mobile-nav-link">{item.label}</a>
+        ))}
+
+        <div class="mobile-bottom">
+          <div class="mobile-lang">
+            <a href={enHref} class={`lang-link${!isMS ? ' lang-active' : ''}`}>EN</a>
+            <span style="color:#d6d6cf;">|</span>
+            <a href={msHref} class={`lang-link${isMS ? ' lang-active' : ''}`}>BM</a>
+          </div>
+          <a href={isMS ? '/ms/senaraikan-syarikat' : '/list-your-company'} class="btn-list-company" style="width:100%;justify-content:center;margin-top:8px;">
+            {t.listYourClinic}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header-inner {
+    display: flex;
+    align-items: center;
+    height: 64px;
+    gap: 24px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .logo-text {
+    font-family: 'EB Garamond', Garamond, Georgia, serif;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    color: #181818;
+  }
+
+  .primary-nav {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex: 1;
+  }
+
+  .nav-link {
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #181818;
+    text-decoration: none;
+    padding: 6px 12px;
+    transition: color 100ms;
+    white-space: nowrap;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+  }
+  .nav-link:hover { color: #6e6e6e; }
+
+  .nav-dropdown-btn { gap: 2px; }
+
+  /* Dropdown panel: bone bg, 1px ink rule, 0 radius, no shadow */
+  .dropdown-panel {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: -16px;
+    background: #f2f2f2;
+    border: 1px solid #181818;
+    border-radius: 0;
+    padding: 16px;
+    z-index: 300;
+    min-width: 480px;
+  }
+
+  .dropdown-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+  .dropdown-item {
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #181818;
+    text-decoration: none;
+    padding: 8px 10px;
+    transition: background 100ms, color 100ms;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dropdown-item:hover { background: #ffffff; color: #181818; }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .lang-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .lang-link {
+    color: #6e6e6e;
+    text-decoration: none;
+    font-weight: 400;
+    transition: color 100ms;
+  }
+  .lang-link:hover { color: #181818; }
+  .lang-active { color: #181818 !important; }
+
+  /* CTA: bordered ink box per design contract */
+  .btn-list-company {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 16px;
+    background: transparent;
+    color: #181818;
+    border: 1px solid #181818;
+    border-radius: 0;
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 120ms, color 120ms;
+  }
+  .btn-list-company:hover { background: #181818; color: #f2f2f2; }
+
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #181818;
+    border-radius: 0;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+  }
+  .bar {
+    display: block;
+    width: 18px;
+    height: 1px;
+    background: #181818;
+  }
+
+  /* Mobile menu: bone bg, 1px top rule */
+  .mobile-menu {
+    border-top: 1px solid #181818;
+    background: #f2f2f2;
+  }
+  .mobile-nav {
+    padding: 8px 0 16px;
+    display: flex;
+    flex-direction: column;
+  }
+  .mobile-nav-link {
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #181818;
+    text-decoration: none;
+    padding: 12px 0;
+    border-bottom: 1px solid #d6d6cf;
+    display: block;
+  }
+  .mobile-summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+  }
+  .mobile-summary::-webkit-details-marker { display: none; }
+  .mobile-cat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+    padding: 8px 0 8px 12px;
+  }
+  .mobile-cat-link {
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6e6e6e;
+    text-decoration: none;
+    padding: 6px 0;
+    transition: color 100ms;
+  }
+  .mobile-cat-link:hover { color: #181818; }
+  .mobile-bottom {
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .mobile-lang {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .mobile-cat-details > summary { outline: none; }
+
+  @media (max-width: 900px) {
+    .primary-nav { display: none; }
+    .btn-list-company { display: none; }
+    .lang-toggle { display: none; }
+    .menu-toggle { display: flex; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-link, .dropdown-item, .btn-list-company, .lang-link, .mobile-cat-link { transition: none; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    // Hamburger toggle
+    var btn = document.querySelector('.menu-toggle');
+    var menu = document.getElementById('mobile-menu');
+    if (btn && menu) {
+      btn.addEventListener('click', function () {
+        var isOpen = menu.getAttribute('data-open') === 'true';
+        if (isOpen) {
+          menu.setAttribute('hidden', '');
+          menu.removeAttribute('data-open');
+          btn.setAttribute('aria-expanded', 'false');
+        } else {
+          menu.removeAttribute('hidden');
+          menu.setAttribute('data-open', 'true');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    }
+
+    // Services dropdown
+    var dropBtn = document.querySelector('.nav-dropdown-btn');
+    var panel = document.getElementById('cat-dropdown');
+    if (dropBtn && panel) {
+      dropBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var open = panel.getAttribute('data-open') === 'true';
+        if (open) {
+          panel.setAttribute('hidden', '');
+          panel.removeAttribute('data-open');
+          dropBtn.setAttribute('aria-expanded', 'false');
+        } else {
+          panel.removeAttribute('hidden');
+          panel.setAttribute('data-open', 'true');
+          dropBtn.setAttribute('aria-expanded', 'true');
+        }
+      });
+      document.addEventListener('click', function (e) {
+        if (!dropBtn.contains(e.target) && !panel.contains(e.target)) {
+          panel.setAttribute('hidden', '');
+          panel.removeAttribute('data-open');
+          dropBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          panel.setAttribute('hidden', '');
+          panel.removeAttribute('data-open');
+          dropBtn.setAttribute('aria-expanded', 'false');
+          dropBtn.focus();
+        }
+      });
+    }
+  })();
+</script>

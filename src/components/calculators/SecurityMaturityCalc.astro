@@ -1,0 +1,248 @@
+---
+interface Props { locale?: string; }
+const { locale = 'en' } = Astro.props;
+---
+
+<div class="smc-wrap">
+  <p class="smc-intro">Rate eight baseline security controls. Each control earns 0 (none), 1 (partial), or 2 (full) points.</p>
+
+  <form id="smc-form" autocomplete="off">
+    <div class="smc-controls">
+
+      <div class="smc-control">
+        <div class="smc-control-header">
+          <span class="smc-control-name">Tested data backups</span>
+          <span class="smc-control-desc">Backups run regularly and have been successfully restored from within the last 90 days.</span>
+        </div>
+        <div class="smc-options">
+          <label class="smc-opt"><input type="radio" name="c1" value="0" class="smc-radio" /> None</label>
+          <label class="smc-opt"><input type="radio" name="c1" value="1" class="smc-radio" /> Partial</label>
+          <label class="smc-opt"><input type="radio" name="c1" value="2" class="smc-radio" /> Full</label>
+        </div>
+      </div>
+
+      <div class="smc-control">
+        <div class="smc-control-header">
+          <span class="smc-control-name">Regular patching</span>
+          <span class="smc-control-desc">Operating systems and software are patched within 30 days of critical security updates.</span>
+        </div>
+        <div class="smc-options">
+          <label class="smc-opt"><input type="radio" name="c2" value="0" class="smc-radio" /> None</label>
+          <label class="smc-opt"><input type="radio" name="c2" value="1" class="smc-radio" /> Partial</label>
+          <label class="smc-opt"><input type="radio" name="c2" value="2" class="smc-radio" /> Full</label>
+        </div>
+      </div>
+
+      <div class="smc-control">
+        <div class="smc-control-header">
+          <span class="smc-control-name">Multi-factor authentication (MFA)</span>
+          <span class="smc-control-desc">MFA is enforced on email, remote access, and critical business accounts.</span>
+        </div>
+        <div class="smc-options">
+          <label class="smc-opt"><input type="radio" name="c3" value="0" class="smc-radio" /> None</label>
+          <label class="smc-opt"><input type="radio" name="c3" value="1" class="smc-radio" /> Partial</label>
+          <label class="smc-opt"><input type="radio" name="c3" value="2" class="smc-radio" /> Full</label>
+        </div>
+      </div>
+
+      <div class="smc-control">
+        <div class="smc-control-header">
+          <span class="smc-control-name">Endpoint protection / EDR</span>
+          <span class="smc-control-desc">All business devices run up-to-date antivirus or endpoint detection and response software.</span>
+        </div>
+        <div class="smc-options">
+          <label class="smc-opt"><input type="radio" name="c4" value="0" class="smc-radio" /> None</label>
+          <label class="smc-opt"><input type="radio" name="c4" value="1" class="smc-radio" /> Partial</label>
+          <label class="smc-opt"><input type="radio" name="c4" value="2" class="smc-radio" /> Full</label>
+        </div>
+      </div>
+
+      <div class="smc-control">
+        <div class="smc-control-header">
+          <span class="smc-control-name">Firewall and network controls</span>
+          <span class="smc-control-desc">A managed firewall is in place; network access is segmented between critical and general systems.</span>
+        </div>
+        <div class="smc-options">
+          <label class="smc-opt"><input type="radio" name="c5" value="0" class="smc-radio" /> None</label>
+          <label class="smc-opt"><input type="radio" name="c5" value="1" class="smc-radio" /> Partial</label>
+          <label class="smc-opt"><input type="radio" name="c5" value="2" class="smc-radio" /> Full</label>
+        </div>
+      </div>
+
+      <div class="smc-control">
+        <div class="smc-control-header">
+          <span class="smc-control-name">Security awareness training</span>
+          <span class="smc-control-desc">Staff complete security awareness training at least once a year, including phishing simulations.</span>
+        </div>
+        <div class="smc-options">
+          <label class="smc-opt"><input type="radio" name="c6" value="0" class="smc-radio" /> None</label>
+          <label class="smc-opt"><input type="radio" name="c6" value="1" class="smc-radio" /> Partial</label>
+          <label class="smc-opt"><input type="radio" name="c6" value="2" class="smc-radio" /> Full</label>
+        </div>
+      </div>
+
+      <div class="smc-control">
+        <div class="smc-control-header">
+          <span class="smc-control-name">Written incident response plan</span>
+          <span class="smc-control-desc">A documented plan exists for responding to a cyber incident, with roles and escalation steps defined.</span>
+        </div>
+        <div class="smc-options">
+          <label class="smc-opt"><input type="radio" name="c7" value="0" class="smc-radio" /> None</label>
+          <label class="smc-opt"><input type="radio" name="c7" value="1" class="smc-radio" /> Partial</label>
+          <label class="smc-opt"><input type="radio" name="c7" value="2" class="smc-radio" /> Full</label>
+        </div>
+      </div>
+
+      <div class="smc-control">
+        <div class="smc-control-header">
+          <span class="smc-control-name">Least-privilege access</span>
+          <span class="smc-control-desc">Staff have access only to the systems and data they need for their role. Admin rights are restricted.</span>
+        </div>
+        <div class="smc-options">
+          <label class="smc-opt"><input type="radio" name="c8" value="0" class="smc-radio" /> None</label>
+          <label class="smc-opt"><input type="radio" name="c8" value="1" class="smc-radio" /> Partial</label>
+          <label class="smc-opt"><input type="radio" name="c8" value="2" class="smc-radio" /> Full</label>
+        </div>
+      </div>
+
+    </div>
+
+    <button type="submit" class="smc-btn">Score my maturity</button>
+  </form>
+
+  <div id="smc-result" class="smc-result-panel" hidden aria-live="polite">
+    <div class="smc-result-header">
+      <div class="smc-result-left">
+        <span class="smc-eyebrow">Maturity level</span>
+        <span class="smc-level" id="smc-level">--</span>
+      </div>
+      <div class="smc-result-right">
+        <span class="smc-eyebrow">Score</span>
+        <span class="smc-score-num" id="smc-score">0 / 16</span>
+      </div>
+    </div>
+    <div class="smc-bar-track"><div class="smc-bar-fill" id="smc-bar" style="width:0%"></div></div>
+    <p class="smc-level-desc" id="smc-level-desc"></p>
+    <div class="smc-gaps-block">
+      <span class="smc-eyebrow" style="margin-bottom:8px;display:block">Top 3 gaps to address first</span>
+      <div id="smc-gaps" class="smc-gaps"></div>
+    </div>
+    <p class="smc-note">
+      For a professional maturity assessment or to close these gaps quickly, see
+      <a href="/providers/managed-security" class="smc-link">managed security providers &rarr;</a>
+    </p>
+  </div>
+
+  <p class="smc-disclaimer">This self-assessment is indicative only. It is not a formal security audit or certification. Engage a qualified MSSP for a professional assessment.</p>
+</div>
+
+<style>
+  .smc-wrap { display:flex; flex-direction:column; gap:20px; font-family:"EB Garamond",Georgia,serif; }
+  .smc-intro { font-size:17px; color:#6e6e6e; margin:0; line-height:1.5; }
+  .smc-eyebrow { font-family:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#181818; font-feature-settings:"tnum"; }
+  .smc-controls { display:flex; flex-direction:column; border-top:1px solid #181818; }
+  .smc-control { padding:16px 0; border-bottom:1px solid #d6d6cf; display:flex; flex-direction:column; gap:10px; }
+  .smc-control:last-child { border-bottom:none; }
+  .smc-control-header { display:flex; flex-direction:column; gap:4px; }
+  .smc-control-name { font-family:"EB Garamond",Georgia,serif; font-size:18px; color:#181818; }
+  .smc-control-desc { font-family:"Inter",Arial,sans-serif; font-size:13px; color:#6e6e6e; line-height:1.4; }
+  .smc-options { display:flex; gap:20px; flex-wrap:wrap; }
+  .smc-opt { display:flex; align-items:center; gap:8px; font-family:"EB Garamond",Georgia,serif; font-size:17px; color:#181818; cursor:pointer; }
+  .smc-radio { accent-color:#181818; width:16px; height:16px; cursor:pointer; }
+  .smc-btn { border:1px solid #181818; background:transparent; color:#181818; font-family:"Inter",Arial,sans-serif; font-size:13px; letter-spacing:.06em; text-transform:uppercase; padding:12px 24px; cursor:pointer; align-self:flex-start; margin-top:4px; }
+  .smc-btn:hover { background:#181818; color:#f2f2f2; }
+  .smc-result-panel { background:#f2f2f2; border-top:1px solid #181818; padding:20px; display:flex; flex-direction:column; gap:14px; }
+  .smc-result-header { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; }
+  .smc-result-left, .smc-result-right { display:flex; flex-direction:column; gap:4px; }
+  .smc-level { font-family:"EB Garamond",Georgia,serif; font-size:36px; color:#181818; line-height:1; }
+  .smc-score-num { font-family:"Inter",Arial,sans-serif; font-size:20px; font-feature-settings:"tnum"; color:#181818; }
+  .smc-bar-track { height:4px; background:#d6d6cf; }
+  .smc-bar-fill { height:4px; background:#181818; transition:width 300ms; }
+  .smc-level-desc { font-family:"EB Garamond",Georgia,serif; font-size:17px; color:#181818; margin:0; line-height:1.5; border-top:1px solid #d6d6cf; padding-top:12px; }
+  .smc-gaps-block { }
+  .smc-gaps { display:flex; flex-direction:column; gap:8px; }
+  .smc-gap { font-family:"EB Garamond",Georgia,serif; font-size:17px; color:#181818; padding-left:16px; position:relative; }
+  .smc-gap::before { content:"-"; position:absolute; left:0; }
+  .smc-note { font-family:"Inter",Arial,sans-serif; font-size:12px; color:#6e6e6e; line-height:1.5; border-top:1px solid #d6d6cf; padding-top:12px; margin:0; }
+  .smc-link { color:#181818; text-decoration:underline; }
+  .smc-link:hover { color:#fc523b; }
+  .smc-disclaimer { font-family:"Inter",Arial,sans-serif; font-size:12px; color:#6e6e6e; line-height:1.5; border-top:1px solid #d6d6cf; padding-top:14px; margin:0; }
+</style>
+
+<script is:inline>
+(function () {
+  var form = document.getElementById('smc-form');
+  var resultPanel = document.getElementById('smc-result');
+  var levelEl = document.getElementById('smc-level');
+  var scoreNumEl = document.getElementById('smc-score');
+  var barEl = document.getElementById('smc-bar');
+  var levelDescEl = document.getElementById('smc-level-desc');
+  var gapsEl = document.getElementById('smc-gaps');
+  var captured = false;
+
+  var controls = [
+    { name: 'c1', label: 'Tested data backups', priority: 1 },
+    { name: 'c2', label: 'Regular patching', priority: 2 },
+    { name: 'c3', label: 'Multi-factor authentication', priority: 1 },
+    { name: 'c4', label: 'Endpoint protection / EDR', priority: 3 },
+    { name: 'c5', label: 'Firewall and network controls', priority: 3 },
+    { name: 'c6', label: 'Security awareness training', priority: 2 },
+    { name: 'c7', label: 'Written incident response plan', priority: 2 },
+    { name: 'c8', label: 'Least-privilege access', priority: 3 },
+  ];
+
+  var levelDesc = [
+    'Level 1 - Basic: Significant gaps exist across core controls. Prioritise MFA, tested backups, and patching first.',
+    'Level 2 - Developing: Some controls in place but inconsistently applied. Focus on closing partial gaps and formalising processes.',
+    'Level 3 - Established: Most baseline controls are implemented. Work on documentation, staff training, and incident response testing.',
+    'Level 4 - Managed: Strong baseline. Consider continuous monitoring, penetration testing, and formal certification.',
+  ];
+
+  function getVal(name) {
+    var el = form.querySelector('[name="' + name + '"]:checked');
+    return el ? parseInt(el.value) : 0;
+  }
+
+  function compute(e) {
+    if (e) e.preventDefault();
+    var total = 0;
+    var scored = controls.map(function(c) {
+      var v = getVal(c.name);
+      total += v;
+      return { label: c.label, score: v, priority: c.priority };
+    });
+    var max = controls.length * 2; // 16
+    var pct = Math.round((total / max) * 100);
+
+    var lvl = pct < 25 ? 1 : pct < 50 ? 2 : pct < 75 ? 3 : 4;
+    levelEl.textContent = 'Level ' + lvl;
+    scoreNumEl.textContent = total + ' / ' + max;
+    barEl.style.width = pct + '%';
+    levelDescEl.textContent = levelDesc[lvl - 1];
+
+    // Top 3 gaps = lowest scored, tie-break by priority (lower = higher priority)
+    var gaps = scored
+      .filter(function(c) { return c.score < 2; })
+      .sort(function(a, b) { return (a.score - b.score) || (a.priority - b.priority); })
+      .slice(0, 3);
+
+    if (gaps.length === 0) {
+      gapsEl.innerHTML = '<p class="smc-gap">All controls rated full. Schedule an annual review or penetration test to validate.</p>';
+    } else {
+      gapsEl.innerHTML = gaps.map(function(g) {
+        var status = g.score === 0 ? ' (not in place)' : ' (partially in place)';
+        return '<p class="smc-gap">' + g.label + status + '</p>';
+      }).join('');
+    }
+
+    resultPanel.removeAttribute('hidden');
+
+    if (!captured) {
+      captured = true;
+      try { if (window.posthog) window.posthog.capture('calculator_used', { tool: 'security-maturity-assessment' }); } catch(_){}
+    }
+  }
+
+  form.addEventListener('submit', compute);
+})();
+</script>

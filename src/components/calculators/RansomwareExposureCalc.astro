@@ -1,0 +1,165 @@
+---
+interface Props { locale?: string; }
+const { locale = 'en' } = Astro.props;
+---
+
+<div class="rec-wrap">
+  <p class="rec-intro">Five questions. Each "No" or "Unsure" adds to your exposure score. Takes under 90 seconds.</p>
+
+  <form id="rec-form" autocomplete="off">
+    <div class="rec-questions">
+
+      <fieldset class="rec-fieldset">
+        <legend class="rec-question">1. Have you successfully restored data from an offline or immutable backup in the last 90 days?</legend>
+        <div class="rec-opts">
+          <label class="rec-opt"><input type="radio" name="r1" value="0" class="rec-radio" /> Yes, tested and confirmed</label>
+          <label class="rec-opt"><input type="radio" name="r1" value="1" class="rec-radio" /> Backups exist but not tested recently</label>
+          <label class="rec-opt"><input type="radio" name="r1" value="2" class="rec-radio" /> No offsite / immutable backup</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="rec-fieldset">
+        <legend class="rec-question">2. Are critical security patches applied within 30 days of release?</legend>
+        <div class="rec-opts">
+          <label class="rec-opt"><input type="radio" name="r2" value="0" class="rec-radio" /> Yes, consistently</label>
+          <label class="rec-opt"><input type="radio" name="r2" value="1" class="rec-radio" /> Inconsistently / best effort</label>
+          <label class="rec-opt"><input type="radio" name="r2" value="2" class="rec-radio" /> No formal patching process</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="rec-fieldset">
+        <legend class="rec-question">3. Is MFA enforced on all remote access accounts (VPN, RDP, cloud)?</legend>
+        <div class="rec-opts">
+          <label class="rec-opt"><input type="radio" name="r3" value="0" class="rec-radio" /> Yes, all remote access uses MFA</label>
+          <label class="rec-opt"><input type="radio" name="r3" value="1" class="rec-radio" /> Some accounts only</label>
+          <label class="rec-opt"><input type="radio" name="r3" value="2" class="rec-radio" /> No MFA on remote access</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="rec-fieldset">
+        <legend class="rec-question">4. Does your organisation use email filtering to block malicious attachments and links?</legend>
+        <div class="rec-opts">
+          <label class="rec-opt"><input type="radio" name="r4" value="0" class="rec-radio" /> Yes, active email security gateway</label>
+          <label class="rec-opt"><input type="radio" name="r4" value="1" class="rec-radio" /> Basic spam filter only</label>
+          <label class="rec-opt"><input type="radio" name="r4" value="2" class="rec-radio" /> No filtering beyond the default</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="rec-fieldset">
+        <legend class="rec-question">5. Is Remote Desktop Protocol (RDP) or similar remote-access services blocked from the public internet?</legend>
+        <div class="rec-opts">
+          <label class="rec-opt"><input type="radio" name="r5" value="0" class="rec-radio" /> Yes, blocked or behind VPN</label>
+          <label class="rec-opt"><input type="radio" name="r5" value="1" class="rec-radio" /> Partially restricted</label>
+          <label class="rec-opt"><input type="radio" name="r5" value="2" class="rec-radio" /> No, directly internet-accessible</label>
+        </div>
+      </fieldset>
+    </div>
+
+    <button type="submit" class="rec-btn">Calculate exposure</button>
+  </form>
+
+  <div id="rec-result" class="rec-result-panel" hidden aria-live="polite">
+    <div class="rec-result-top">
+      <span class="rec-eyebrow">Ransomware exposure</span>
+      <span class="rec-badge" id="rec-badge">--</span>
+    </div>
+    <div class="rec-bar-track"><div class="rec-bar-fill" id="rec-bar" style="width:0%"></div></div>
+    <div class="rec-fixes" id="rec-fixes"></div>
+    <p class="rec-note">
+      Ransomware recovery costs for Malaysian SMEs have ranged from RM 50,000 to over RM 500,000 when backups were absent or unverified. See
+      <a href="/providers/data-backup" class="rec-link">data backup and recovery providers &rarr;</a>
+    </p>
+  </div>
+
+  <p class="rec-disclaimer">This tool gives an indicative exposure score based on five known ransomware entry and recovery vectors. It is not a security audit.</p>
+</div>
+
+<style>
+  .rec-wrap { display:flex; flex-direction:column; gap:20px; font-family:"EB Garamond",Georgia,serif; }
+  .rec-intro { font-size:17px; color:#6e6e6e; margin:0; }
+  .rec-eyebrow { font-family:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#181818; font-feature-settings:"tnum"; }
+  .rec-questions { display:flex; flex-direction:column; border-top:1px solid #181818; }
+  .rec-fieldset { border:none; margin:0; padding:16px 0; border-bottom:1px solid #d6d6cf; }
+  .rec-fieldset:last-child { border-bottom:none; }
+  .rec-question { font-family:"EB Garamond",Georgia,serif; font-size:18px; color:#181818; margin-bottom:10px; display:block; }
+  .rec-opts { display:flex; flex-direction:column; gap:7px; padding-left:4px; }
+  .rec-opt { display:flex; align-items:center; gap:10px; font-family:"EB Garamond",Georgia,serif; font-size:17px; color:#181818; cursor:pointer; }
+  .rec-radio { accent-color:#181818; width:16px; height:16px; cursor:pointer; }
+  .rec-btn { border:1px solid #181818; background:transparent; color:#181818; font-family:"Inter",Arial,sans-serif; font-size:13px; letter-spacing:.06em; text-transform:uppercase; padding:12px 24px; cursor:pointer; align-self:flex-start; margin-top:4px; }
+  .rec-btn:hover { background:#181818; color:#f2f2f2; }
+  .rec-result-panel { background:#f2f2f2; border-top:1px solid #181818; padding:20px; display:flex; flex-direction:column; gap:14px; }
+  .rec-result-top { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .rec-badge { font-family:"Inter",Arial,sans-serif; font-size:13px; letter-spacing:.08em; text-transform:uppercase; padding:4px 12px; border:1px solid #181818; }
+  .rec-bar-track { height:4px; background:#d6d6cf; }
+  .rec-bar-fill { height:4px; background:#fc523b; transition:width 300ms; }
+  .rec-fixes { display:flex; flex-direction:column; gap:8px; border-top:1px solid #d6d6cf; padding-top:14px; }
+  .rec-fix { font-family:"EB Garamond",Georgia,serif; font-size:17px; color:#181818; padding-left:16px; position:relative; }
+  .rec-fix::before { content:"-"; position:absolute; left:0; }
+  .rec-fix-label { font-family:"Inter",Arial,sans-serif; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:#6e6e6e; margin-bottom:4px; display:block; }
+  .rec-note { font-family:"Inter",Arial,sans-serif; font-size:12px; color:#6e6e6e; line-height:1.5; border-top:1px solid #d6d6cf; padding-top:12px; margin:0; }
+  .rec-link { color:#181818; text-decoration:underline; }
+  .rec-link:hover { color:#fc523b; }
+  .rec-disclaimer { font-family:"Inter",Arial,sans-serif; font-size:12px; color:#6e6e6e; line-height:1.5; border-top:1px solid #d6d6cf; padding-top:14px; margin:0; }
+</style>
+
+<script is:inline>
+(function () {
+  var form = document.getElementById('rec-form');
+  var resultPanel = document.getElementById('rec-result');
+  var badgeEl = document.getElementById('rec-badge');
+  var barEl = document.getElementById('rec-bar');
+  var fixesEl = document.getElementById('rec-fixes');
+  var captured = false;
+
+  var qs = [
+    { name: 'r1', fix: 'Create and test an offline or immutable backup now. Without a verified backup, paying the ransom may be your only option.' },
+    { name: 'r2', fix: 'Establish a 30-day patching cadence. Unpatched vulnerabilities are the most common ransomware entry point.' },
+    { name: 'r3', fix: 'Enable MFA on all remote access immediately. Credential theft is the second most common entry vector.' },
+    { name: 'r4', fix: 'Deploy an email security gateway to filter malicious attachments and links before they reach staff inboxes.' },
+    { name: 'r5', fix: 'Block RDP from the public internet and place it behind a VPN. Exposed RDP is actively scanned by ransomware operators.' },
+  ];
+
+  var maxScore = qs.length * 2; // 10
+
+  function getVal(name) {
+    var el = form.querySelector('[name="' + name + '"]:checked');
+    return el ? parseInt(el.value) : 2; // unanswered = max risk
+  }
+
+  function compute(e) {
+    if (e) e.preventDefault();
+    var total = 0;
+    var gaps = [];
+    qs.forEach(function(q) {
+      var v = getVal(q.name);
+      total += v;
+      if (v > 0) gaps.push({ fix: q.fix, score: v });
+    });
+    var pct = Math.round((total / maxScore) * 100);
+    var level = pct < 30 ? 'Low' : pct < 60 ? 'Moderate' : 'High';
+
+    badgeEl.textContent = level;
+    badgeEl.style.background = level === 'Low' ? 'transparent' : (level === 'Moderate' ? '#6e6e6e' : '#fc523b');
+    badgeEl.style.color = level === 'Low' ? '#181818' : '#f2f2f2';
+    badgeEl.style.borderColor = level === 'High' ? '#fc523b' : '#181818';
+    barEl.style.width = pct + '%';
+
+    gaps.sort(function(a, b) { return b.score - a.score; });
+    if (gaps.length === 0) {
+      fixesEl.innerHTML = '<span class="rec-fix-label">No high-exposure gaps found</span><p class="rec-fix">All five key controls are in place. Review and re-test backups quarterly.</p>';
+    } else {
+      fixesEl.innerHTML = '<span class="rec-fix-label">Prioritised fixes</span>' +
+        gaps.map(function(g) { return '<p class="rec-fix">' + g.fix + '</p>'; }).join('');
+    }
+
+    resultPanel.removeAttribute('hidden');
+
+    if (!captured) {
+      captured = true;
+      try { if (window.posthog) window.posthog.capture('calculator_used', { tool: 'ransomware-exposure-score' }); } catch(_){}
+    }
+  }
+
+  form.addEventListener('submit', compute);
+})();
+</script>
